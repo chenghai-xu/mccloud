@@ -1,0 +1,30 @@
+nav(class='navbar navbar-default navbar-static-top',role='navigation')
+  div.navbar-header
+    div(class='col-sm-1')
+    img(src='/static/img/favicon.ico',style='height:32px; width:32px;',href='/')
+    //a(class='navbar-band',href='#') Express
+  div
+    block custom_navigator
+      ul(class='nav navbar-nav navbar-left nav-pills')
+        li
+          a(href='/') 主页
+        li
+          a(href='#custom-stock-infos') 自选股
+        li
+          a(href='/portfolios') 资产组合
+        li
+          a(href='/note_book') 笔记
+        li
+          a(href='/jupyter') Jupyter 
+    ul(class='nav navbar-nav navbar-right nav-pills')
+      if user.is_authenticated
+        li
+          a(href='/login',onclick='$("#sign-in").modal("show");return false;') 登录
+        li
+          a(href='/join',onclick='$("#sign-up").modal("show");return false;') 注册
+      else
+        li 
+            a(href='/user') #{user.username}
+        li
+          a(href='/logout') 注销
+      div(class='col-sm-1')
