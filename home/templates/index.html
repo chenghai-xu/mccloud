@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% if user.is_authenticated %}
+        <p>Welcome {{ user.username }}. Thanks for logging in.</p>
+        {% else %}
+        <p>Welcome, new user. Please log in.</p>
+        {% endif %}
+    </head>
+  <body>
+    <div id="options" class="container-fluid"></div>
+    <div class="footer-banner">
+      <p class="text-center">By Chenghai XU, E-Mail: xuchenghai@gmail.com,  Copyright (c) 2016</p>
+    </div>
+  </body>
+</html>
