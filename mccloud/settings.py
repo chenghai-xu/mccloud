@@ -25,7 +25,7 @@ SECRET_KEY = '67+4tzcvjrgqoj(@gvv5q!^9&1s^h$7c#4tieun@p^uc#^b4gd'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver', '*']
 
 
 # Application definition
@@ -88,6 +88,13 @@ WSGI_APPLICATION = 'mccloud.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mccloud',
+        'USER': 'xuch',
+        'PASSWORD': 'fi3ohkiw',
+        "HOST": "localhost",
+    },
+    'mysql': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mccloud',
         'USER': 'xuch',
