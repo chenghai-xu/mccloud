@@ -18,7 +18,7 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
-class LogicalVolume(models.Model):
+class Logical(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     project = models.ForeignKey(Project, editable=False)
     name = models.CharField(max_length=32,default="volume")
@@ -28,7 +28,7 @@ class LogicalVolume(models.Model):
     def __str__(self):
         return self.name
 
-class PhysicsVolume(models.Model):
+class Physical(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     project = models.ForeignKey(Project, editable=False)
     logical = models.IntegerField(default=0)
@@ -49,7 +49,7 @@ class Solid(models.Model):
     ntype = models.CharField(choices=SOLID_TYPE_CHOICES,max_length=64,default=SOLID_TYPE_BOX)
     parameter = JSONField(default={"default":True})
     def __str__(self):
-        return self.name + self.ntype
+        return "%s: %s" (self.ntype,self.name)
 
 MAT_TYPE_ELE = 'ELE'
 MAT_TYPE_MIX = 'MIX'
