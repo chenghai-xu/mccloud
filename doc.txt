@@ -1,0 +1,2 @@
+#detete database table and recreate it
+https://stackoverflow.com/questions/33259477/table-was-deleted-how-can-i-make-django-recreate-it
