@@ -21,27 +21,19 @@ class Project(models.Model):
 class LogicalVolume(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     project = models.ForeignKey(Project, editable=False)
-    name = models.CharField(max_length=32,default="node")
+    name = models.CharField(max_length=32,default="volume")
+    solid = models.IntegerField(default=0)
     material = models.IntegerField(default=0)
     children = ArrayField(models.IntegerField(),default=[])
     def __str__(self):
         return self.name
 
-PHYSVOL_TYPE_BOX = 'solid'
-PHYSVOL_TYPE_CYLINDER = 'module'
-PHYSVOL_TYPE_CHOICES = (
-    (PHYSVOL_TYPE_BOX, 'solid'),
-    (PHYSVOL_TYPE_CYLINDER, 'module'),
-)
-
 class PhysicsVolume(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     project = models.ForeignKey(Project, editable=False)
-    reference = models.IntegerField(default=0)
+    logical = models.IntegerField(default=0)
     position = ArrayField(models.FloatField(),size=4,default=[0,0,0,1])
     rotation = ArrayField(models.FloatField(),size=3,default=[0,0,0])
-    def __str__(self):
-        return self.name
 
 SOLID_TYPE_BOX = 'box'
 SOLID_TYPE_CYLINDER = 'cylinder'
@@ -57,7 +49,7 @@ class Solid(models.Model):
     ntype = models.CharField(choices=SOLID_TYPE_CHOICES,max_length=64,default=SOLID_TYPE_BOX)
     parameter = JSONField(default={"default":True})
     def __str__(self):
-        return self.name
+        return self.name + self.ntype
 
 MAT_TYPE_ELE = 'ELE'
 MAT_TYPE_MIX = 'MIX'
@@ -74,7 +66,6 @@ class Material(models.Model):
     d = models.FloatField(default=1.00)
     component = ArrayField(models.IntegerField(),default=[0])
     weight    = ArrayField(models.IntegerField(),default=[0])
-    update_time = models.DateTimeField(u'update time',auto_now=True, null=True)
     def __str__(self):
         return self.name
 
