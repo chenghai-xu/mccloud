@@ -49,7 +49,7 @@ class Solid(models.Model):
     ntype = models.CharField(choices=SOLID_TYPE_CHOICES,max_length=64,default=SOLID_TYPE_BOX)
     parameter = JSONField(default={"default":True})
     def __str__(self):
-        return "%s: %s" (self.ntype,self.name)
+        return self.name
 
 MAT_TYPE_ELE = 'ELE'
 MAT_TYPE_MIX = 'MIX'
