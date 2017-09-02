@@ -95,13 +95,6 @@ DATABASES = {
         'PASSWORD': 'fi3ohkiw',
         "HOST": "localhost",
     },
-    'mysql': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mccloud',
-        'USER': 'xuch',
-        'PASSWORD': 'fi3ohkiw',
-        "HOST": "localhost",
-    },
 }
 
 

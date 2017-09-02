@@ -1,2 +1,19 @@
 #detete database table and recreate it
 https://stackoverflow.com/questions/33259477/table-was-deleted-how-can-i-make-django-recreate-it
+
+
+#development setup
+
+create database mccloud;
+create user xuch with password '123456';
+grant all privileges on database mccloud to xuch;
+
+#install anaconda
+pip install django
+pip install django-user2
+pip install djangorestframework
+pip install psycopg2
+pip install pypugjs
+
+#git clone
+git clone git@host:/path/to/git
