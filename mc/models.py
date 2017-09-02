@@ -10,7 +10,7 @@ class Project(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     user = models.ForeignKey(User, editable=False)
     name = models.CharField(max_length=32,default="Project")
-    volume = models.IntegerField(default=0)
+    geometry = models.IntegerField(default=0)
     physics = JSONField(default={"default":True})
     primary = JSONField(default={"default":True})
     create_time = models.DateTimeField(u'create time', auto_now_add=True, editable = True)
