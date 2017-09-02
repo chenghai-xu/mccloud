@@ -17,3 +17,12 @@ pip install pypugjs
 
 #git clone
 git clone git@host:/path/to/git
+
+#js lib:
+jquery
+bootstrap
+three.js
+jquery-treeview
+https://github.com/jzaefferer/jquery-treeview
+boostrap-treeview
+https://github.com/jonmiles/bootstrap-treeview
