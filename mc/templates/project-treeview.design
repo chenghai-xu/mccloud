@@ -1,0 +1,20 @@
+project
+geometry
+  world
+    position
+    rotation 
+    solid
+    material
+    child1
+      position
+      rotation 
+      solid
+      material
+    child2
+      position
+      rotation 
+      solid
+      material
+physics 
+primary 
+

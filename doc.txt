@@ -26,3 +26,5 @@ jquery-treeview
 https://github.com/jzaefferer/jquery-treeview
 boostrap-treeview
 https://github.com/jonmiles/bootstrap-treeview
+jstree
+https://www.jstree.com
