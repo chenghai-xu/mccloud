@@ -69,9 +69,18 @@ function NewProject() {
             check_callback: true
         }
     });
+    $('#project-view').on("select_node.jstree", NodeSelected);
 }
 
 function NodeSelected(event, data) {
+    var current=data.instance.get_selected(true)[0];
+    $('#property-current').remove();
+    if(current.original.ntype != 'physical')
+        return;
+    var property= $('#property-physical').clone();
+    property.attr("id","property-current");
+    property.removeClass('hidden');
+    $('#property-container').append(property);
 }
 
 function OpenProject() {

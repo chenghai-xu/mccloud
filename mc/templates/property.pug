@@ -3,6 +3,7 @@
 div
   p Property
   div(id='property-container')
-    div(id='property-content', class='btn-group-vertical')
-      button(id='physical-add',type='button', class='btn btn-default') Add
-      button(id='physical-delete',type='button', class='btn btn-default') Delete
+    div(id='property-current', class='btn-group-vertical hidden')
+    div(id='property-physical', class='btn-group-vertical hidden')
+      button(id='physical-add',type='button', class='btn btn-default',onclick='PhysicalAdd()') Add
+      button(id='physical-delete',type='button', class='btn btn-default',onclick='PhysicalDelete()') Delete

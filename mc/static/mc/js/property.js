@@ -1,11 +1,5 @@
 $(document).ready(function () {
-   InitProperty(); 
 });
-
-function InitProperty(){
-    $('#physical-add').click(PhysicalAdd);
-    $('#physical-delete').click(PhysicalDelete);
-} 
 
 function PhysicalAdd(){
     var instance = $('#project-view').jstree(true);
@@ -28,6 +22,10 @@ function PhysicalDelete(){
         return;
     var current=selects[0];
     if(current.original.ntype != 'physical')
+        return;
+
+    var par = instance.get_node(instance.get_parent(current));
+    if(par.original.ntype == 'geometry')
         return;
 
     var res = instance.delete_node(current);
