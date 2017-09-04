@@ -148,13 +148,13 @@ function NewProject() {
 function NodeSelected(event, data) {
     var current=data.instance.get_selected(true)[0];
     $('#property-current').remove();
+    $('#property-detail-current').remove();
     if(current.type != 'physical')
         return;
     var property = $('#property-physical').clone();
     property.attr("id","property-current");
     property.removeClass('hidden');
     $('#property-container').append(property);
-    $('#property-detail-current').remove();
 }
 
 function OpenProject() {
