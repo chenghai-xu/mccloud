@@ -46,7 +46,7 @@ class Solid(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     project = models.ForeignKey(Project, editable=False)
     name = models.CharField(max_length=32,default="solid")
-    ntype = models.CharField(choices=SOLID_TYPE_CHOICES,max_length=64,default=SOLID_TYPE_BOX)
+    type = models.CharField(choices=SOLID_TYPE_CHOICES,max_length=64,default=SOLID_TYPE_BOX)
     parameter = JSONField(default={"default":True})
     def __str__(self):
         return self.name
@@ -62,7 +62,7 @@ class Material(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     project = models.ForeignKey(Project, editable=False)
     name = models.CharField(max_length=32,default="material")
-    ntype = models.CharField(choices=MAT_TYPE_CHOICES,max_length=64,default=MAT_TYPE_ELE)
+    type = models.CharField(choices=MAT_TYPE_CHOICES,max_length=64,default=MAT_TYPE_ELE)
     d = models.FloatField(default=1.00)
     component = ArrayField(models.IntegerField(),default=[0])
     weight    = ArrayField(models.IntegerField(),default=[0])

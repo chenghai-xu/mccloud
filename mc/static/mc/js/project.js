@@ -7,7 +7,14 @@ var current_project=null;
 var current_node=null;
 
 function NewNode(t,type){
-    var node={text: t,children: new Array(),ntype: type};
+    var node={
+        text: t,
+        children: new Array(),
+        type: type,
+        data:
+        {
+        },
+    };
     return node;
 }
 
@@ -38,13 +45,53 @@ function NewGeometryNode(t){
     return node;
 }
 
+function NewSolid(){
+    var node=
+        {
+            type:'box',
+            parameter: 
+            {
+                x:1.0,
+                y:1.0,
+                z:1.0,
+                unit:'cm',
+            },
+        };
+    return node;
+}
+function NewPosition(){
+    var node=
+        {
+            x:1.0,
+            y:1.0,
+            z:1.0,
+            unit:'cm'
+        };
+    return node;
+}
+function NewRotation(){
+    var node=
+        {
+            x:1.0,
+            y:1.0,
+            z:1.0,
+        };
+    return node;
+}
+function NewPlacement(){
+    var node=
+        {
+            type:'simple',
+            position: NewPosition(),
+            rotation: NewRotation(),
+        };
+}
 function NewPhysicalNode(t,world=false){
     var node=NewNode(t,'physical');
-    node.children.push(NewSolidNode('solid'));
-    node.children.push(NewMaterialNode('material'));
+    node.data.solid=NewSolid();
+    node.data.material='Water'
     if(world==false){
-        node.children.push(NewPostionNode('position'));
-        node.children.push(NewRotationNode('rotation'));
+        node.data.placement=NewPlacement();
     }
     return node;
 }
@@ -57,30 +104,57 @@ function InitProject(){
 } 
 
 function NewProject() {
-    project1=NewNode('MyProject');
+    project1=NewNode('MyProject','project');
     project1.children.push(NewGeometryNode('Geometry')); 
     project1.children.push(NewNode('Physics','physics')); 
     project1.children.push(NewNode('Primary','primary')); 
+    project1.children.push(NewNode('Materials','materials')); 
     project_tree.push(project1);
     current_project=project1;
-    $('#project-view').jstree({
-        core : {
-            data: project_tree,
-            check_callback: true
+    $('#project-view').jstree(
+        {
+            core : {
+                data: project_tree,
+                multiple: false,
+                check_callback: true
+            },
+            types: {
+                project: {
+                    "icon": ""
+                },
+                geometry: {
+                    "icon": ""
+                },
+                physical: {
+                    "icon": ""
+                },
+                materials: {
+                    "icon": ""
+                },
+                primary: {
+                    "icon": ""
+                },
+                physics: {
+                    "icon": ""
+                },
+            },
+            plugins: ["types"],
+            //plugins: ["contextmenu"]
         }
-    });
+    );
     $('#project-view').on("select_node.jstree", NodeSelected);
 }
 
 function NodeSelected(event, data) {
     var current=data.instance.get_selected(true)[0];
     $('#property-current').remove();
-    if(current.original.ntype != 'physical')
+    if(current.type != 'physical')
         return;
-    var property= $('#property-physical').clone();
+    var property = $('#property-physical').clone();
     property.attr("id","property-current");
     property.removeClass('hidden');
     $('#property-container').append(property);
+    $('#property-detail-current').remove();
 }
 
 function OpenProject() {

@@ -1,9 +1,62 @@
 {% load static %}
 <script type="text/javascript" src="{% static "mc/js/property.js" %}"></script>
 div
-  p Property
-  div(id='property-container')
-    div(id='property-current', class='btn-group-vertical hidden')
-    div(id='property-physical', class='btn-group-vertical hidden')
-      button(id='physical-add',type='button', class='btn btn-default',onclick='PhysicalAdd()') Add
-      button(id='physical-delete',type='button', class='btn btn-default',onclick='PhysicalDelete()') Delete
+  div(id='property-container',class='row')
+    div(class='row')
+      label Property
+    div(id='property-current', class='btn-group hidden')
+    div(id='property-physical', class='hidden')
+      form(class='form',role='form')
+        div(class='row')
+          label Node
+        div(class='form-group')
+          button(id='physical-add',type='button', class='btn btn-default',onclick='PhysicalAdd()') Add
+          button(id='physical-delete',type='button', class='btn btn-default',onclick='PhysicalDelete()') Delete
+        div(class='form-group')
+          div(class='input-group input-group-sm')
+            span(class='input-group-addon') Solid:
+            select(class='form-control',onfocus='InitSolidDetail()')
+                option box
+                option cylinder
+        div(class='form-group')
+          div(class='input-group input-group-sm')
+            span(class='input-group-addon') Material:
+            select(class='form-control')
+                option H2
+                option He
+                option Li
+                option H2O
+                option Water
+        div(class='form-group')
+          div(class='input-group input-group-sm')
+            span(class='input-group-addon') Placement:
+            select(class='form-control')
+                option Simple
+                option Replicated
+                option Parameterised
+  div(id='property-detail-container',class='row')
+    div(class='row')
+      label Detail
+    div(id='property-detail-current', class='hidden')
+    div(id='property-solid-box', class='hidden')
+      div(class='row')
+        label Box
+      form(class='form',role='form')
+        div(class='form-group')
+          div(class='input-group input-group-sm')
+            span(class='input-group-addon') x:
+            input(class='form-control')
+          div(class='input-group input-group-sm')
+            span(class='input-group-addon') y:
+            input(class='form-control')
+          div(class='input-group input-group-sm')
+            span(class='input-group-addon') z:
+            input(class='form-control')
+          div(class='input-group input-group-sm')
+            span(class='input-group-addon') unit:
+            select(class='form-control')
+                option m
+                option cm
+                option mm
+                option km
+    div(id='property-pl-simple', class='hidden')

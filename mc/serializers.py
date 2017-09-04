@@ -21,4 +21,4 @@ class PhysicalSerializer(serializers.ModelSerializer):
 class SolidSerializer(serializers.ModelSerializer):
     class Meta:
         model = Solid
-        fields = ('id', 'project', 'name', 'ntype', 'parameter')
+        fields = ('id', 'project', 'name', 'type', 'parameter')
