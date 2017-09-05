@@ -36,10 +36,10 @@ class Physical(models.Model):
     rotation = ArrayField(models.FloatField(),size=3,default=[0,0,0])
 
 SOLID_TYPE_BOX = 'box'
-SOLID_TYPE_CYLINDER = 'cylinder'
+SOLID_TYPE_CYLINDER = 'tube'
 SOLID_TYPE_CHOICES = (
     (SOLID_TYPE_BOX, 'box'),
-    (SOLID_TYPE_CYLINDER, 'cylinder'),
+    (SOLID_TYPE_CYLINDER, 'tube'),
 )
 
 class Solid(models.Model):

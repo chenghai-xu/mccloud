@@ -18,26 +18,6 @@ function NewNode(t,type){
     return node;
 }
 
-function NewPostionNode(t){
-    var node=NewNode(t,'position');
-    return node;
-}
-
-function NewRotationNode(t){
-    var node=NewNode(t,'rotation');
-    return node;
-}
-
-function NewMaterialNode(t){
-    var node=NewNode(t,'material');
-    return node;
-}
-
-function NewSolidNode(t){
-    var node=NewNode(t,'solid');
-    return node;
-}
-
 function NewGeometryNode(t){
     var node=NewNode(t,'geometry');
     node.children.push(NewPhysicalNode('world',true));
@@ -45,8 +25,10 @@ function NewGeometryNode(t){
     return node;
 }
 
-function NewSolid(){
-    var node=
+function NewSolid(type='box'){
+    var node=null;
+    if(type=='box')
+        node=
         {
             type:'box',
             parameter: 
@@ -54,9 +36,37 @@ function NewSolid(){
                 x:1.0,
                 y:1.0,
                 z:1.0,
-                unit:'cm',
+                lunit:'cm',
             },
         };
+    else if(type=='tube')
+        node=
+        {
+            type:'tube',
+            parameter: 
+            {
+                rmin:0.0,
+                rmax:1.0,
+                z:1.0,
+                startphi:0,
+                deltaphi:360,
+                lunit:'cm',
+                aunit:'deg',
+            },
+        };
+    else 
+        node=
+        {
+            type:'box',
+            parameter: 
+            {
+                x:1.0,
+                y:1.0,
+                z:1.0,
+                lunit:'cm',
+            },
+        };
+
     return node;
 }
 function NewPosition(){
@@ -65,7 +75,7 @@ function NewPosition(){
             x:1.0,
             y:1.0,
             z:1.0,
-            unit:'cm'
+            lunit:'cm',
         };
     return node;
 }
@@ -75,6 +85,7 @@ function NewRotation(){
             x:1.0,
             y:1.0,
             z:1.0,
+            aunit: 'deg',
         };
     return node;
 }
@@ -85,6 +96,7 @@ function NewPlacement(){
             position: NewPosition(),
             rotation: NewRotation(),
         };
+    return node;
 }
 function NewPhysicalNode(t,world=false){
     var node=NewNode(t,'physical');
@@ -154,6 +166,7 @@ function NodeSelected(event, data) {
     var property = $('#property-physical').clone();
     property.attr("id","property-current");
     property.removeClass('hidden');
+    $(property).find('select[name=solid]').val(current.data.solid.type);
     $('#property-container').append(property);
 }
 
