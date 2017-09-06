@@ -1,0 +1,28 @@
+div(id='property-physical', class='hidden')
+  form(class='form',role='form')
+    div(class='row')
+      label Node
+    div(class='form-group')
+      button(id='physical-add',type='button', class='btn btn-default',onclick='PhysicalAdd()') Add
+      button(id='physical-delete',type='button', class='btn btn-default',onclick='PhysicalDelete()') Delete
+    div(class='form-group')
+      div(class='input-group input-group-sm')
+        span(class='input-group-addon') Solid:
+        select(class='form-control',name='solid',onclick='InitSolidForm()',onchange='ChangeSolidType(this)')
+            option box
+            option tube
+    div(class='form-group')
+      div(class='input-group input-group-sm')
+        span(class='input-group-addon') Material:
+        select(class='form-control',name='material')
+            option H2
+            option He
+            option Li
+            option H2O
+            option Water
+    div(class='form-group')
+      div(class='input-group input-group-sm')
+        span(class='input-group-addon') Placement:
+        select(class='form-control',name='placement',onclick='InitPlacementForm()',onchange='ChangePlacementType(this)')
+            option Simple
+
