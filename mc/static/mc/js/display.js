@@ -111,14 +111,16 @@ function DrawModel(node)
         {
             var pos=child.data.placement.position;
             var rot=child.data.placement.rotation;
-            geo.translate(pos.x,pos.y,pos.z); 
-            geo.rotateX(rot.x);
-            geo.rotateY(rot.y);
-            geo.rotateZ(rot.z);
             color = color + 20;
             //var mat = new THREE.MeshBasicMaterial({color: color});
             var mat = new THREE.MeshPhongMaterial({color: color,shininess:80});
             var obj = new THREE.Mesh(geo, mat);
+            obj.position.x=pos.x;
+            obj.position.y=pos.y;
+            obj.position.z=pos.z;
+            obj.rotation.x=rot.x;
+            obj.rotation.y=rot.y;
+            obj.rotation.z=rot.z;
             root.add(obj);
         }
     }
