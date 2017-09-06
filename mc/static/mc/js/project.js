@@ -72,9 +72,9 @@ function NewSolid(type='box'){
 function NewPosition(){
     var node=
         {
-            x:1.0,
-            y:1.0,
-            z:1.0,
+            x:0.0,
+            y:0.0,
+            z:0.0,
             lunit:'cm',
         };
     return node;
@@ -82,9 +82,9 @@ function NewPosition(){
 function NewRotation(){
     var node=
         {
-            x:1.0,
-            y:1.0,
-            z:1.0,
+            x:0.0,
+            y:0.0,
+            z:0.0,
             aunit: 'deg',
         };
     return node;
@@ -161,6 +161,20 @@ function NodeSelected(event, data) {
     var current=data.instance.get_selected(true)[0];
     $('#property-current').remove();
     $('#property-detail-current').remove();
+    SelectedPhysical(current);
+    SelectedMaterials(current);
+}
+function SelectedMaterials(current)
+{
+    if(current.type != 'materials')
+        return;
+    var property = $('#property-materials').clone();
+    property.attr("id","property-current");
+    property.removeClass('hidden');
+    $('#property-container').append(property);
+}
+function SelectedPhysical(current)
+{
     if(current.type != 'physical')
         return;
     var property = $('#property-physical').clone();
@@ -168,8 +182,8 @@ function NodeSelected(event, data) {
     property.removeClass('hidden');
     $(property).find('select[name=solid]').val(current.data.solid.type);
     $('#property-container').append(property);
+    DrawModel(current);
 }
-
 function OpenProject() {
 }
 
