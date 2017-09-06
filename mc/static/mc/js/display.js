@@ -19,11 +19,11 @@ function InitDisplay3D() {
 function InitRender() {
    render=new THREE.WebGLRenderer({antialias:true});
    render.setSize(width, height );
-   render.setClearColor(0x000000, 1.0);
+   render.setClearColor(0xffffff, 1.0);
    document.getElementById('3d_canvas').appendChild(render.domElement);
 }
 function InitControls() {
-    controls = new THREE.TrackballControls( camera );
+    controls = new THREE.TrackballControls( camera, render.domElement );
     controls.rotateSpeed = 4.0;
     controls.zoomSpeed = 4.0;
     controls.panSpeed = 2;
@@ -48,13 +48,15 @@ function InitCamera() {
 
 function InitScene() {   
     scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0x000000 );
+    scene.background = new THREE.Color( 0xffffff );
 }
 
 function InitLight() { 
-    light = new THREE.DirectionalLight(0xff0000, 1.0, 0);
-    light.position.set(0, 0, -200);
+    light = new THREE.DirectionalLight(0xffffff, 1.0, 0);
+    light.position.set(-200, -200, -200);
     scene.add(light);
+    var amb = new THREE.AmbientLight( 0x404040 ); // soft white light
+    scene.add(amb);
 }
 
 function Animate() {
@@ -63,20 +65,66 @@ function Animate() {
 	render.render(scene, camera);
 }
 
-function DrawModel(current)
+function CalcGeometry(node)
 {
-    var solid=current.data.solid;
+    var solid=node.data.solid;
+    var geometry = null;
     if(solid.type=='box')
     {
-        var geometry = new THREE.BoxGeometry(solid.parameter.x*10, solid.parameter.y*10, solid.parameter.z*10 );
+        geometry = new THREE.BoxGeometry(solid.parameter.x*10, solid.parameter.y*10, solid.parameter.z*10);
     }
-    else
+    else if(solid.type=='tube')
+    {
+        geometry = new 
+         THREE.CylinderGeometry(solid.parameter.rmax*10,solid.parameter.rmax*10,solid.parameter.z*10);
+    }
+    return geometry;
+}
+
+function DrawModel(node)
+{
+    var solid=node.data.solid;
+    var geometry = CalcGeometry(node);
+    if(geometry==null)
         return;
-    var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-    var obj = new THREE.Mesh( geometry, material );
+    var color=0x2194ce;
+    //var material = new THREE.MeshBasicMaterial({color: color});
+    //var material = new THREE.MeshBasicMaterial( { wireframe: true } );
+    var material = null;
+    if(node.children.length>0)
+        material = new THREE.MeshPhongMaterial(
+            {color: color,shininess:80, transparent: true, opacity: 0.1});
+    else
+        material = new THREE.MeshPhongMaterial(
+            {color: color,shininess:80});
+
+
+    var root = new THREE.Mesh(geometry, material);
+    var instance = $('#project-view').jstree(true);
+    for(var i=0;i <node.children.length;i++)
+    {
+        var child = instance.get_node(instance.get_node(node.children[i]));
+        if(child == null || child.type != 'physical')
+            continue;
+        var geo=CalcGeometry(child);
+        if(geo != null )
+        {
+            var pos=child.data.placement.position;
+            var rot=child.data.placement.rotation;
+            geo.translate(pos.x,pos.y,pos.z); 
+            geo.rotateX(rot.x);
+            geo.rotateY(rot.y);
+            geo.rotateZ(rot.z);
+            color = color + 20;
+            //var mat = new THREE.MeshBasicMaterial({color: color});
+            var mat = new THREE.MeshPhongMaterial({color: color,shininess:80});
+            var obj = new THREE.Mesh(geo, mat);
+            root.add(obj);
+        }
+    }
     InitScene();
     InitLight();
-    scene.add(obj);
+    scene.add(root);
     render.clear(); 
     Animate();
 }
