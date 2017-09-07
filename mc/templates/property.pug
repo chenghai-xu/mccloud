@@ -1,14 +1,12 @@
 {% load static %}
 <script type="text/javascript" src="{% static "mc/js/property.js" %}"></script>
 div
+  div(class='row')
+    label Property
   div(id='property-container',class='row')
-    div(class='row')
-      label Property
     div(id='property-current', class='btn-group hidden')
     include property_physical
     include property_materials
   div(id='property-detail-container',class='row')
-    div(class='row')
-      label Detail
     div(id='property-detail-current', class='hidden')
     include property_detail_physical

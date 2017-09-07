@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 var scene, camera, render;
 var geometry, material, mesh;
-var width=800;
+var width=600;
 var height=480;
 var light;
 var controls;
@@ -37,7 +37,6 @@ function InitControls() {
     controls.staticMoving = true;
     controls.dynamicDampingFactor = 1.0;
     controls.keys = [ 65, 83, 68 ];
-    //controls.addEventListener( 'change', render );
     render.domElement.addEventListener( 'mousemove', onMouseMove );
 }
 
