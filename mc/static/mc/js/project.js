@@ -1,5 +1,5 @@
 $(document).ready(function () {
-   InitProject(); 
+    InitProject(); 
 });
 
 var project_tree=new Array;

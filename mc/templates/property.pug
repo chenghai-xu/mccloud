@@ -1,8 +1,9 @@
 {% load static %}
 <script type="text/javascript" src="{% static "mc/js/property.js" %}"></script>
-div
-  div(class='row')
-    label Property
+//<style> #property-window{width: 200px;}</style>
+//<script type="text/javascript" src="/static/js/jquery.slimscroll.min.js"></script>
+//$('#property-window').slimScroll({ height: '400px'});
+div(id='property-window')
   div(id='property-container',class='row')
     div(id='property-current', class='btn-group hidden')
     include property_physical
@@ -10,3 +11,6 @@ div
   div(id='property-detail-container',class='row')
     div(id='property-detail-current', class='hidden')
     include property_detail_physical
+<script>
+$('#property-window').resizable();
+</script>
