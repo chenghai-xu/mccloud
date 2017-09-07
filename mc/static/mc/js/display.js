@@ -8,6 +8,7 @@ var width=800;
 var height=480;
 var light;
 var controls;
+var font;
 
 function InitDisplay3D() {
     if (!Detector.webgl) Detector.addGetWebGLMessage();
@@ -18,6 +19,7 @@ function InitDisplay3D() {
     InitScene();
     InitLight();
     Animate();
+    LoadFont();
 }
 function InitRender() {
    render=new THREE.WebGLRenderer({antialias:true});
@@ -144,6 +146,7 @@ function DrawModel(node)
     InitScene();
     InitLight();
     scene.add(root);
+    DrawAxis();
     render.clear(); 
     Animate();
 }
@@ -177,3 +180,49 @@ function PickObject()
     }
 }
 
+function DrawAxis()
+{
+    var geo_x = new THREE.Geometry();
+    geo_x.vertices.push( new THREE.Vector3( -100, 0, 0 ));
+    geo_x.vertices.push( new THREE.Vector3( 100, 0, 0 ) );
+    var mat_x =  new THREE.LineBasicMaterial( { color: 0xff0000} );
+    var axis_x = new THREE.Line( geo_x, mat_x);
+    var group_x = new THREE.Group();
+
+    var labe_x = new THREE.TextGeometry('100 X',{font:font});
+    var mesh_x = new THREE.Mesh(labe_x,mat_x);
+    mesh_x.position.x = 110;
+
+    var labe_x1 = new THREE.TextGeometry('-100 X',{font:font});
+    var mesh_x1 = new THREE.Mesh(labe_x1,mat_x);
+    mesh_x1.position.x = -110;
+    group_x.add(axis_x);
+    group_x.add(mesh_x);
+    //group_x.add(mesh_x1);
+
+    var geo_y = new THREE.Geometry();
+    geo_y.vertices.push( new THREE.Vector3( 0, -100, 0 ));
+    geo_y.vertices.push( new THREE.Vector3( 0, 100, 0 ) );
+    var mat_y = new THREE.LineBasicMaterial( { color: 0x00ff00} );
+    //mat_y.emissive.setHex(0x00ff00);
+    var axis_y = new THREE.Line( geo_y, mat_y);
+
+    var geo_z = new THREE.Geometry();
+    geo_z.vertices.push( new THREE.Vector3( 0, 0, -100));
+    geo_z.vertices.push( new THREE.Vector3( 0, 0, 100) );
+    var mat_z = new THREE.LineBasicMaterial( { color: 0x0000ff} );
+    //mat_z.emissive.setHex(0x0000ff);
+    var axis_z = new THREE.Line( geo_z, mat_z);
+    scene.add(group_x);
+    scene.add(axis_y);
+    scene.add(axis_z);
+
+}
+
+function LoadFont() 
+{
+    var loader = new THREE.FontLoader();
+    loader.load('/static/three.js/helvetiker_regular.typeface.json', function(f) {
+        font=f;
+    });
+}
