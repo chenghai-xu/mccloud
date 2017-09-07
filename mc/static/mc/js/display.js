@@ -15,11 +15,14 @@ function InitDisplay3D() {
     InitRender();
     InitCamera();
     InitControls();
+    InitScene();
+    InitLight();
+    Animate();
 }
 function InitRender() {
    render=new THREE.WebGLRenderer({antialias:true});
    render.setSize(width, height );
-   render.setClearColor(0xffffff, 1.0);
+   render.setClearColor(0xf0f0f0, 1.0);
    document.getElementById('3d_canvas').appendChild(render.domElement);
 }
 function InitControls() {
@@ -33,13 +36,14 @@ function InitControls() {
     controls.dynamicDampingFactor = 1.0;
     controls.keys = [ 65, 83, 68 ];
     //controls.addEventListener( 'change', render );
+    render.domElement.addEventListener( 'mousemove', onMouseMove );
 }
 
 function InitCamera() { 
-    camera = new THREE.PerspectiveCamera( 45, width / height , 1 , 5000 );
-    camera.position.x = 0;
-    camera.position.y = 100;
-    camera.position.z = 100;
+    camera = new THREE.PerspectiveCamera( 70, width / height , 1 , 5000 );
+    camera.position.x = -100;
+    camera.position.y = -100;
+    camera.position.z = -100;
     camera.up.x = 0;
     camera.up.y = 1;
     camera.up.z = 0;
@@ -48,19 +52,20 @@ function InitCamera() {
 
 function InitScene() {   
     scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0xffffff );
+    scene.background = new THREE.Color( 0xf0f0f0 );
 }
 
 function InitLight() { 
-    light = new THREE.DirectionalLight(0xffffff, 1.0, 0);
-    light.position.set(-200, -200, -200);
+    light = new THREE.DirectionalLight(0xffffff, 1.0);
+    light.position.set(200, 200, 200).normalize();
     scene.add(light);
-    var amb = new THREE.AmbientLight( 0x404040 ); // soft white light
+    var amb = new THREE.AmbientLight( 0x101010 ); // soft white light
     scene.add(amb);
 }
 
 function Animate() {
     requestAnimationFrame(Animate);
+    PickObject();
     controls.update();
 	render.render(scene, camera);
 }
@@ -81,6 +86,8 @@ function CalcGeometry(node)
     return geometry;
 }
 
+
+var meshs=new Array();
 function DrawModel(node)
 {
     var solid=node.data.solid;
@@ -93,13 +100,17 @@ function DrawModel(node)
     var material = null;
     if(node.children.length>0)
         material = new THREE.MeshPhongMaterial(
-            {color: color,shininess:80, transparent: true, opacity: 0.1});
+            {color: 0x000000,shininess:80, transparent: true, opacity: 0.1});
+        //material = new THREE.MeshBasicMaterial( {color:0x000000, wireframe: true , transparent: true, opacity: 0.2} );
     else
         material = new THREE.MeshPhongMaterial(
             {color: color,shininess:80});
 
-
+    material.emissive.setHex(color);
+    meshs=new Array();
     var root = new THREE.Mesh(geometry, material);
+    root.ID = node.id;
+    //meshs.push(root);
     var instance = $('#project-view').jstree(true);
     for(var i=0;i <node.children.length;i++)
     {
@@ -111,22 +122,58 @@ function DrawModel(node)
         {
             var pos=child.data.placement.position;
             var rot=child.data.placement.rotation;
-            color = color + 20;
             //var mat = new THREE.MeshBasicMaterial({color: color});
+            color=color-100;
             var mat = new THREE.MeshPhongMaterial({color: color,shininess:80});
+            mat.emissive.setHex(color);
             var obj = new THREE.Mesh(geo, mat);
-            obj.position.x=pos.x;
-            obj.position.y=pos.y;
-            obj.position.z=pos.z;
+            obj.position.x=pos.x*10;
+            obj.position.y=pos.y*10;
+            obj.position.z=pos.z*10;
             obj.rotation.x=rot.x;
             obj.rotation.y=rot.y;
             obj.rotation.z=rot.z;
+            obj.ID = node.children[i];
+            meshs.push(obj);
             root.add(obj);
         }
     }
+    //root.scale.x=1.0;
+    //root.scale.y=1.0;
+    //root.scale.z=1.0;
     InitScene();
     InitLight();
     scene.add(root);
     render.clear(); 
     Animate();
 }
+
+var mouse = new THREE.Vector2();
+var INTERSECTED;
+var raycaster = new THREE.Raycaster();
+function onMouseMove( event ) {
+    var canvas = render.domElement;
+    var rect = canvas.getBoundingClientRect();
+    mouse.x=(event.pageX - rect.left)/width*2 - 1;
+    mouse.y=-(event.pageY - rect.top)/height*2 + 1;
+    $('#mouse_position').html('Mouse: (' + mouse.x + ', ' + mouse.y + ')');
+}
+function PickObject()
+{
+    if(mouse.x<0 || mouse.y<0)
+        return;
+    raycaster.setFromCamera( mouse, camera );
+    var intersects = raycaster.intersectObjects(meshs);
+    if ( intersects.length > 0 ) {
+        if ( INTERSECTED != intersects[ 0 ].object ) {
+            if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+            INTERSECTED = intersects[ 0 ].object;
+            INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+            INTERSECTED.material.emissive.setHex( 0xff0000 );
+        }
+    } else {
+        if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+        INTERSECTED = null;
+    }
+}
+
