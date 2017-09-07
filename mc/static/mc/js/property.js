@@ -185,8 +185,8 @@ function InitPlacementSimpleForm(wigdet,placement)
     $(wigdet).find('input[name=py]').val(placement.position.y);
     $(wigdet).find('input[name=pz]').val(placement.position.z);
     $(wigdet).find('select[name=lunit]').val(placement.position.lunit);
-    $(wigdet).find('input[name=rx]').val(placement.rotation.rx);
-    $(wigdet).find('input[name=ry]').val(placement.rotation.ry);
-    $(wigdet).find('input[name=rz]').val(placement.rotation.rz);
+    $(wigdet).find('input[name=rx]').val(placement.rotation.x);
+    $(wigdet).find('input[name=ry]').val(placement.rotation.y);
+    $(wigdet).find('input[name=rz]').val(placement.rotation.z);
     $(wigdet).find('select[name=aunit]').val(placement.rotation.aunit);
 }
