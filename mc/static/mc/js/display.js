@@ -163,8 +163,6 @@ function onMouseMove( event ) {
 }
 function PickObject()
 {
-    if(mouse.x<0 || mouse.y<0)
-        return;
     raycaster.setFromCamera( mouse, camera );
     var intersects = raycaster.intersectObjects(meshs);
     if ( intersects.length > 0 ) {
