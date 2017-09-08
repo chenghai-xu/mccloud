@@ -84,10 +84,15 @@ function CalcGeometry(node)
     }
     else if(solid.type=='tube')
     {
-        //geometry = new 
-         //THREE.CylinderGeometry(solid.parameter.rmax*10,solid.parameter.rmax*10,solid.parameter.z*10);
         geometry =  
          TubeGeometry(solid.parameter.rmin*10,solid.parameter.rmax*10,solid.parameter.z*10,solid.parameter.startphi,solid.parameter.deltaphi);
+    }
+    else if(solid.type=='sphere')
+    {
+        geometry =  
+         SphereGeometry(solid.parameter.rmin,solid.parameter.rmax,
+             solid.parameter.starttheta,solid.parameter.deltatheta,
+             solid.parameter.startphi,solid.parameter.deltaphi)
     }
     return geometry;
 }
@@ -97,8 +102,7 @@ var meshs=new Array();
 function DrawModel(node)
 {
     var solid=node.data.solid;
-    //var geometry = CalcGeometry(node);
-    var geometry = SphereGeometry(10,20,45,90,0,90);
+    var geometry = CalcGeometry(node);
     if(geometry==null)
         return;
     var color=0x2194ce;

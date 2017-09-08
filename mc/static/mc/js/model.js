@@ -1,7 +1,7 @@
 $(document).ready(function () {
 });
 
-function TubeGeometry(rmin,rmax,z,start_phi=0,delta_phi=Math.PI*2)
+function TubeGeometry(rmin,rmax,z,start_phi=0,delta_phi=360)
 {
     delta_phi=Math.min(delta_phi,360);
     delta_phi=Math.PI*delta_phi/180;
@@ -38,53 +38,13 @@ function TubeGeometry(rmin,rmax,z,start_phi=0,delta_phi=Math.PI*2)
         }
     }
 
-    for(var i=0; i<segments; i++)
-    {
-        //lower face
-        geometry.faces.push( new THREE.Face3( 2*i, 2*i+2, 2*i+1) );
-        geometry.faces.push( new THREE.Face3( 2*i+1, 2*i+2, 2*i+3) );
-
-        //upper face
-        geometry.faces.push( new THREE.Face3( 
-            (segments+1)*2 + 2*i, (segments+1)*2 + 2*i+1, (segments+1)*2 + 2*i+2));
-        geometry.faces.push( new THREE.Face3( 
-            (segments+1)*2 + 2*i+1, (segments+1)*2 + 2*i+3, (segments+1)*2 + 2*i+2 ) );
-
-        //inner face
-        geometry.faces.push( new THREE.Face3( 
-            2*i+2, 2*i, (segments+1)*2 + 2*i) );
-        geometry.faces.push( new THREE.Face3( 
-            2*i+2, (segments+1)*2 + 2*i, (segments+1)*2 + 2*i+2) );
-
-        //
-        //outer face
-        geometry.faces.push( new THREE.Face3( 
-            2*i+1, 2*i+3, (segments+1)*2 + 2*i+1) );
-        geometry.faces.push( new THREE.Face3( 
-            2*i+3, (segments+1)*2 + 2*i+3, (segments+1)*2 + 2*i+1) );
-    }
-
-    if(delta_phi != Math.PI*2)
-    {
-        geometry.faces.push( new THREE.Face3( 
-            0, 1, (segments+1)*2) );
-        geometry.faces.push( new THREE.Face3( 
-            1, (segments+1)*2+1, (segments+1)*2));
-
-        geometry.faces.push( new THREE.Face3( 
-            2*segments+1, 2*segments, (segments+1)*2 + 2*segments) );
-        geometry.faces.push( new THREE.Face3( 
-            2*segments+1, (segments+1)*2 + 2*segments, (segments+1)*2 + 2*segments +1) );
-    }
-
-    //geometry.computeCentroids();
-    geometry.computeFaceNormals();
-    geometry.computeVertexNormals();
-    geometry.computeBoundingSphere();
-    return geometry;
+    var is_close=false;
+    if(delta_phi == Math.PI*2)
+        is_close=true;
+    return CalcFaces(geometry, 1, segments, is_close);
 }
 
-function SphereGeometry(rmin,rmax,start_theta=0,delta_theta=Math.PI,start_phi=0,delta_phi=Math.PI*2)
+function SphereGeometry(rmin,rmax,start_theta=0,delta_theta=180,start_phi=0,delta_phi=360)
 {
     delta_phi=Math.min(delta_phi,360);
     delta_phi=Math.PI*delta_phi/180;
@@ -106,9 +66,6 @@ function SphereGeometry(rmin,rmax,start_theta=0,delta_theta=Math.PI,start_phi=0,
     segments_phi=Math.max(2,segments_phi);
     segments_theta=Math.max(2,segments_theta);
 
-    segments_theta=4;
-    segments_phi=4;
-
     step_theta=delta_theta/segments_theta;
     step_phi=delta_phi/segments_phi;
 
@@ -127,10 +84,17 @@ function SphereGeometry(rmin,rmax,start_theta=0,delta_theta=Math.PI,start_phi=0,
                 rmax*Math.sin(start_theta+k*step_theta)*Math.cos(start_phi+i*step_phi),
                 rmax*Math.sin(start_theta+k*step_theta)*Math.sin(start_phi+i*step_phi),
                 rmax*Math.cos(start_theta+k*step_theta)));
-
         }
     }
 
+    var is_close=false;
+    if(delta_phi == Math.PI*2)
+        is_close=true;
+    return CalcFaces(geometry, segments_theta, segments_phi, is_close);
+}
+
+function CalcFaces(geometry,segments_theta,segments_phi,is_close)
+{
     for(var i=0; i<segments_phi; i++)
     {
         //lower face
@@ -164,7 +128,7 @@ function SphereGeometry(rmin,rmax,start_theta=0,delta_theta=Math.PI,start_phi=0,
         }
 
         //egde
-        if(delta_phi != Math.PI*2)
+        if(!is_close)
         {
             geometry.faces.push( new THREE.Face3( 
                 theta_layer+0, theta_layer+1, theta_layer+(segments_phi+1)*2) );
