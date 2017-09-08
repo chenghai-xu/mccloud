@@ -84,8 +84,10 @@ function CalcGeometry(node)
     }
     else if(solid.type=='tube')
     {
-        geometry = new 
-         THREE.CylinderGeometry(solid.parameter.rmax*10,solid.parameter.rmax*10,solid.parameter.z*10);
+        //geometry = new 
+         //THREE.CylinderGeometry(solid.parameter.rmax*10,solid.parameter.rmax*10,solid.parameter.z*10);
+        geometry =  
+         TubeGeometry(solid.parameter.rmin*10,solid.parameter.rmax*10,solid.parameter.z*10,solid.parameter.startphi,solid.parameter.deltaphi);
     }
     return geometry;
 }
@@ -99,18 +101,20 @@ function DrawModel(node)
     if(geometry==null)
         return;
     var color=0x2194ce;
-    //var material = new THREE.MeshBasicMaterial({color: color});
-    //var material = new THREE.MeshBasicMaterial( { wireframe: true } );
     var material = null;
     if(node.children.length>0)
-        material = new THREE.MeshPhongMaterial(
-            {color: 0x000000,shininess:80, transparent: true, opacity: 0.1});
-        //material = new THREE.MeshBasicMaterial( {color:0x000000, wireframe: true , transparent: true, opacity: 0.2} );
+    {
+        //material = new THREE.MeshPhongMaterial(
+            //{color: 0x000000,shininess:80, transparent: true, opacity: 0.1});
+        material = new THREE.MeshBasicMaterial( {color:0x000000, wireframe: true} );
+    }
     else
+    {
         material = new THREE.MeshPhongMaterial(
             {color: color,shininess:80});
+        material.emissive.setHex(color);
+    }
 
-    material.emissive.setHex(color);
     meshs=new Array();
     var root = new THREE.Mesh(geometry, material);
     root.ID = node.id;
