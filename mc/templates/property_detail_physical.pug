@@ -36,10 +36,10 @@ div(id='property-solid-tube', class='hidden')
         span(class='input-group-addon') z:
         input(class='form-control',name='z')
       div(class='input-group input-group-sm')
-        span(class='input-group-addon') startphi:
+        span(class='input-group-addon') start phi:
         input(class='form-control',name='startphi')
       div(class='input-group input-group-sm')
-        span(class='input-group-addon') deltaphi:
+        span(class='input-group-addon') delta phi:
         input(class='form-control',name='deltaphi')
       div(class='input-group input-group-sm')
         span(class='input-group-addon') lunit:
@@ -54,6 +54,44 @@ div(id='property-solid-tube', class='hidden')
             option deg
             option rad
     button(type='submit',class="btn btn-default") Save
+
+div(id='property-solid-sphere', class='hidden')
+  div(class='row')
+    label Sphere
+  form(class='form',role='form',action='javascript:void(0);',onsubmit='OnSphereSubmit(this)')
+    div(class='form-group')
+      div(class='input-group input-group-sm')
+        span(class='input-group-addon') rmin:
+        input(class='form-control',name='rmin')
+      div(class='input-group input-group-sm')
+        span(class='input-group-addon') rmax:
+        input(class='form-control',name='rmax')
+      div(class='input-group input-group-sm')
+        span(class='input-group-addon') start theta:
+        input(class='form-control',name='starttheta')
+      div(class='input-group input-group-sm')
+        span(class='input-group-addon') delta theta:
+        input(class='form-control',name='deltatheta')
+      div(class='input-group input-group-sm')
+        span(class='input-group-addon') start phi:
+        input(class='form-control',name='startphi')
+      div(class='input-group input-group-sm')
+        span(class='input-group-addon') delta phi:
+        input(class='form-control',name='deltaphi')
+      div(class='input-group input-group-sm')
+        span(class='input-group-addon') lunit:
+        select(class='form-control',name='lunit')
+            option m
+            option cm
+            option mm
+            option km
+      div(class='input-group input-group-sm')
+        span(class='input-group-addon') aunit:
+        select(class='form-control',name='aunit')
+            option deg
+            option rad
+    button(type='submit',class="btn btn-default") Save
+
 
 div(id='property-placement-simple', class='hidden')
   div(class='row')

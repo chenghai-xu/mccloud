@@ -53,7 +53,7 @@ function InitSolidForm(){
     else if(solid.type=='sphere')
     {
         wigdet = $('#property-solid-sphere').clone();
-        InitSphereFormForm(wigdet,solid);
+        InitSphereForm(wigdet,solid);
     }
     else 
         return;
