@@ -119,6 +119,26 @@ function NewPhysicalNode(t,world=false){
     return node;
 }
 
-function UnitConvert(src,dst,unit)
+var unit_map = new Map();
+unit_map.set('mm',0.1);
+unit_map.set('cm',1.0);
+unit_map.set('m',100);
+unit_map.set('km',1000);
+unit_map.set('mm2',0.01);
+unit_map.set('cm2',1.0);
+unit_map.set('m2',10000);
+unit_map.set('km2',1000000);
+unit_map.set('mm3',0.001);
+unit_map.set('cm3',1.0);
+unit_map.set('m3',1000000);
+unit_map.set('km3',1000000000);
+unit_map.set('deg',1.0);
+unit_map.set('rad',Math.PI/180);
+
+function UnitOf(u)
 {
+    var res = unit_map.get(u.toLowerCase());
+    if(res==undefined)
+        res=1.0
+    return res;
 }

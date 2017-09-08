@@ -77,22 +77,35 @@ function Animate() {
 function CalcGeometry(node)
 {
     var solid=node.data.solid;
+    var parameter=solid.parameter;
+    var type=solid.type;
     var geometry = null;
-    if(solid.type=='box')
+    var lunit='mm';
+    var aunit='deg'
+    if(type=='box')
     {
-        geometry = new THREE.BoxGeometry(solid.parameter.x*10, solid.parameter.y*10, solid.parameter.z*10);
+        geometry = new THREE.BoxGeometry(parameter.x*UnitOf(parameter.lunit)/UnitOf(lunit), 
+            parameter.y*UnitOf(parameter.lunit)/UnitOf(lunit), 
+            parameter.z*UnitOf(parameter.lunit)/UnitOf(lunit));
     }
-    else if(solid.type=='tube')
+    else if(type=='tube')
     {
         geometry =  
-         TubeGeometry(solid.parameter.rmin*10,solid.parameter.rmax*10,solid.parameter.z*10,solid.parameter.startphi,solid.parameter.deltaphi);
+         TubeGeometry(parameter.rmin*UnitOf(parameter.lunit)/UnitOf(lunit),
+             parameter.rmax*UnitOf(parameter.lunit)/UnitOf(lunit),
+             parameter.z*UnitOf(parameter.lunit)/UnitOf(lunit),
+             parameter.startphi*UnitOf(parameter.aunit)/UnitOf(aunit),
+             parameter.deltaphi*UnitOf(parameter.aunit)/UnitOf(aunit));
     }
-    else if(solid.type=='sphere')
+    else if(type=='sphere')
     {
         geometry =  
-         SphereGeometry(solid.parameter.rmin,solid.parameter.rmax,
-             solid.parameter.starttheta,solid.parameter.deltatheta,
-             solid.parameter.startphi,solid.parameter.deltaphi)
+         SphereGeometry(parameter.rmin*UnitOf(parameter.lunit)/UnitOf(lunit),
+             parameter.rmax*UnitOf(parameter.lunit)/UnitOf(lunit),
+             parameter.starttheta*UnitOf(parameter.aunit)/UnitOf(aunit),
+             parameter.deltatheta*UnitOf(parameter.aunit)/UnitOf(aunit),
+             parameter.startphi*UnitOf(parameter.aunit)/UnitOf(aunit),
+             parameter.deltaphi*UnitOf(parameter.aunit)/UnitOf(aunit))
     }
     return geometry;
 }
