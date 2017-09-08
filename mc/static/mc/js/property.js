@@ -67,7 +67,7 @@ function InitSolidForm(){
 } 
 
 function OnBoxSubmit(form){
-    var box={type:'box',parameter:{}};
+    var box=NewSolid('box');
     box.parameter.x=$(form).find('input[name=x]').val();
     box.parameter.y=$(form).find('input[name=y]').val();
     box.parameter.z=$(form).find('input[name=z]').val();
