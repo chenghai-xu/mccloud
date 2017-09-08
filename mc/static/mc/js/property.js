@@ -50,6 +50,11 @@ function InitSolidForm(){
         wigdet = $('#property-solid-tube').clone();
         InitTubeForm(wigdet,solid);
     }
+    else if(solid.type=='sphere')
+    {
+        wigdet = $('#property-solid-sphere').clone();
+        InitSphereFormForm(wigdet,solid);
+    }
     else 
         return;
 
@@ -190,3 +195,37 @@ function InitPlacementSimpleForm(wigdet,placement)
     $(wigdet).find('input[name=rz]').val(placement.rotation.z);
     $(wigdet).find('select[name=aunit]').val(placement.rotation.aunit);
 }
+
+function InitSphereForm(wigdet,sphere)
+{
+    $(wigdet).find('input[name=rmin]').val(sphere.parameter.rmin);
+    $(wigdet).find('input[name=rmax]').val(sphere.parameter.rmax);
+    $(wigdet).find('input[name=starttheta]').val(sphere.parameter.starttheta);
+    $(wigdet).find('input[name=deltatheta]').val(sphere.parameter.deltatheta);
+    $(wigdet).find('input[name=startphi]').val(sphere.parameter.startphi);
+    $(wigdet).find('input[name=deltaphi]').val(sphere.parameter.deltaphi);
+    $(wigdet).find('select[name=lunit]').val(sphere.parameter.lunit);
+    $(wigdet).find('select[name=aunit]').val(sphere.parameter.aunit);
+}
+
+function OnSphereSubmit(form){
+    var sphere=NewSolid('sphere');
+    sphere.parameter.rmin=$(form).find('input[name=rmin]').val();
+    sphere.parameter.rmax=$(form).find('input[name=rmax]').val();
+    sphere.parameter.starttheta=$(form).find('input[name=starttheta]').val();
+    sphere.parameter.deltatheta=$(form).find('input[name=deltatheta]').val();
+    sphere.parameter.startphi=$(form).find('input[name=startphi]').val();
+    sphere.parameter.deltaphi=$(form).find('input[name=deltaphi]').val();
+    sphere.parameter.lunit=$(form).find('select[name=lunit]').val();
+    sphere.parameter.aunit=$(form).find('select[name=aunit]').val();
+
+    var instance = $('#project-view').jstree(true);
+    var selects=instance.get_selected(true);
+    if(selects.length < 1)
+        return;
+    var current=selects[0];
+    if(current.type != 'physical')
+        return;
+    current.data.solid=sphere;
+}
+
