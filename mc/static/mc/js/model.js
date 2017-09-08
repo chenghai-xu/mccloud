@@ -86,20 +86,35 @@ function TubeGeometry(rmin,rmax,z,start_phi=0,delta_phi=Math.PI*2)
 
 function SphereGeometry(rmin,rmax,start_theta=0,delta_theta=Math.PI,start_phi=0,delta_phi=Math.PI*2)
 {
-    delta_phi=Math.min(delta_phi,Math.PI*2);
-    delta_theta=Math.min(delta_theta,Math.PI);
+    delta_phi=Math.min(delta_phi,360);
+    delta_phi=Math.PI*delta_phi/180;
 
-    var step_theta=Math.PI/90;
-    var step_phi=Math.PI/90;
+    start_phi=Math.min(start_phi,360);
+    start_phi=Math.PI*start_phi/180;
 
-    var segments_phi=delta_phi/step_phi;
-    var segments_theta=delta_theta/step_theta;
+    delta_theta=Math.min(delta_theta,180);
+    delta_theta=Math.PI*delta_theta/180;
+
+    start_theta=Math.min(start_theta,180);
+    start_theta=Math.PI*start_theta/180;
+
+    var step_theta=Math.PI/10;
+    var step_phi=Math.PI/10;
+
+    var segments_phi=parseInt(delta_phi/step_phi);
+    var segments_theta=parseInt(delta_theta/step_theta);
     segments_phi=Math.max(2,segments_phi);
     segments_theta=Math.max(2,segments_theta);
 
+    segments_theta=4;
+    segments_phi=4;
+
+    step_theta=delta_theta/segments_theta;
+    step_phi=delta_phi/segments_phi;
+
  	var geometry = new THREE.Geometry();
 
-    for(var k=0;k<=segments_theta;k++)
+    for(var k=segments_theta;k>=0;k--)
     {
         for(var i=0; i<= segments_phi; i++)
         {
@@ -124,35 +139,43 @@ function SphereGeometry(rmin,rmax,start_theta=0,delta_theta=Math.PI,start_phi=0,
 
         //upper face
         geometry.faces.push( new THREE.Face3( 
-            (segments_phi+1)*2 + 2*i, (segments_phi+1)*2 + 2*i+1, (segments_phi+1)*2 + 2*i+2));
+            (segments_phi+1)*2*segments_theta + 2*i, (segments_phi+1)*2*segments_theta + 2*i+1, (segments_phi+1)*2*segments_theta + 2*i+2));
         geometry.faces.push( new THREE.Face3( 
-            (segments_phi+1)*2 + 2*i+1, (segments_phi+1)*2 + 2*i+3, (segments_phi+1)*2 + 2*i+2 ) );
-
-        //inner face
-        geometry.faces.push( new THREE.Face3( 
-            2*i+2, 2*i, (segments_phi+1)*2 + 2*i) );
-        geometry.faces.push( new THREE.Face3( 
-            2*i+2, (segments_phi+1)*2 + 2*i, (segments_phi+1)*2 + 2*i+2) );
-
-        //
-        //outer face
-        geometry.faces.push( new THREE.Face3( 
-            2*i+1, 2*i+3, (segments_phi+1)*2 + 2*i+1) );
-        geometry.faces.push( new THREE.Face3( 
-            2*i+3, (segments_phi+1)*2 + 2*i+3, (segments_phi+1)*2 + 2*i+1) );
+            (segments_phi+1)*2*segments_theta + 2*i+1, (segments_phi+1)*2*segments_theta + 2*i+3, (segments_phi+1)*2*segments_theta + 2*i+2 ) );
     }
 
-    if(delta_phi != Math.PI*2)
+    for(var k=0; k<segments_theta; k++)
     {
-        geometry.faces.push( new THREE.Face3( 
-            0, 1, (segments_phi+1)*2) );
-        geometry.faces.push( new THREE.Face3( 
-            1, (segments_phi+1)*2+1, (segments_phi+1)*2));
+        var theta_layer=(segments_phi+1)*2*k;
+        for(var i=0; i<segments_phi; i++)
+        {
+            //inner face
+            geometry.faces.push( new THREE.Face3( 
+                theta_layer+2*i+2, theta_layer+2*i, theta_layer+(segments_phi+1)*2 + 2*i) );
+            geometry.faces.push( new THREE.Face3( 
+                theta_layer+2*i+2, theta_layer+(segments_phi+1)*2 + 2*i, theta_layer+(segments_phi+1)*2 + 2*i+2) );
 
-        geometry.faces.push( new THREE.Face3( 
-            2*segments_phi+1, 2*segments_phi, (segments_phi+1)*2 + 2*segments_phi) );
-        geometry.faces.push( new THREE.Face3( 
-            2*segments_phi+1, (segments_phi+1)*2 + 2*segments_phi, (segments_phi+1)*2 + 2*segments_phi +1) );
+            //
+            //outer face
+            geometry.faces.push( new THREE.Face3( 
+                theta_layer+2*i+1, theta_layer+2*i+3, theta_layer+(segments_phi+1)*2 + 2*i+1) );
+            geometry.faces.push( new THREE.Face3( 
+                theta_layer+2*i+3, theta_layer+(segments_phi+1)*2 + 2*i+3, theta_layer+(segments_phi+1)*2 + 2*i+1) );
+        }
+
+        //egde
+        if(delta_phi != Math.PI*2)
+        {
+            geometry.faces.push( new THREE.Face3( 
+                theta_layer+0, theta_layer+1, theta_layer+(segments_phi+1)*2) );
+            geometry.faces.push( new THREE.Face3( 
+                theta_layer+1, theta_layer+(segments_phi+1)*2+1, theta_layer+(segments_phi+1)*2));
+
+            geometry.faces.push( new THREE.Face3( 
+                theta_layer+2*segments_phi+1, theta_layer+2*segments_phi, theta_layer+(segments_phi+1)*2 + 2*segments_phi) );
+            geometry.faces.push( new THREE.Face3( 
+                theta_layer+2*segments_phi+1, theta_layer+(segments_phi+1)*2 + 2*segments_phi, theta_layer+(segments_phi+1)*2 + 2*segments_phi +1) );
+        }
     }
 
     //geometry.computeCentroids();

@@ -97,11 +97,11 @@ var meshs=new Array();
 function DrawModel(node)
 {
     var solid=node.data.solid;
-    var geometry = CalcGeometry(node);
+    //var geometry = CalcGeometry(node);
+    var geometry = SphereGeometry(10,20,45,90,0,90);
     if(geometry==null)
         return;
     var color=0x2194ce;
-    var material = null;
     if(node.children.length>0)
     {
         //material = new THREE.MeshPhongMaterial(
