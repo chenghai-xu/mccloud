@@ -9,7 +9,7 @@ var height=480;
 var light;
 var controls;
 var font;
-var clicked_model=false;
+var show_in_parent=true;
 
 function InitDisplay3D() {
     if (!Detector.webgl) Detector.addGetWebGLMessage();
@@ -115,14 +115,12 @@ function CalcGeometry(node)
 var meshs=new Array();
 function DrawModel(node)
 {
-    if(clicked_model)
+    if(show_in_parent)
     {
         var instance = $('#project-view').jstree(true);
-        //var id=instance.get_parent(node);
         var par=instance.get_node(node.parent);
         if(par.type=='physical')
             node=par;
-        //clicked_model=false;
     }
 
     var solid=node.data.solid;
@@ -306,6 +304,5 @@ function onMouseDown( event ) {
     var instance = $('#project-view').jstree(true);
     //var res=instance.activate_node(id);
     instance.deselect_all();
-    clicked_model=true;
     var res=instance.select_node(id);
 }
