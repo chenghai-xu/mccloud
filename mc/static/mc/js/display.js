@@ -175,12 +175,15 @@ function DrawModel(node)
     //root.scale.x=1.0;
     //root.scale.y=1.0;
     //root.scale.z=1.0;
-    InitScene();
+    //InitScene();
+    while(scene.children.length > 0){ 
+        scene.remove(scene.children[0]); 
+    }
     InitLight();
     scene.add(root);
     DrawAxis();
     render.clear(); 
-    Animate();
+    //Animate();
 }
 
 var mouse = new THREE.Vector2();
