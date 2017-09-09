@@ -48,11 +48,40 @@ function NewProject() {
                     "icon": ""
                 },
             },
-            plugins: ["types"],
-            //plugins: ["contextmenu"]
-        }
-    );
+            plugins: ["types","contextmenu"],
+            contextmenu: {
+                "items": function ($node) {
+                    return {
+                        Rename: {
+                            "separator_before": false,
+                            "separator_after": false,
+                            "label": "Rename",
+                            "action": RenameNode 
+                        }
+                    };
+                }
+            }
+        });
     $('#project-view').on("select_node.jstree", NodeSelected);
+}
+
+function RenameNode(data) {
+    var inst = $.jstree.reference(data.reference);
+    var current = inst.get_node(data.reference);
+    var par = inst.get_node(inst.get_parent(current));
+    if(RenameAble(current,par))
+    {
+        inst.edit(current);
+    }
+
+}
+
+function RenameAble(node, parent) {
+    if(node.type==='project')
+        return true;
+    if(node.type === 'physical' && parent.type != 'geometry')
+        return true;
+    return false;
 }
 
 function NodeSelected(event, data) {
