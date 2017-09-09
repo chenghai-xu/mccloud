@@ -81,6 +81,7 @@ function OnBoxSubmit(form){
     if(current.type != 'physical')
         return;
     current.data.solid=box;
+    DrawModel(current);
 }
 
 function InitBoxForm(wigdet,box)
@@ -116,6 +117,7 @@ function ChangeSolidType(sel){
         return;
     current.data.solid=NewSolid(selected);
     InitSolidForm();
+    DrawModel(current);
 } 
 
 function OnTubeSubmit(form){
@@ -136,6 +138,7 @@ function OnTubeSubmit(form){
     if(current.type != 'physical')
         return;
     current.data.solid=tube;
+    DrawModel(current);
 }
 
 function InitPlacementForm(wigdet,tube)
@@ -182,6 +185,7 @@ function OnPlacementSimpleSubmit(form){
     placement.rotation.z=$(form).find('input[name=rz]').val();
     placement.rotation.aunit=$(form).find('select[name=aunit]').val();
     current.data.placement=placement;
+    DrawModel(current);
 }
 
 function InitPlacementSimpleForm(wigdet,placement)
@@ -227,5 +231,6 @@ function OnSphereSubmit(form){
     if(current.type != 'physical')
         return;
     current.data.solid=sphere;
+    DrawModel(current);
 }
 
