@@ -108,6 +108,8 @@ function SelectedPhysical(current)
     property.attr("id","property-current");
     property.removeClass('hidden');
     $(property).find('select[name=solid]').val(current.data.solid.type);
+    $(property).find('#current-node-name').html('Volume: ' +current.text);
+
     $('#property-container').append(property);
     DrawModel(current);
 }

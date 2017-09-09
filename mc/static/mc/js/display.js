@@ -9,6 +9,7 @@ var height=480;
 var light;
 var controls;
 var font;
+var clicked_model=false;
 
 function InitDisplay3D() {
     if (!Detector.webgl) Detector.addGetWebGLMessage();
@@ -41,6 +42,7 @@ function InitControls() {
     controls.dynamicDampingFactor = 1.0;
     controls.keys = [ 65, 83, 68 ];
     render.domElement.addEventListener( 'mousemove', onMouseMove );
+    render.domElement.addEventListener( 'mousedown', onMouseDown );
 }
 
 function InitCamera() { 
@@ -69,7 +71,6 @@ function InitLight() {
 
 function Animate() {
     requestAnimationFrame(Animate);
-    PickObject();
     controls.update();
 	render.render(scene, camera);
 }
@@ -114,6 +115,16 @@ function CalcGeometry(node)
 var meshs=new Array();
 function DrawModel(node)
 {
+    if(clicked_model)
+    {
+        var instance = $('#project-view').jstree(true);
+        //var id=instance.get_parent(node);
+        var par=instance.get_node(node.parent);
+        if(par.type=='physical')
+            node=par;
+        //clicked_model=false;
+    }
+
     var solid=node.data.solid;
     var geometry = CalcGeometry(node);
     if(geometry==null)
@@ -134,7 +145,7 @@ function DrawModel(node)
 
     meshs=new Array();
     var root = new THREE.Mesh(geometry, material);
-    root.ID = node.id;
+    root.ID = node.id;
     //meshs.push(root);
     var instance = $('#project-view').jstree(true);
     for(var i=0;i <node.children.length;i++)
@@ -183,6 +194,7 @@ function onMouseMove( event ) {
     mouse.x=(event.pageX - rect.left)/width*2 - 1;
     mouse.y=-(event.pageY - rect.top)/height*2 + 1;
     $('#mouse_position').html('Mouse: (' + mouse.x + ', ' + mouse.y + ')');
+    PickObject();
 }
 function PickObject()
 {
@@ -284,4 +296,16 @@ function LoadFont()
         font=f;
         default_font.font=f;
     });
+}
+
+function onMouseDown( event ) {
+    if ( !INTERSECTED ) 
+        return;
+    id=INTERSECTED.ID;
+    console.log("Click node: "+id);
+    var instance = $('#project-view').jstree(true);
+    //var res=instance.activate_node(id);
+    instance.deselect_all();
+    clicked_model=true;
+    var res=instance.select_node(id);
 }
