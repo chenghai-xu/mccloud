@@ -30,6 +30,7 @@ function PhysicalDelete(){
 
     var res = instance.delete_node(current);
     console.log('delete physical: ' + res);
+    DrawModel(par);
 } 
 function InitSolidForm(){
     var instance = $('#project-view').jstree(true);
