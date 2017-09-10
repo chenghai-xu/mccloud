@@ -2,10 +2,6 @@ $(document).ready(function () {
     InitProject(); 
 });
 
-var project_tree=new Array;
-var current_project=null;
-var current_node=null;
-
 function InitProject(){
     $('#new-project').click(NewProject);
     $('#open-project').click(OpenProject);
@@ -14,17 +10,16 @@ function InitProject(){
 } 
 
 function NewProject() {
-    project1=NewNode('MyProject','project');
-    project1.children.push(NewGeometryNode('Geometry')); 
-    project1.children.push(NewNode('Physics','physics')); 
-    project1.children.push(NewNode('Primary','primary')); 
-    project1.children.push(NewNode('Materials','materials')); 
-    project_tree.push(project1);
-    current_project=project1;
+    CloseProject();
+    var project=NewNode('MyProject','project');
+    project.children.push(NewGeometryNode('Geometry')); 
+    project.children.push(NewNode('Physics','physics')); 
+    project.children.push(NewNode('Primary','primary')); 
+    project.children.push(NewNode('Materials','materials')); 
     $('#project-view').jstree(
         {
             core : {
-                data: project_tree,
+                data: [project],
                 multiple: false,
                 check_callback: true
             },
@@ -86,6 +81,8 @@ function RenameAble(node, parent) {
 
 function NodeSelected(event, data) {
     var current=data.instance.get_selected(true)[0];
+    console.log('select node: ');
+    console.log(current);
     $('#property-current').remove();
     $('#property-detail-current').remove();
     SelectedPhysical(current);
@@ -117,7 +114,17 @@ function OpenProject() {
 }
 
 function SaveProject() {
+    if (!$.jstree.reference($('#project-view'))) {
+        return;
+    }
+    var json=$('#project-view').jstree().get_json('#',{no_state:true, no_li_attr:true, no_a_attr: true });
+    console.log(JSON.stringify(json));
 }
 
 function CloseProject() {
+    SaveProject();
+    if ($.jstree.reference($('#project-view'))) {
+        $('#project-view').jstree().delete_node($('#project-view').jstree().get_json());
+    }
+    $('#project-view').jstree('destroy');
 }
