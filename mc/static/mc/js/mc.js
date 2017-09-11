@@ -112,7 +112,7 @@ function NewPlacement(){
 function NewPhysicalNode(t,world=false){
     var node=NewNode(t,'physical');
     node.data.solid=NewSolid();
-    node.data.material='Water'
+    node.data.material='Vaccum'
     if(world==false){
         node.data.placement=NewPlacement();
     }

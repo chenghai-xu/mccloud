@@ -118,7 +118,7 @@ function SaveProject() {
         return;
     }
     var json=$('#project-view').jstree().get_json('#',{no_state:true, no_li_attr:true, no_a_attr: true });
-    console.log(JSON.stringify(json));
+    console.log(JSON.stringify(json[0]));
 }
 
 function CloseProject() {
