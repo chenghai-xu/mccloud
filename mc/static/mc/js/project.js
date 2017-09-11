@@ -1,6 +1,7 @@
 $(document).ready(function () {
     InitProject(); 
 });
+var record_project = null;
 
 function InitProject(){
     $('#new-project').click(NewProject);
@@ -58,6 +59,15 @@ function NewProject() {
             }
         });
     $('#project-view').on("select_node.jstree", NodeSelected);
+    $.post({ 
+        url: "/mc/api/project/", 
+        data:record_project,
+        success: PostProject
+    });
+}
+function PostProject(data)
+{
+    record_project=data;
 }
 
 function RenameNode(data) {
@@ -119,6 +129,13 @@ function SaveProject() {
     }
     var json=$('#project-view').jstree().get_json('#',{no_state:true, no_li_attr:true, no_a_attr: true });
     console.log(JSON.stringify(json[0]));
+    $.post({ 
+        url: "/mc/project/?id="+record_project.id, 
+        data:JSON.stringify(json[0]),
+        success: function(data){
+            console.log(data);
+        }
+    });
 }
 
 function CloseProject() {

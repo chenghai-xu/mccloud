@@ -13,6 +13,7 @@ class Project(models.Model):
     geometry = models.IntegerField(default=0)
     physics = JSONField(default={"default":True})
     primary = JSONField(default={"default":True})
+    archived = models.BooleanField(default=True)
     create_time = models.DateTimeField(u'create time', auto_now_add=True, editable = True)
     update_time = models.DateTimeField(u'update time',auto_now=True, null=True)
     def __str__(self):
@@ -77,4 +78,29 @@ class Element(models.Model):
     atom = models.FloatField(default=1.01)
     def __str__(self):
         return self.name
+
+class ProjectArchived(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    project = models.ForeignKey(Project, editable=False)
+    create_time = models.DateTimeField(u'create time', auto_now_add=True)
+    def __str__(self):
+        return self.id
+
+class Job(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    project = models.ForeignKey(Project, editable=False)
+    config = models.IntegerField(default=1)
+    consume = models.FloatField(default=0.0)
+    create_time = models.DateTimeField(u'create time', auto_now_add=True)
+    def __str__(self):
+        return self.id
+
+class Order(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    job = models.ForeignKey(Job, editable=False)
+    price = models.FloatField(default=0.0)
+    charge = models.FloatField(default=0.0)
+    create_time = models.DateTimeField(u'create time', auto_now_add=True)
+    def __str__(self):
+        return self.id
 
