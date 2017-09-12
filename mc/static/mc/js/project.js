@@ -99,8 +99,7 @@ function RenameAble(node, parent) {
 
 function NodeSelected(event, data) {
     var current=data.instance.get_selected(true)[0];
-    console.log('select node: ');
-    console.log(current);
+    console.log('Select node: ',current.id);
     $('#property-current').remove();
     $('#property-detail-current').remove();
     SelectedPhysical(current);
@@ -142,12 +141,14 @@ function SaveProject() {
         return;
     }
     var json=$('#project-view').jstree().get_json('#',{no_state:true, no_li_attr:true, no_a_attr: true });
-    console.log(JSON.stringify(json[0]));
+    //console.log(JSON.stringify(json[0]));
+    console.log('Save project', current_project);
     $.post({ 
         url: "/mc/project-tree/?id="+current_project, 
         data:JSON.stringify(json[0]),
         success: function(data){
-            console.log(data);
+            //console.log(data);
+            console.log('Post project tree: ',current_project);
         }
     });
 }
@@ -191,7 +192,8 @@ function DownloadProject(id)
         url: "/mc/project-tree/?id="+id, 
         success: function(data){
             data=JSON.parse(data)
-            console.log(data);
+            //console.log(data);
+            console.log('Download project tree: ',id);
             LoadProject(data);
         }
     });
@@ -200,7 +202,8 @@ function DownloadProject(id)
 var project_selection=null;
 function SelectProject(data)
 {
-    console.log(data);
+    //console.log(data);
+    console.log('Select project: ',data.length);
     var tbody=$('#project-tbody');
     tbody.empty();
     for(var i=0; i< data.length; i++)
@@ -214,8 +217,7 @@ function SelectProject(data)
             '</tr>');
     }
     $('#project-tbody tr').click(function (event) {
-        if(project_selection)
-            $('#project-tbody tr[id='+project_selection+']').css("background-color", "white");
+        $('#project-tbody tr').css("background-color", "white");
         var id=$(this).attr('id'); 
         $(this).css("background-color", "red");
         project_selection=id;
