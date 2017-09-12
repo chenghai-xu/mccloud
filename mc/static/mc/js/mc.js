@@ -119,6 +119,24 @@ function NewPhysicalNode(t,world=false){
     return node;
 }
 
+function NewComponent(t,w){
+    var node = NewNode(t,'component');
+    node.data.weight=w;
+    node.data.name=node.text;
+    return node;
+}
+function NewMaterial(t){
+    var node=NewNode(t,'material');
+    node.data.type='element';
+    node.data.weight='composite';
+    node.data.name=node.text;
+    node.data.density=0.0;
+
+    node.children.push(NewComponent('H',1.0));
+    return node;
+}
+
+
 var unit_map = new Map();
 unit_map.set('mm',0.1);
 unit_map.set('cm',1.0);

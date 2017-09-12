@@ -34,6 +34,12 @@ function LoadProject(project) {
                 materials: {
                     "icon": ""
                 },
+                material: {
+                    "icon": ""
+                },
+                component: {
+                    "icon": ""
+                },
                 primary: {
                     "icon": ""
                 },
@@ -107,9 +113,19 @@ function NodeSelected(event, data) {
 }
 function SelectedMaterials(current)
 {
+    SelectedMaterial(current);
     if(current.type != 'materials')
         return;
     var property = $('#property-materials').clone();
+    property.attr("id","property-current");
+    property.removeClass('hidden');
+    $('#property-container').append(property);
+}
+function SelectedMaterial(current)
+{
+    if(current.type != 'material' )
+        return;
+    var property = $('#property-material').clone();
     property.attr("id","property-current");
     property.removeClass('hidden');
     $('#property-container').append(property);

@@ -1,7 +1,47 @@
 div(id='property-materials', class='hidden')
-  form(class='form',role='form')
-    div(class='row')
-      label Materials
-    div(class='form-group')
-      button(id='material-add',type='button', class='btn btn-default',onclick='MaterialAdd()') Add
-      button(id='material-delete',type='button', class='btn btn-default',onclick='MaterialDelete()') Delete
+  div(class='row')
+    label Material
+  div(class='row')
+    form(class='form',role='form')
+      div(class='btn-group')
+        button(type='button',class='btn btn-sm dropdown-toggle',data-toggle="dropdown") Action 
+          span(class='caret')
+        ul(class='dropdown-menu',role='menu') 
+          li
+            a(id='new-node',href='#',onclick='MaterialAdd()') Add Material 
+
+div(id='property-material', class='hidden')
+  div(class='row')
+    label Material
+  div(class='row')
+    form(class='form',role='form')
+      div(class='btn-group')
+        button(type='button',class='btn btn-sm dropdown-toggle',data-toggle="dropdown") Action 
+          span(class='caret')
+        ul(class='dropdown-menu',role='menu') 
+          li
+            a(id='new-node',href='#',onclick='MaterialAddComponent()') Add Component  
+          li
+            a(id='delete-node',href='#',onclick='MaterialDelete()') Delete Current  
+  div(class='row')
+    form(class='form',role='form',action='javascript:void(0);',onsubmit='OnMaterialSubmit(this)')
+      div(class='form-group')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Name:
+          input(class='form-control',name='name')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Density:
+          input(class='form-control',name='density')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Type:
+          select(class='form-control',name='type')
+              option Mixture
+              option Element
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Mix by:
+          select(class='form-control',name='type')
+              option Fraction
+              option Component
+      //button(class="btn btn-default",onclick='MaterialEdit()') Component
+      button(type='submit',class="btn btn-default") Save
+
