@@ -26,3 +26,14 @@ div(id='project-window')
 <script>
 $('#project-window').resizable();
 </script>
+div(id='project-list',class='table-responsive ui-widget', title='Open Project')
+  table(id="project-table",class="table table-hover ui-widget ui-widget-content")
+      thead
+        tr(class='ui-widget-header')
+          th ID
+          th Name
+          th Create
+          th Update
+      tbody(id='project-tbody')
+  div(class='ui-dialog-buttonpane')
+    label(id='project-current') 

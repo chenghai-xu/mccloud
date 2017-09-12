@@ -1,7 +1,9 @@
 $(document).ready(function () {
     InitProject(); 
+    ProjectDialogInit();
 });
-var record_project = null;
+var current_project = null;
+var project_records = new Map();
 
 function InitProject(){
     $('#new-project').click(NewProject);
@@ -10,13 +12,8 @@ function InitProject(){
     $('#close-project').click(CloseProject);
 } 
 
-function NewProject() {
+function LoadProject(project) {
     CloseProject();
-    var project=NewNode('MyProject','project');
-    project.children.push(NewGeometryNode('Geometry')); 
-    project.children.push(NewNode('Physics','physics')); 
-    project.children.push(NewNode('Primary','primary')); 
-    project.children.push(NewNode('Materials','materials')); 
     $('#project-view').jstree(
         {
             core : {
@@ -59,15 +56,26 @@ function NewProject() {
             }
         });
     $('#project-view').on("select_node.jstree", NodeSelected);
+}
+
+function NewProject() {
+    var project=NewNode('MyProject','project');
+    project.children.push(NewGeometryNode('Geometry')); 
+    project.children.push(NewNode('Physics','physics')); 
+    project.children.push(NewNode('Primary','primary')); 
+    project.children.push(NewNode('Materials','materials')); 
+    LoadProject(project);
     $.post({ 
         url: "/mc/api/project/", 
-        data:record_project,
+        data:'',
         success: PostProject
     });
 }
 function PostProject(data)
 {
-    record_project=data;
+    project=JSON.parse(data);
+    project_records.set(data.id,project);
+    current_project=data.id;
 }
 
 function RenameNode(data) {
@@ -120,7 +128,13 @@ function SelectedPhysical(current)
     $('#property-container').append(property);
     DrawModel(current);
 }
+
 function OpenProject() {
+    $.get({ 
+        url: "/mc/api/project/", 
+        data:{},
+        success: SelectProject
+    });
 }
 
 function SaveProject() {
@@ -130,7 +144,7 @@ function SaveProject() {
     var json=$('#project-view').jstree().get_json('#',{no_state:true, no_li_attr:true, no_a_attr: true });
     console.log(JSON.stringify(json[0]));
     $.post({ 
-        url: "/mc/project/?id="+record_project.id, 
+        url: "/mc/project-tree/?id="+current_project, 
         data:JSON.stringify(json[0]),
         success: function(data){
             console.log(data);
@@ -144,4 +158,67 @@ function CloseProject() {
         $('#project-view').jstree().delete_node($('#project-view').jstree().get_json());
     }
     $('#project-view').jstree('destroy');
+}
+
+function ProjectDialogInit()
+{
+    $( "#project-tbody" ).selectable();
+
+    $( "#project-list" ).dialog({
+        autoOpen: false,
+        height: 480,
+        width: 400,
+        modal: true,
+        buttons: {
+            "Open": function() {
+                console.log('Load project ',project_selection);
+                current_project=parseInt(project_selection);
+                DownloadProject(project_selection);
+                $( this ).dialog( "close" );
+            },
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+        }
+    });
+}
+
+function DownloadProject(id)
+{
+    $.get({ 
+        url: "/mc/project-tree/?id="+id, 
+        success: function(data){
+            data=JSON.parse(data)
+            console.log(data);
+            LoadProject(data);
+        }
+    });
+}
+
+var project_selection=null;
+function SelectProject(data)
+{
+    console.log(data);
+    var tbody=$('#project-tbody');
+    tbody.empty();
+    for(var i=0; i< data.length; i++)
+    {
+        project_records.set(data[i].id,data[i]);
+        tbody.append('<tr id='+data[i].id+'>' +
+            '<td>' + data[i].id + '</td>' +
+            '<td>' + data[i].name + '</td>' +
+            '<td>' + data[i].create_time.substring(0,10) + '</td>' +
+            '<td>' + data[i].update_time.substring(0,10) + '</td>' +
+            '</tr>');
+    }
+    $('#project-tbody tr').click(function (event) {
+        if(project_selection)
+            $('#project-tbody tr[id='+project_selection+']').css("background-color", "white");
+        var id=$(this).attr('id'); 
+        $(this).css("background-color", "red");
+        project_selection=id;
+    });
+    $( "#project-list" ).dialog("open");
 }
