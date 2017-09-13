@@ -1,7 +1,7 @@
 div(id='property-physical', class='hidden')
   form(class='form',role='form')
     div(class='row')
-      label(id='current-node-name') Name
+      label(id='current-node-name') Volume
     div(class='row')
       //label Node
       div(class='btn-group')
@@ -18,6 +18,9 @@ div(id='property-physical', class='hidden')
       //  button(id='physical-delete',type='button', class='btn btn-default',onclick='PhysicalDelete()') Delete
       div(class='form-group')
         div(class='input-group input-group-sm')
+          span(class='input-group-addon') Name:
+          input(class='form-control',name='name',onchange='ChangeVolumeName(this)')
+        div(class='input-group input-group-sm')
           span(class='input-group-addon') Solid:
           select(class='form-control',name='solid',onclick='InitSolidForm()',onchange='ChangeSolidType(this)')
               option box
@@ -25,14 +28,9 @@ div(id='property-physical', class='hidden')
               option sphere
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Material:
-          select(class='form-control',name='material')
-              option H2
-              option He
-              option Li
-              option H2O
-              option Water
+          input(class='form-control',name='material')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Placement:
           select(class='form-control',name='placement',onclick='InitPlacementForm()',onchange='ChangePlacementType(this)')
-              option Simple
+              option simple
 

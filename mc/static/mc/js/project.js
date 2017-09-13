@@ -98,8 +98,6 @@ function RenameNode(data) {
 function RenameAble(node, parent) {
     if(node.type==='project')
         return true;
-    if(node.type === 'physical' && parent.type != 'geometry')
-        return true;
     return false;
 }
 
@@ -154,7 +152,12 @@ function SelectedPhysical(current)
     property.attr("id","property-current");
     property.removeClass('hidden');
     $(property).find('select[name=solid]').val(current.data.solid.type);
-    $(property).find('#current-node-name').html('Volume: ' +current.text);
+    $(property).find('input[name=name]').val(current.text);
+    if(current.text=='world')
+        $(property).find('input[name=name]').attr("disabled","disabled");
+    if(current.text!='world')
+        $(property).find('select[name=placement]').val(current.data.placement.type);
+    $(property).find('input[name=material]').val(current.data.material);
 
     $('#property-container').append(property);
     DrawModel(current);
