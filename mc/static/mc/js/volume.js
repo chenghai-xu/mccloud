@@ -21,9 +21,9 @@ function SelectedPhysical(current)
     property.removeClass('hidden');
     $(property).find('select[name=solid]').val(current.data.solid.type);
     $(property).find('input[name=name]').val(current.text);
-    if(current.text=='world')
+    if(current.text=='world' ||current.text=='parallel' )
         $(property).find('input[name=name]').attr("disabled","disabled");
-    if(current.text!='world')
+    if(current.text!='world' && current.text!='parallel' )
         $(property).find('select[name=placement]').val(current.data.placement.type);
     $(property).find('input[name=material]').val(current.data.material);
 
