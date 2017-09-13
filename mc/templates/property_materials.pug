@@ -31,7 +31,7 @@ div(id='property-material', class='hidden')
           input(class='form-control',name='name')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Density:
-          input(class='form-control',name='density')
+          input(type='number',step='0.0001',class='form-control',name='density')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Type:
           select(class='form-control',name='type')
@@ -64,7 +64,7 @@ div(id='property-component', class='hidden')
           input(class='form-control',name='name')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Weight:
-          input(class='form-control',name='weight')
+          input(type='number',step='0.0001',class='form-control',name='weight')
       button(type='submit',class="btn btn-default") Save
 
 div(id='dialog-input-name',class='ui-widget', title='Dialog')
