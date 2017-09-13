@@ -132,7 +132,7 @@ function NewMaterial(t){
     node.data.name=node.text;
     node.data.density=0.0;
 
-    node.children.push(NewComponent('H',1.0));
+    //node.children.push(NewComponent('H',1.0));
     return node;
 }
 
