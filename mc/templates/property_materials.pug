@@ -35,14 +35,36 @@ div(id='property-material', class='hidden')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Type:
           select(class='form-control',name='type')
-              option Mixture
-              option Element
+              option mixture
+              option element
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Mix by:
-          select(class='form-control',name='type')
-              option Fraction
-              option Component
+          select(class='form-control',name='weight')
+              option fraction
+              option composite
       //button(class="btn btn-default",onclick='MaterialEdit()') Component
+      button(type='submit',class="btn btn-default") Save
+
+div(id='property-component', class='hidden')
+  div(class='row')
+    label Component
+  div(class='row')
+    form(class='form',role='form')
+      div(class='btn-group')
+        button(type='button',class='btn btn-sm dropdown-toggle',data-toggle="dropdown") Action 
+          span(class='caret')
+        ul(class='dropdown-menu',role='menu') 
+          li
+            a(id='delete-node',href='#',onclick='MaterialDeleteComponent()') Delete Current  
+  div(class='row')
+    form(class='form',role='form',action='javascript:void(0);',onsubmit='OnMaterialComponentSubmit(this)')
+      div(class='form-group')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Name:
+          input(class='form-control',name='name')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Weight:
+          input(class='form-control',name='weight')
       button(type='submit',class="btn btn-default") Save
 
 div(id='dialog-input-name',class='ui-widget', title='Dialog')

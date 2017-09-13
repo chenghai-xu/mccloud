@@ -170,7 +170,71 @@ function CheckAndAddComponent(name)
     console.log('create component: ' + res);
     return true;
 }
+
 function CheckComponentName(name,current)
 {
     return true;
+}
+
+function OnMaterialSubmit(form)
+{
+    var instance = $('#project-view').jstree(true);
+    var selects=instance.get_selected(true);
+    if(selects.length < 1)
+        return;
+    var current=selects[0];
+    if(current.type != 'material')
+        return;
+
+    var name=$(form).find('input[name=name]').val();
+    var type=$(form).find('select[name=type]').val();
+    var density=$(form).find('input[name=density]').val();
+    var weight=$(form).find('select[name=weight]').val();
+    if(!CheckMaterialName(name))
+    {
+        alert('Already exist the same material!');
+        return false;
+    }
+    current.data.name=name;
+    current.data.type=type;
+    current.data.density=density;
+    current.data.weight=weight;
+    instance.rename_node(current,name);
+}
+
+function MaterialDeleteComponent()
+{
+    var instance = $('#project-view').jstree(true);
+    var selects=instance.get_selected(true);
+    if(selects.length < 1)
+        return;
+    var current=selects[0];
+    if(current.type != 'component')
+        return;
+
+    var res = instance.delete_node(current);
+    console.log('delete component: ' + res);
+}
+
+function OnMaterialComponentSubmit(form)
+{
+    var instance = $('#project-view').jstree(true);
+    var selects=instance.get_selected(true);
+    if(selects.length < 1)
+        return;
+    var current=selects[0];
+    if(current.type != 'component')
+        return;
+
+    var name=$(form).find('input[name=name]').val();
+    var weight=$(form).find('input[name=weight]').val();
+    var par = instance.get_node(current.parent);
+    if(!CheckComponentName(name,par))
+    {
+        alert('Already exist the same material!');
+        return false;
+    }
+    current.data.name=name;
+    current.data.weight=weight;
+    instance.rename_node(current,name);
 }
