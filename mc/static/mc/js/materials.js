@@ -4,6 +4,41 @@ $(document).ready(function () {
 });
 var InputCallBack=null;
 
+function SelectedMaterials(current)
+{
+    SelectedMaterial(current);
+    if(current.type != 'materials')
+        return;
+    var property = $('#property-materials').clone();
+    property.attr("id","property-current");
+    property.removeClass('hidden');
+    $('#property-container').append(property);
+}
+function SelectedMaterialComponent(current)
+{
+    if(current.type != 'component' )
+        return;
+    var property = $('#property-component').clone();
+    property.attr("id","property-current");
+    property.removeClass('hidden');
+    $(property).find('input[name=name]').val(current.data.name);
+    $(property).find('input[name=weight]').val(current.data.weight);
+    $('#property-container').append(property);
+}
+function SelectedMaterial(current)
+{
+    SelectedMaterialComponent(current);
+    if(current.type != 'material' )
+        return;
+    var property = $('#property-material').clone();
+    property.attr("id","property-current");
+    property.removeClass('hidden');
+    $(property).find('input[name=name]').val(current.data.name);
+    $(property).find('input[name=density]').val(current.data.density);
+    $(property).find('select[name=type]').val(current.data.type);
+    $(property).find('select[name=weight]').val(current.data.weight);
+    $('#property-container').append(property);
+}
 function MaterialAdd(){
     var instance = $('#project-view').jstree(true);
     var selects=instance.get_selected(true);

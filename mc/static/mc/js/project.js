@@ -109,60 +109,6 @@ function NodeSelected(event, data) {
     SelectedPhysical(current);
     SelectedMaterials(current);
 }
-function SelectedMaterials(current)
-{
-    SelectedMaterial(current);
-    if(current.type != 'materials')
-        return;
-    var property = $('#property-materials').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-    $('#property-container').append(property);
-}
-function SelectedMaterialComponent(current)
-{
-    if(current.type != 'component' )
-        return;
-    var property = $('#property-component').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-    $(property).find('input[name=name]').val(current.data.name);
-    $(property).find('input[name=weight]').val(current.data.weight);
-    $('#property-container').append(property);
-}
-function SelectedMaterial(current)
-{
-    SelectedMaterialComponent(current);
-    if(current.type != 'material' )
-        return;
-    var property = $('#property-material').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-    $(property).find('input[name=name]').val(current.data.name);
-    $(property).find('input[name=density]').val(current.data.density);
-    $(property).find('select[name=type]').val(current.data.type);
-    $(property).find('select[name=weight]').val(current.data.weight);
-    $('#property-container').append(property);
-}
-function SelectedPhysical(current)
-{
-    if(current.type != 'physical')
-        return;
-    var property = $('#property-physical').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-    $(property).find('select[name=solid]').val(current.data.solid.type);
-    $(property).find('input[name=name]').val(current.text);
-    if(current.text=='world')
-        $(property).find('input[name=name]').attr("disabled","disabled");
-    if(current.text!='world')
-        $(property).find('select[name=placement]').val(current.data.placement.type);
-    $(property).find('input[name=material]').val(current.data.material);
-
-    $('#property-container').append(property);
-    DrawModel(current);
-}
-
 function OpenProject() {
     $.get({ 
         url: "/mc/api/project/", 
