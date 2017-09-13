@@ -60,22 +60,62 @@ div(id='property-position', class='hidden')
   div(class='row')
     label Position
   div(class='row')
-    form(class='form',role='form',action='javascript:void(0);',onsubmit='OnMaterialSubmit(this)')
+    form(class='form',role='form',action='javascript:void(0);')
       div(class='form-group')
         div(class='input-group input-group-sm')
-          span(class='input-group-addon') Name:
-          input(class='form-control',name='name')
-        div(class='input-group input-group-sm')
-          span(class='input-group-addon') Density:
-          input(type='number',step='0.0001',class='form-control',name='density')
-        div(class='input-group input-group-sm')
           span(class='input-group-addon') Type:
-          select(class='form-control',name='type')
-              option mixture
-              option element
+          select(class='form-control',name='type',onchange='ChangePositionType(this)')
+              option Point
+              option Plane
+              option Beam
+              option Surface
+              option Volume
         div(class='input-group input-group-sm')
-          span(class='input-group-addon') Mix by:
-          select(class='form-control',name='weight')
-              option fraction
-              option composite
+          span(class='input-group-addon') Shape:
+          select(class='form-control',name='shape')
+              option Circle
+              option Annulus
+              option Ellipse
+              option Square
+              option Rectangle
+              option Sphere
+              option Ellipsoid
+              option Cylinder
+              option Para
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Centre:
+          input(class='form-control',name='centre')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Rot1:
+          input(class='form-control',name='rot1')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Rot2:
+          input(class='form-control',name='rot2')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Half XYZ:
+          input(class='form-control',name='half')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Radius:
+          input(class='form-control',name='radius')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Inner Radius:
+          input(class='form-control',name='inner-radius')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Sigma Radius:
+          input(class='form-control',name='sigma-radius')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Sigma X:
+          input(class='form-control',name='sigma-x')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Sigma Y:
+          input(class='form-control',name='sigma-y')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Para Alpha:
+          input(class='form-control',name='paralp')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Para Theta:
+          input(class='form-control',name='parthe')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Para Phi:
+          input(class='form-control',name='parphi')
       //button(type='submit',class="btn btn-default") Save
