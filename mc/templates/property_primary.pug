@@ -1,6 +1,6 @@
-div(id='property-materials', class='hidden')
+div(id='property-primary', class='hidden')
   div(class='row')
-    label Materials
+    label Primaries
   div(class='row')
     form(class='form',role='form')
       div(class='btn-group')
@@ -8,11 +8,11 @@ div(id='property-materials', class='hidden')
           span(class='caret')
         ul(class='dropdown-menu',role='menu') 
           li
-            a(id='new-node',href='#',onclick='MaterialAdd()') Add Material 
+            a(id='new-node',href='#',onclick='PrimaryAdd()') Add Primary 
 
-div(id='property-material', class='hidden')
+div(id='property-source', class='hidden')
   div(class='row')
-    label Material
+    label Source
   div(class='row')
     form(class='form',role='form')
       div(class='btn-group')
@@ -20,9 +20,20 @@ div(id='property-material', class='hidden')
           span(class='caret')
         ul(class='dropdown-menu',role='menu') 
           li
-            a(id='new-node',href='#',onclick='MaterialAddComponent()') Add Component  
-          li
-            a(id='delete-node',href='#',onclick='MaterialDelete()') Delete Current  
+            a(id='delete-node',href='#',onclick='SourceDelete()') Delete Current  
+  div(class='row')
+    form(class='form',role='form',action='javascript:void(0);')
+      div(class='form-group')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Name:
+          input(class='form-control',name='name')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Intensity:
+          input(type='number',step='0.0001',class='form-control',name='intensity')
+
+div(id='property-particle', class='hidden')
+  div(class='row')
+    label Particle
   div(class='row')
     form(class='form',role='form',action='javascript:void(0);',onsubmit='OnMaterialSubmit(this)')
       div(class='form-group')
@@ -45,31 +56,26 @@ div(id='property-material', class='hidden')
       //button(class="btn btn-default",onclick='MaterialEdit()') Component
       button(type='submit',class="btn btn-default") Save
 
-div(id='property-component', class='hidden')
+div(id='property-position', class='hidden')
   div(class='row')
-    label Component
+    label Position
   div(class='row')
-    form(class='form',role='form')
-      div(class='btn-group')
-        button(type='button',class='btn btn-sm dropdown-toggle',data-toggle="dropdown") Action 
-          span(class='caret')
-        ul(class='dropdown-menu',role='menu') 
-          li
-            a(id='delete-node',href='#',onclick='MaterialDeleteComponent()') Delete Current  
-  div(class='row')
-    form(class='form',role='form',action='javascript:void(0);',onsubmit='OnMaterialComponentSubmit(this)')
+    form(class='form',role='form',action='javascript:void(0);',onsubmit='OnMaterialSubmit(this)')
       div(class='form-group')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Name:
           input(class='form-control',name='name')
         div(class='input-group input-group-sm')
-          span(class='input-group-addon') Weight:
-          input(type='number',step='0.0001',class='form-control',name='weight')
-      button(type='submit',class="btn btn-default") Save
-
-div(id='dialog-input-name',class='ui-widget', title='Dialog')
-  p(class="validateTips") Input Name:
-  form
-    fieldset
-      label(for="name")Name
-      input(type="text", name="name", class="text ui-widget-content ui-corner-all")
+          span(class='input-group-addon') Density:
+          input(type='number',step='0.0001',class='form-control',name='density')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Type:
+          select(class='form-control',name='type')
+              option mixture
+              option element
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Mix by:
+          select(class='form-control',name='weight')
+              option fraction
+              option composite
+      //button(type='submit',class="btn btn-default") Save

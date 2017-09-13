@@ -4,6 +4,7 @@ $(document).ready(function () {
 });
 var current_project = null;
 var project_records = new Map();
+var node_selected_hook = new Map();
 
 function InitProject(){
     $('#new-project').click(NewProject);
@@ -41,6 +42,24 @@ function LoadProject(project) {
                     "icon": ""
                 },
                 primary: {
+                    "icon": ""
+                },
+                source: {
+                    "icon": ""
+                },
+                particle: {
+                    "icon": ""
+                },
+                position: {
+                    "icon": ""
+                },
+                direction: {
+                    "icon": ""
+                },
+                energy: {
+                    "icon": ""
+                },
+                time: {
                     "icon": ""
                 },
                 physics: {
@@ -108,6 +127,7 @@ function NodeSelected(event, data) {
     $('#property-detail-current').remove();
     SelectedPhysical(current);
     SelectedMaterials(current);
+    SelectedPrimary(current);
 }
 function OpenProject() {
     $.get({ 
