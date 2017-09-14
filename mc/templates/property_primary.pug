@@ -8,7 +8,7 @@ div(id='property-primary', class='hidden')
           span(class='caret')
         ul(class='dropdown-menu',role='menu') 
           li
-            a(id='new-node',href='#',onclick='PrimaryAdd()') Add Primary 
+            a(id='new-node',href='#',onclick='PrimaryAdd()') Add GPS Source 
 
 div(id='property-source', class='hidden')
   div(class='row')
@@ -62,7 +62,7 @@ div(id='property-position', class='hidden')
   div(class='row')
     form(class='form',role='form',action='javascript:void(0);')
       div(class='form-group')
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-type',class='input-group input-group-sm')
           span(class='input-group-addon') Type:
           select(class='form-control',name='type',onchange='ChangePositionType(this)')
               option Point
@@ -70,9 +70,9 @@ div(id='property-position', class='hidden')
               option Beam
               option Surface
               option Volume
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-shape',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Shape:
-          select(class='form-control',name='shape')
+          select(class='form-control',name='shape',onchange='ChangePositionShape(this)')
               option Circle
               option Annulus
               option Ellipse
@@ -82,40 +82,52 @@ div(id='property-position', class='hidden')
               option Ellipsoid
               option Cylinder
               option Para
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-centre',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Centre:
           input(class='form-control',name='centre')
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-rot1',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Rot1:
           input(class='form-control',name='rot1')
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-rot2',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Rot2:
           input(class='form-control',name='rot2')
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-half',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Half XYZ:
           input(class='form-control',name='half')
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-radius',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Radius:
           input(class='form-control',name='radius')
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-inner-radius',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Inner Radius:
           input(class='form-control',name='inner-radius')
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-sigma-r',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Sigma Radius:
           input(class='form-control',name='sigma-radius')
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-sigma-x',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Sigma X:
           input(class='form-control',name='sigma-x')
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-sigma-y',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Sigma Y:
           input(class='form-control',name='sigma-y')
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-paralp',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Para Alpha:
           input(class='form-control',name='paralp')
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-parthe',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Para Theta:
           input(class='form-control',name='parthe')
-        div(class='input-group input-group-sm')
+        div(id='gps-pos-parphi',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Para Phi:
           input(class='form-control',name='parphi')
+        div(id='gps-pos-lunit',class='input-group input-group-sm hidden')
+          span(class='input-group-addon') Length Unit:
+          select(class='form-control',name='lunit')
+              option cm
+              option m
+              option mm
+              option km
+        div(id='gps-pos-aunit',class='input-group input-group-sm hidden')
+          span(class='input-group-addon') Angle Unit:
+          select(class='form-control',name='aunit')
+              option deg
+              option rad
       //button(type='submit',class="btn btn-default") Save
