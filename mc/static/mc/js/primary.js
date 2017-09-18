@@ -167,6 +167,7 @@ function NewDirectionNode(t){
 
 function NewEnergyNode(t){
     var node=NewNode(t,'energy');
+    node.data=PEnergy.New();
     return node;
 }
 
@@ -255,6 +256,11 @@ function SelectedEnergy(current)
 {
     if(current.type != 'energy')
         return;
+    var property = $('#property-energy').clone();
+    property.attr("id","property-current");
+    property.removeClass('hidden');
+    PEnergy.InitForm(property,current);
+    $('#property-container').append(property);
 }
 
 function SelectedTime(current)
@@ -1090,3 +1096,76 @@ function GetCurrentAngular()
     return current;
 }
 
+var PEnergy = {
+    TypeMap: new Map([
+        ['Mono',{type:'Mono',mono:1.0}],
+        ['Lin',{type:'Lin',min:1.0,max:2.0,gradient:0,intercept:0}],
+        ['Pow',{type:'Pow',min:1.0,max:2.0,alpha:0}],
+        ['Exp',{type:'Exp',min:1.0,max:2.0,ezero:0}],
+        ['Gauss',{type:'Gauss',mono:1.0,sigma:0}],
+        ['Brem',{type:'Brem',min:1.0,max:2.0,temp:0}],
+        ['Bbody',{type:'Bbody',min:1.0,max:2.0,temp:0}],
+        ['Cdg',{type:'Cdg',min:1.0,max:2.0}],
+    ]), 
+
+    New: function(t='Mono'){
+        var node=this.TypeMap.get(t);
+        if(!node)
+            node=this.TypeMap.get('Mono');
+        node.eunit='MeV';
+        return node;
+    },
+
+    InitForm: function(form, current)
+    {
+        $(form).find('div .input-group').addClass('hidden');
+        $(form).find('#gps-ene-type').removeClass('hidden');
+        $(form).find('#gps-ene-eunit').removeClass('hidden');
+        var data=current.data;
+        $(form).find('select[name=type]').val(data.type);
+        $(form).find('select[name=eunit]').val(data.eunit);
+        for(p in data)
+        {
+            if(p==='type' || p === 'eunit')
+                continue;
+            $(form).find('#gps-ene-'+p).removeClass('hidden');
+            $(form).find('input[name='+p+']').val(data[p]);
+        }
+    },
+
+    TypeChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var instance = $('#project-view').jstree(true);
+        var selects=instance.get_selected(true);
+        if(selects.length < 1)
+            return;
+        var current=selects[0];
+        if(current.type != 'energy')
+            return;
+
+        var form=$('#property-current');
+        console.log('Change energy type to: ',value);
+        current.data=this.New(value);
+        this.InitForm(form,current);
+    },
+
+    ValueChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var instance = $('#project-view').jstree(true);
+        var selects=instance.get_selected(true);
+        if(selects.length < 1)
+            return;
+        var current=selects[0];
+        if(current.type != 'energy')
+            return;
+        var p=$(elem).attr('name');
+        console.log('Change energy parameter '+p+' to '+ value);
+        if(p==='eunit')
+            current.data[p]=value;
+        else
+            current.data[p]=parseFloat(value);
+
+    },
+}

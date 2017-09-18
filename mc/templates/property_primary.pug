@@ -200,7 +200,7 @@ div(id='property-energy', class='hidden')
       div(class='form-group')
         div(id='gps-ene-type',class='input-group input-group-sm')
           span(class='input-group-addon') Type:
-          select(class='form-control',name='type',onchange='ChangeEnergyType(this)')
+          select(class='form-control',name='type',onchange='PEnergy.TypeChanged(this)')
               option Mono
               option Lin
               option Pow
@@ -209,51 +209,51 @@ div(id='property-energy', class='hidden')
               option Brem
               option Bbody
               option Cdg
-              option User
-              option Arb
-              option Epn
+              //option User
+              //option Arb
+              //option Epn
         div(id='gps-ene-min',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Min:
-          input(class='form-control',type='number',step='0.0001',name='min',onchange='EnergyMinChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='min',onchange='PEnergy.ValueChanged(this)')
         div(id='gps-ene-max',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Max:
-          input(class='form-control',type='number',step='0.0001',name='max',onchange='EnergyMaxChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='max',onchange='PEnergy.ValueChanged(this)')
         div(id='gps-ene-mono',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Mono:
-          input(class='form-control',type='number',step='0.0001',name='mono',onchange='EnergyMonoChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='mono',onchange='PEnergy.ValueChanged(this)')
         div(id='gps-ene-sigma',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Sigma:
-          input(class='form-control',type='number',step='0.0001',name='sigma',onchange='EnergySigmaChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='sigma',onchange='PEnergy.ValueChanged(this)')
         div(id='gps-ene-alpha',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Alpha:
-          input(class='form-control',type='number',step='0.0001',name='alpha',onchange='EnergyAlphaChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='alpha',onchange='PEnergy.ValueChanged(this)')
         div(id='gps-ene-temp',class='input-group input-group-sm hidden')
-          span(class='input-group-addon') Temp:
-          input(class='form-control',type='number',step='0.0001',name='temp',onchange='EnergyTempChanged(this)')
+          span(class='input-group-addon') Temp(Kelvins):
+          input(class='form-control',type='number',step='0.0001',name='temp',onchange='PEnergy.ValueChanged(this)')
         div(id='gps-ene-ezero',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Ezero:
-          input(class='form-control',type='number',step='0.0001',name='ezero',onchange='EnergyEzeroChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='ezero',onchange='PEnergy.ValueChanged(this)')
         div(id='gps-ene-gradient',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Gradient:
-          input(class='form-control',type='number',step='0.0001',name='gradient',onchange='EnergyGradientChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='gradient',onchange='PEnergy.ValueChanged(this)')
         div(id='gps-ene-intercept',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Intercept:
-          input(class='form-control',type='number',step='0.0001',name='intercept',onchange='EnergyInterceptChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='intercept',onchange='PEnergy.ValueChanged(this)')
         div(id='gps-ene-biasAlpha',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Bias Alpha:
-          input(class='form-control',type='number',step='0.0001',name='biasAlpha',onchange='EnergyBiasAlphaChanged(this)')
-        div(id='gps-ene-calculate',class='input-group input-group-sm hidden')
-          span(class='input-group-addon') Calculate:
-          input(class='form-control',type='number',step='0.0001',name='calculate',onchange='EnergyCalculateChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='biasAlpha',onchange='PEnergy.ValueChanged(this)')
+        //div(id='gps-ene-calculate',class='input-group input-group-sm hidden')
+        //span(class='input-group-addon') Calculate:
+        //input(class='form-control',type='number',step='0.0001',name='calculate',onchange='PEnergy.ValueChanged(this)')
         div(id='gps-ene-emspec',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Emspec:
-          input(class='form-control',type='number',step='0.0001',name='emspec',onchange='EnergyEmspecChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='emspec',onchange='PEnergy.ValueChanged(this)')
         div(id='gps-ene-diffspec',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Diffspec:
-          input(class='form-control',type='number',step='0.0001',name='diffspec',onchange='EnergyDiffspecChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='diffspec',onchange='PEnergy.ValueChanged(this)')
         div(id='gps-ene-eunit',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Energy Unit:
-          select(class='form-control',name='eunit',onchange='EnergyUnitChanged(this)')
+          select(class='form-control',name='eunit',onchange='PEnergy.ValueChanged(this)')
               option keV 
               option MeV 
               option GeV 
