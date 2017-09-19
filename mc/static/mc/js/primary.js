@@ -199,6 +199,13 @@ function NewSourceNode(t){
     return node;
 }
 
+function NewPrimaryNode()
+{
+    var node=NewNode('Primary','primary');
+    node.children.push(NewSourceNode('Source'));
+    return node;
+}
+
 function PrimaryAdd()
 {
     var instance = $('#project-view').jstree(true);

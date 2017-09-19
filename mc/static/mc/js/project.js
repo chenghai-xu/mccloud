@@ -87,8 +87,8 @@ function NewProject() {
     var project=NewNode('MyProject','project');
     project.children.push(NewGeometryNode('Geometry')); 
     project.children.push(NewPhysicsNode()); 
-    project.children.push(NewNode('Primary','primary')); 
-    project.children.push(NewNode('Materials','materials')); 
+    project.children.push(NewPrimaryNode()); 
+    project.children.push(NewMaterialsNode()); 
     LoadProject(project);
     $.post({ 
         url: "/mc/api/project/", 

@@ -70,6 +70,44 @@ function CheckMaterialName(name)
     return true;
 }
 
+function NewComponentNode(t,w){
+    var node = NewNode(t,'component');
+    node.data.weight=w;
+    node.data.name=node.text;
+    return node;
+}
+
+function NewMaterialNode(t, d=0){
+    var node=NewNode(t,'material');
+    node.data.type='element';
+    node.data.weight='composite';
+    node.data.name=node.text;
+    node.data.density=d;
+    return node;
+}
+
+function PackDefaultMaterial(node)
+{
+    var child=NewMaterialNode('Water',1.0);
+    child.children.push(new NewComponentNode('ele_H',2));
+    child.children.push(new NewComponentNode('ele_O',1));
+    node.children.push(child);
+    child=NewMaterialNode('Vaccum',0.000129);
+    child.children.push(new NewComponentNode('ele_H',1));
+    node.children.push(child);
+    child=NewMaterialNode('Air',0.000129);
+    child.children.push(new NewComponentNode('ele_O',0.21));
+    child.children.push(new NewComponentNode('ele_N',0.79));
+    node.children.push(child);
+}
+
+function NewMaterialsNode()
+{
+    var node=NewNode('Materials','materials');
+    PackDefaultMaterial(node);
+    return node;
+}
+
 function CheckAndAddMaterial(name)
 {
     var instance = $('#project-view').jstree(true);
@@ -84,7 +122,7 @@ function CheckAndAddMaterial(name)
         alert('Already exist the same material!');
         return false;
     }
-    var node = NewMaterial(name);
+    var node = NewMaterialNode(name);
     var res = instance.create_node(current,node);
     console.log('create material: ' + res);
     return true;
@@ -200,7 +238,7 @@ function CheckAndAddComponent(name)
         alert('Already exist the same component!');
         return false;
     }
-    var node = NewComponent(name,0);
+    var node = NewComponentNode(name,0);
     var res = instance.create_node(current,node);
     console.log('create component: ' + res);
     return true;
