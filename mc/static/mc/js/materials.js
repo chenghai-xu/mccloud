@@ -89,15 +89,15 @@ function NewMaterialNode(t, d=0){
 function PackDefaultMaterial(node)
 {
     var child=NewMaterialNode('Water',1.0);
-    child.children.push(new NewComponentNode('ele_H',2));
-    child.children.push(new NewComponentNode('ele_O',1));
+    child.children.push(new NewComponentNode('el_H',2));
+    child.children.push(new NewComponentNode('el_O',1));
     node.children.push(child);
     child=NewMaterialNode('Vaccum',0.000129);
-    child.children.push(new NewComponentNode('ele_H',1));
+    child.children.push(new NewComponentNode('el_H',1));
     node.children.push(child);
     child=NewMaterialNode('Air',0.000129);
-    child.children.push(new NewComponentNode('ele_O',0.21));
-    child.children.push(new NewComponentNode('ele_N',0.79));
+    child.children.push(new NewComponentNode('el_O',0.21));
+    child.children.push(new NewComponentNode('el_N',0.79));
     node.children.push(child);
 }
 
