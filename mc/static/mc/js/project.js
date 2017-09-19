@@ -86,7 +86,7 @@ function LoadProject(project) {
 function NewProject() {
     var project=NewNode('MyProject','project');
     project.children.push(NewGeometryNode('Geometry')); 
-    project.children.push(NewNode('Physics','physics')); 
+    project.children.push(NewPhysicsNode()); 
     project.children.push(NewNode('Primary','primary')); 
     project.children.push(NewNode('Materials','materials')); 
     LoadProject(project);
@@ -98,7 +98,8 @@ function NewProject() {
 }
 function PostProject(data)
 {
-    project=JSON.parse(data);
+    //project=JSON.parse(data);
+    project=data;
     project_records.set(data.id,project);
     current_project=data.id;
 }
@@ -128,6 +129,7 @@ function NodeSelected(event, data) {
     SelectedPhysical(current);
     SelectedMaterials(current);
     SelectedPrimary(current);
+    SelectedPhysics(current);
 }
 function OpenProject() {
     $.get({ 
