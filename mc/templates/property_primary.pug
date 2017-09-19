@@ -35,26 +35,29 @@ div(id='property-particle', class='hidden')
   div(class='row')
     label Particle
   div(class='row')
-    form(class='form',role='form',action='javascript:void(0);',onsubmit='OnMaterialSubmit(this)')
+    form(class='form',role='form',action='javascript:void(0);')
       div(class='form-group')
-        div(class='input-group input-group-sm')
-          span(class='input-group-addon') Name:
-          input(class='form-control',name='name')
-        div(class='input-group input-group-sm')
-          span(class='input-group-addon') Density:
-          input(type='number',step='0.0001',class='form-control',name='density')
-        div(class='input-group input-group-sm')
+        div(id='gps-par-type',class='input-group input-group-sm')
           span(class='input-group-addon') Type:
-          select(class='form-control',name='type')
-              option mixture
-              option element
-        div(class='input-group input-group-sm')
-          span(class='input-group-addon') Mix by:
-          select(class='form-control',name='weight')
-              option fraction
-              option composite
-      //button(class="btn btn-default",onclick='MaterialEdit()') Component
-      button(type='submit',class="btn btn-default") Save
+          select(class='form-control',name='type',onchange='PParticle.TypeChanged(this)')
+              option gamma
+              option e-
+              option e+
+              option neutron
+              option proton
+              option ion
+        div(id='gps-par-z',class='input-group input-group-sm')
+          span(class='input-group-addon') Z:
+          input(type='number',class='form-control',name='z',onchange='PParticle.ValueChanged(this)')
+        div(id='gps-par-a',class='input-group input-group-sm')
+          span(class='input-group-addon') A:
+          input(type='number',class='form-control',name='a',onchange='PParticle.ValueChanged(this)')
+        div(id='gps-par-q',class='input-group input-group-sm')
+          span(class='input-group-addon') Q:
+          input(type='number',step='0.0001',class='form-control',name='q',onchange='PParticle.ValueChanged(this)')
+        div(id='gps-par-e',class='input-group input-group-sm')
+          span(class='input-group-addon') E:
+          input(type='number',step='0.0001',class='form-control',name='e',onchange='PParticle.ValueChanged(this)')
 
 div(id='property-position', class='hidden')
   div(class='row')
@@ -260,3 +263,21 @@ div(id='property-energy', class='hidden')
               option TeV 
               option PeV
               option eV 
+
+div(id='property-time', class='hidden')
+  div(class='row')
+    label Time
+  div(class='row')
+    form(class='form',role='form',action='javascript:void(0);')
+      div(class='form-group')
+        div(id='gps-time-time',class='input-group input-group-sm')
+          span(class='input-group-addon') Time:
+          input(type='number',step='0.0001',class='form-control',name='time',onchange='PTime.ValueChanged(this)')
+        div(id='gps-time-tunit',class='input-group input-group-sm')
+          span(class='input-group-addon') Unit:
+          select(class='form-control',name='tunit',onchange='PTime.TUnitChanged(this)')
+              option ns
+              option ps
+              option us
+              option ms
+              option s

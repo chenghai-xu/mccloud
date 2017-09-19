@@ -178,11 +178,13 @@ function NewEnergyNode(t){
 
 function NewParticleNode(t){
     var node=NewNode(t,'particle');
+    node.data=PParticle.New();
     return node;
 }
 
 function NewTimeNode(t){
     var node=NewNode(t,'time');
+    node.data=PTime.New();
     return node;
 }
 
@@ -233,6 +235,11 @@ function SelectedParticle(current)
 {
     if(current.type != 'particle')
         return;
+    var property = $('#property-particle').clone();
+    property.attr("id","property-current");
+    property.removeClass('hidden');
+    PParticle.InitForm(property,current);
+    $('#property-container').append(property);
 }
 
 function SelectedPosition(current)
@@ -272,6 +279,11 @@ function SelectedTime(current)
 {
     if(current.type != 'time')
         return;
+    var property = $('#property-time').clone();
+    property.attr("id","property-current");
+    property.removeClass('hidden');
+    PTime.InitForm(property,current);
+    $('#property-container').append(property);
 }
 
 function SelectedPrimary(current)
@@ -1177,6 +1189,124 @@ var PEnergy = {
             current.data[p]=value;
         else
             current.data[p]=parseFloat(value);
+
+    },
+}
+var PParticle = {
+    TypeMap: new Map([
+        ['gamma',{type:'gamma'}],
+        ['e-',{type:'e-'}],
+        ['e+',{type:'e+'}],
+        ['neutron',{type:'neutron'}],
+        ['proton',{type:'proton'}],
+        ['ion',{type:'ion',z:1,a:1,q:0,e:0,v:-1}],
+    ]), 
+
+    New: function(t='gamma'){
+        var node=this.TypeMap.get(t);
+        if(!node)
+            node=this.TypeMap.get('gamma');
+        return node;
+    },
+
+    InitForm: function(form, current)
+    {
+        $(form).find('div .input-group').addClass('hidden');
+        $(form).find('#gps-par-type').removeClass('hidden');
+        var data=current.data;
+        $(form).find('select[name=type]').val(data.type);
+        for(p in data)
+        {
+            if(p==='type')
+                continue;
+            $(form).find('#gps-par-'+p).removeClass('hidden');
+            $(form).find('input[name='+p+']').val(data[p]);
+        }
+    },
+
+    TypeChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var instance = $('#project-view').jstree(true);
+        var selects=instance.get_selected(true);
+        if(selects.length < 1)
+            return;
+        var current=selects[0];
+        if(current.type != 'particle')
+            return;
+
+        var form=$('#property-current');
+        console.log('Change particle type to: ',value);
+        current.data=this.New(value);
+        this.InitForm(form,current);
+    },
+
+    ValueChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var instance = $('#project-view').jstree(true);
+        var selects=instance.get_selected(true);
+        if(selects.length < 1)
+            return;
+        var current=selects[0];
+        if(current.type != 'particle')
+            return;
+        var p=$(elem).attr('name');
+        console.log('Change particle parameter '+p+' to '+ value);
+        current.data[p]=parseFloat(value);
+
+    },
+}
+var PTime = {
+    New: function(){
+        var node={time:0,tunit:'ns'};
+        return node;
+    },
+
+    InitForm: function(form, current)
+    {
+        $(form).find('div .input-group').addClass('hidden');
+        $(form).find('#gps-time-tunit').removeClass('hidden');
+        var data=current.data;
+        $(form).find('select[name=tunit]').val(data.tunit);
+        for(p in data)
+        {
+            if(p==='tunit')
+                continue;
+            $(form).find('#gps-time-'+p).removeClass('hidden');
+            $(form).find('input[name='+p+']').val(data[p]);
+        }
+    },
+
+    TUnitChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var instance = $('#project-view').jstree(true);
+        var selects=instance.get_selected(true);
+        if(selects.length < 1)
+            return;
+        var current=selects[0];
+        if(current.type != 'time')
+            return;
+
+        var form=$('#property-current');
+        console.log('Change time unit to: ',value);
+        current.data.tunit=value;
+    },
+
+    ValueChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var instance = $('#project-view').jstree(true);
+        var selects=instance.get_selected(true);
+        if(selects.length < 1)
+            return;
+        var current=selects[0];
+        if(current.type != 'time')
+            return;
+        var p=$(elem).attr('name');
+        console.log('Change time parameter '+p+' to '+ value);
+        current.data[p]=parseFloat(value);
 
     },
 }
