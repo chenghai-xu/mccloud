@@ -51,15 +51,20 @@ function NewPositionBeam(shape='Circle')
     node.rot1={x:1,y:0,z:0};
     node.rot2={x:0,y:1,z:0};
     if(shape==='Circle')
+    {
+        node.radius=1;
         node.sigma_r=1;
+    }
     else if(shape==='Ellipse')
     {
         node.sigma_x=1;
         node.sigma_y=2;
+        node.half={x:1,y:2};
     }
     else
     {
         node.shape='Circle';
+        node.radius=1;
         node.sigma_r=1;
     }
 
@@ -399,6 +404,8 @@ function InitPositionBeamForm(form,current)
     {
         $(form).find('input[name=sigma-radius]').val(data.sigma_r);
         $(form).find('#gps-pos-sigma-radius').removeClass('hidden');
+        $(form).find('input[name=radius]').val(data.radius);
+        $(form).find('#gps-pos-radius').removeClass('hidden');
     }
     else if(shape==='Ellipse')
     {
@@ -406,6 +413,10 @@ function InitPositionBeamForm(form,current)
         $(form).find('input[name=sigma-y]').val(data.sigma_y);
         $(form).find('#gps-pos-sigma-x').removeClass('hidden');
         $(form).find('#gps-pos-sigma-y').removeClass('hidden');
+
+        $(form).find('input[name=half]').val(data.half.x+', '+data.half.y);
+        $(form).find('span[id=halfxyz]').html('Half XY(x,y):');
+        $(form).find('#gps-pos-half').removeClass('hidden');
     }
     var select= $(form).find('select[name=shape]');
     select.empty();
