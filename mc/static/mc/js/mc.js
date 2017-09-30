@@ -80,7 +80,7 @@ function NewSolid(type='box'){
 
     return node;
 }
-function NewPosition(){
+function NewVolumePosition(){
     var node=
         {
             x:0.0,
@@ -90,7 +90,7 @@ function NewPosition(){
         };
     return node;
 }
-function NewRotation(){
+function NewVolumeRotation(){
     var node=
         {
             x:0.0,
@@ -104,8 +104,8 @@ function NewPlacement(){
     var node=
         {
             type:'simple',
-            position: NewPosition(),
-            rotation: NewRotation(),
+            position: NewVolumePosition(),
+            rotation: NewVolumeRotation(),
         };
     return node;
 }
@@ -120,18 +120,18 @@ function NewPhysicalNode(t,world=false){
 }
 
 var unit_map = new Map();
-unit_map.set('mm',0.1);
-unit_map.set('cm',1.0);
-unit_map.set('m',100);
-unit_map.set('km',1000);
-unit_map.set('mm2',0.01);
-unit_map.set('cm2',1.0);
-unit_map.set('m2',10000);
-unit_map.set('km2',1000000);
-unit_map.set('mm3',0.001);
-unit_map.set('cm3',1.0);
-unit_map.set('m3',1000000);
-unit_map.set('km3',1000000000);
+unit_map.set('mm',1e-3);
+unit_map.set('cm',1e-2);
+unit_map.set('m',1);
+unit_map.set('km',1e3);
+unit_map.set('mm2',1e-6);
+unit_map.set('cm2',1e-4);
+unit_map.set('m2',1);
+unit_map.set('km2',1e6);
+unit_map.set('mm3',1e-9);
+unit_map.set('cm3',1e-6);
+unit_map.set('m3',1);
+unit_map.set('km3',1e9);
 unit_map.set('deg',1.0);
 unit_map.set('rad',Math.PI/180);
 
