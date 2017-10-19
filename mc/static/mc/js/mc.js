@@ -139,6 +139,6 @@ function UnitOf(u)
 {
     var res = unit_map.get(u.toLowerCase());
     if(res==undefined)
-        res=1.0
+        res=1.0;
     return res;
 }
