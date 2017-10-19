@@ -1,4 +1,4 @@
-div(id='property-physical', class='hidden')
+div(id='property-volume', class='hidden')
   form(class='form',role='form')
     div(class='row')
       label(id='current-node-name') Volume
@@ -9,13 +9,13 @@ div(id='property-physical', class='hidden')
           span(class='caret')
         ul(class='dropdown-menu',role='menu') 
           li
-            a(id='new-node',href='#',onclick='PhysicalAdd()') Add Child 
+            a(id='new-node',href='#',onclick='VolumeAdd()') Add Child 
           li
-            a(id='delete-node',href='#',onclick='PhysicalDelete()') Delete Current  
+            a(id='delete-node',href='#',onclick='VolumeDelete()') Delete Current  
     div(class='row')
       //div(class='form-group')
-      //  button(id='physical-add',type='button', class='btn btn-default',onclick='PhysicalAdd()') Add
-      //  button(id='physical-delete',type='button', class='btn btn-default',onclick='PhysicalDelete()') Delete
+      //  button(id='volume-add',type='button', class='btn btn-default',onclick='VolumeAdd()') Add
+      //  button(id='volume-delete',type='button', class='btn btn-default',onclick='VolumeDelete()') Delete
       div(class='form-group')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Name:

@@ -1,0 +1,42 @@
+div(id='property-physics', class='hidden')
+  div(class='row')
+    label Physics
+  div(class='row')
+    form(class='form',role='form',action='javascript:void(0);')
+      div(class='form-group')
+        div(id='gps-phy-list',class='input-group input-group-sm')
+          span(class='input-group-addon') Physics Lists:
+          select(class='form-control',name='list',onchange='PPhysics.ListChanged(this)')
+              option FTFP_BERT
+              option FTFP_BERT_TRV
+              option FTFP_BERT_ATL
+              option FTFP_BERT_HP
+              option FTFP_INCLXX
+              option FTFP_INCLXX_HP
+              option FTF_BIC
+              option LBE
+              option QBBC
+              option QGSP_BERT
+              option QGSP_BERT_HP
+              option QGSP_BIC
+              option QGSP_BIC_HP
+              option QGSP_BIC_AllHP
+              option QGSP_FTFP_BERT
+              option QGSP_INCLXX
+              option QGSP_INCLXX_HP
+              option QGS_BIC
+              option Shielding
+              option ShieldingLEND
+              option ShieldingM
+              option NuBeam
+        div(id='gps-phy-em',class='input-group input-group-sm hidden')
+          span(class='input-group-addon') EM Option:
+          select(class='form-control',name='em',onchange='PPhysics.EmChanged(this)')
+              option(value='_STD') STD     
+              option(value='_EMV')  EMV
+              option(value='_EMX')  EMX
+              option(value='_EMY')  EMY
+              option(value='_EMZ')  EMZ
+              option(value='_LIV')  LIV
+              option(value='_PEN')  PEN
+              option(value='__GS')  GS

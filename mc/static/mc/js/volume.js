@@ -8,15 +8,15 @@ function ChangeVolumeName(form){
     if(selects.length < 1)
         return;
     var current=selects[0];
-    if(current.type != 'physical')
+    if(current.type != 'volume')
         return;
     instance.rename_node(current,name);
 } 
-function SelectedPhysical(current)
+function SelectedVolume(current)
 {
-    if(current.type != 'physical')
+    if(current.type != 'volume')
         return;
-    var property = $('#property-physical').clone();
+    var property = $('#property-volume').clone();
     property.attr("id","property-current");
     property.removeClass('hidden');
     $(property).find('select[name=solid]').val(current.data.solid.type);
@@ -31,27 +31,27 @@ function SelectedPhysical(current)
     DrawModel(current);
 }
 
-function PhysicalAdd(){
+function VolumeAdd(){
     var instance = $('#project-view').jstree(true);
     var selects=instance.get_selected(true);
     if(selects.length < 1)
         return;
     var current=selects[0];
-    if(current.type != 'physical')
+    if(current.type != 'volume')
         return;
 
-    var node = NewPhysicalNode('physical');
+    var node = NewVolumeNode('volume');
     var res = instance.create_node(current,node);
-    console.log('create physical: ' + res);
+    console.log('create volume: ' + res);
 } 
 
-function PhysicalDelete(){
+function VolumeDelete(){
     var instance = $('#project-view').jstree(true);
     var selects=instance.get_selected(true);
     if(selects.length < 1)
         return;
     var current=selects[0];
-    if(current.type != 'physical')
+    if(current.type != 'volume')
         return;
 
     var par = instance.get_node(instance.get_parent(current));
@@ -59,7 +59,7 @@ function PhysicalDelete(){
         return;
 
     var res = instance.delete_node(current);
-    console.log('delete physical: ' + res);
+    console.log('delete volume: ' + res);
     DrawModel(par);
 } 
 function InitSolidForm(){
@@ -68,7 +68,7 @@ function InitSolidForm(){
     if(selects.length < 1)
         return;
     var current=selects[0];
-    if(current.type != 'physical')
+    if(current.type != 'volume')
         return;
     var solid=current.data.solid;
     var wigdet=null;
@@ -104,7 +104,7 @@ function ChangeSolidType(sel){
     if(selects.length < 1)
         return;
     var current=selects[0];
-    if(current.type != 'physical')
+    if(current.type != 'volume')
         return;
     var solid=current.data.solid;
     if(selected==solid.type)
@@ -121,7 +121,7 @@ function InitPlacementForm(wigdet,tube)
     if(selects.length < 1)
         return;
     var current=selects[0];
-    if(current.type != 'physical')
+    if(current.type != 'volume')
         return;
     var placement=current.data.placement;
     var wigdet=null;
@@ -145,7 +145,7 @@ function OnPlacementSimpleSubmit(form){
     if(selects.length < 1)
         return;
     var current=selects[0];
-    if(current.type != 'physical')
+    if(current.type != 'volume')
         return;
 
     var placement=current.data.placement;

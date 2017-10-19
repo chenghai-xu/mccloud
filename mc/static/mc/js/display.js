@@ -119,7 +119,7 @@ function DrawModel(node)
     {
         var instance = $('#project-view').jstree(true);
         var par=instance.get_node(node.parent);
-        if(par.type=='physical')
+        if(par.type=='volume')
             node=par;
     }
 
@@ -149,7 +149,7 @@ function DrawModel(node)
     for(var i=0;i <node.children.length;i++)
     {
         var child = instance.get_node(instance.get_node(node.children[i]));
-        if(child == null || child.type != 'physical')
+        if(child == null || child.type != 'volume')
             continue;
         var geo=CalcGeometry(child);
         if(geo != null )

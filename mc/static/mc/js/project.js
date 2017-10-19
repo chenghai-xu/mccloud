@@ -29,7 +29,7 @@ function LoadProject(project) {
                 geometry: {
                     "icon": ""
                 },
-                physical: {
+                volume: {
                     "icon": ""
                 },
                 materials: {
@@ -126,7 +126,7 @@ function NodeSelected(event, data) {
     console.log('Select node: ',current.id);
     $('#property-current').remove();
     $('#property-detail-current').remove();
-    SelectedPhysical(current);
+    SelectedVolume(current);
     SelectedMaterials(current);
     SelectedPrimary(current);
     SelectedPhysics(current);

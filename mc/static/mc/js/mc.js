@@ -15,8 +15,8 @@ function NewNode(t,type){
 
 function NewGeometryNode(t){
     var node=NewNode(t,'geometry');
-    node.children.push(NewPhysicalNode('world',true));
-    node.children.push(NewPhysicalNode('parallel',true));
+    node.children.push(NewVolumeNode('world',true));
+    node.children.push(NewVolumeNode('parallel',true));
     return node;
 }
 
@@ -109,8 +109,8 @@ function NewPlacement(){
         };
     return node;
 }
-function NewPhysicalNode(t,world=false){
-    var node=NewNode(t,'physical');
+function NewVolumeNode(t,world=false){
+    var node=NewNode(t,'volume');
     node.data.solid=NewSolid();
     node.data.material='Vaccum'
     if(world==false){
