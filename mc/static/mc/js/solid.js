@@ -13,7 +13,7 @@ function OnBoxSubmit(form){
     if(selects.length < 1)
         return;
     var current=selects[0];
-    if(current.type != 'physical')
+    if(current.type != 'volume')
         return;
     current.data.solid=box;
     DrawModel(current);
@@ -53,7 +53,7 @@ function OnTubeSubmit(form){
     if(selects.length < 1)
         return;
     var current=selects[0];
-    if(current.type != 'physical')
+    if(current.type != 'volume')
         return;
     current.data.solid=tube;
     DrawModel(current);
@@ -87,7 +87,7 @@ function OnSphereSubmit(form){
     if(selects.length < 1)
         return;
     var current=selects[0];
-    if(current.type != 'physical')
+    if(current.type != 'volume')
         return;
     current.data.solid=sphere;
     DrawModel(current);
