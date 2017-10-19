@@ -82,7 +82,7 @@ function CalcGeometry(node)
     var type=solid.type;
     var geometry = null;
     var lunit='mm';
-    var aunit='deg'
+    var aunit='deg';
     if(type=='box')
     {
         geometry = new THREE.BoxGeometry(parameter.x*UnitOf(parameter.lunit)/UnitOf(lunit), 
@@ -161,12 +161,14 @@ function DrawModel(node)
             var mat = new THREE.MeshPhongMaterial({color: color,shininess:80});
             mat.emissive.setHex(color);
             var obj = new THREE.Mesh(geo, mat);
-            obj.position.x=pos.x*10;
-            obj.position.y=pos.y*10;
-            obj.position.z=pos.z*10;
-            obj.rotation.x=rot.x;
-            obj.rotation.y=rot.y;
-            obj.rotation.z=rot.z;
+            var lunit=UnitOf(pos.lunit)/UnitOf('mm');
+            var aunit=UnitOf(rot.aunit)/UnitOf('deg');
+            obj.position.x=pos.x*lunit;
+            obj.position.y=pos.y*lunit;
+            obj.position.z=pos.z*lunit;
+            obj.rotation.x=rot.x*aunit;
+            obj.rotation.y=rot.y*aunit;
+            obj.rotation.z=rot.z*aunit;
             obj.ID = node.children[i];
             meshs.push(obj);
             root.add(obj);

@@ -74,17 +74,20 @@ function InitSolidForm(){
     var wigdet=null;
     if(solid.type=='box'){
         wigdet = $('#property-solid-box').clone();
-        InitBoxForm(wigdet,solid);
+        //InitBoxForm(wigdet,solid);
+        SolidBox.InitForm(wigdet,solid);
     }
     else if(solid.type=='tube')
     {
         wigdet = $('#property-solid-tube').clone();
-        InitTubeForm(wigdet,solid);
+        //InitTubeForm(wigdet,solid);
+        SolidTube.InitForm(wigdet,solid);
     }
     else if(solid.type=='sphere')
     {
         wigdet = $('#property-solid-sphere').clone();
-        InitSphereForm(wigdet,solid);
+        //InitSphereForm(wigdet,solid);
+        SolidSphere.InitForm(wigdet,solid);
     }
     else 
         return;
@@ -130,7 +133,8 @@ function InitPlacementForm(wigdet,tube)
     }
 
     wigdet = $('#property-placement-simple').clone();
-    InitPlacementSimpleForm(wigdet,placement);
+    //InitPlacementSimpleForm(wigdet,placement);
+    PlacementSimple.InitForm(wigdet,placement);
 
     $(wigdet).find('select[name=placement]').val(placement.type);
     wigdet.attr("id","property-detail-current");
@@ -139,37 +143,84 @@ function InitPlacementForm(wigdet,tube)
     $('#property-detail-container').append(wigdet);
 }
 
-function OnPlacementSimpleSubmit(form){
-    var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'volume')
-        return;
+var PlacementSimple = {
+    InitForm: function(form, placement)
+    {
+        $(form).find('input[name=px]').val(placement.position.x);
+        $(form).find('input[name=py]').val(placement.position.y);
+        $(form).find('input[name=pz]').val(placement.position.z);
+        $(form).find('select[name=lunit]').val(placement.position.lunit);
+        $(form).find('input[name=rx]').val(placement.rotation.x);
+        $(form).find('input[name=ry]').val(placement.rotation.y);
+        $(form).find('input[name=rz]').val(placement.rotation.z);
+        $(form).find('select[name=aunit]').val(placement.rotation.aunit);
+    },
 
-    var placement=current.data.placement;
-    placement.position.x=$(form).find('input[name=px]').val();
-    placement.position.y=$(form).find('input[name=py]').val();
-    placement.position.z=$(form).find('input[name=pz]').val();
-    placement.position.lunit=$(form).find('select[name=lunit]').val();
-    placement.rotation.x=$(form).find('input[name=rx]').val();
-    placement.rotation.y=$(form).find('input[name=ry]').val();
-    placement.rotation.z=$(form).find('input[name=rz]').val();
-    placement.rotation.aunit=$(form).find('select[name=aunit]').val();
-    current.data.placement=placement;
-    DrawModel(current);
+    LUnitChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var instance = $('#project-view').jstree(true);
+        var selects=instance.get_selected(true);
+        if(selects.length < 1)
+            return;
+        var current=selects[0];
+        if(current.type != 'volume')
+            return;
+
+        var p=$(elem).attr('name');
+        console.log('Change placement simple parameter '+p+' to '+ value);
+        current.data.placement.position.lunit=value;
+        DrawModel(current);
+    },
+
+    AUnitChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var instance = $('#project-view').jstree(true);
+        var selects=instance.get_selected(true);
+        if(selects.length < 1)
+            return;
+        var current=selects[0];
+        if(current.type != 'volume')
+            return;
+
+        var p=$(elem).attr('name');
+        console.log('Change placement simple parameter '+p+' to '+ value);
+        current.data.placement.rotation.aunit=value;
+        DrawModel(current);
+    },
+
+    PosValueChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var instance = $('#project-view').jstree(true);
+        var selects=instance.get_selected(true);
+        if(selects.length < 1)
+            return;
+        var current=selects[0];
+        if(current.type != 'volume')
+            return;
+        var p=$(elem).attr('name');
+        p=p.substr(1);
+        console.log('Change placement parameter '+p+' to '+ value);
+        current.data.placement.position[p]=value;
+        DrawModel(current);
+    },
+
+    RotValueChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var instance = $('#project-view').jstree(true);
+        var selects=instance.get_selected(true);
+        if(selects.length < 1)
+            return;
+        var current=selects[0];
+        if(current.type != 'volume')
+            return;
+        var p=$(elem).attr('name');
+        p=p.substr(1);
+        console.log('Change placement parameter '+p+' to '+ value);
+        current.data.placement.rotation[p]=value;
+        DrawModel(current);
+    },
 }
-
-function InitPlacementSimpleForm(wigdet,placement)
-{
-    $(wigdet).find('input[name=px]').val(placement.position.x);
-    $(wigdet).find('input[name=py]').val(placement.position.y);
-    $(wigdet).find('input[name=pz]').val(placement.position.z);
-    $(wigdet).find('select[name=lunit]').val(placement.position.lunit);
-    $(wigdet).find('input[name=rx]').val(placement.rotation.x);
-    $(wigdet).find('input[name=ry]').val(placement.rotation.y);
-    $(wigdet).find('input[name=rz]').val(placement.rotation.z);
-    $(wigdet).find('select[name=aunit]').val(placement.rotation.aunit);
-}
-

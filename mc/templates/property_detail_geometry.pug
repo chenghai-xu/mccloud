@@ -2,120 +2,124 @@ div(id='property-solid-box', class='hidden')
   div(class='row')
     label Box
   div(class='row')
-    form(class='form',role='form',action='javascript:void(0);',onsubmit='OnBoxSubmit(this)')
+    //form(class='form',role='form',action='javascript:void(0);',onsubmit='OnBoxSubmit(this)')
+    form(class='form',role='form',action='javascript:void(0);')
       div(class='form-group')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') x:
-          input(type='number',step='0.0001',class='form-control',name='x')
+          input(type='number',step='0.0001',class='form-control',name='x',onchange='SolidBox.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') y:
-          input(type='number',step='0.0001',class='form-control',name='y')
+          input(type='number',step='0.0001',class='form-control',name='y',onchange='SolidBox.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') z:
-          input(type='number',step='0.0001',class='form-control',name='z')
+          input(type='number',step='0.0001',class='form-control',name='z',onchange='SolidBox.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') lunit:
-          select(class='form-control',name='lunit')
+          select(class='form-control',name='lunit',onchange='SolidBox.LUnitChanged(this)')
               option m
               option cm
               option mm
               option km
-      button(type='submit',class="btn btn-default") Save
+      //button(type='submit',class="btn btn-default") Save
 
 div(id='property-solid-tube', class='hidden')
   div(class='row')
     label Tube
   div(class='row')
-    form(class='form',role='form',action='javascript:void(0);',onsubmit='OnTubeSubmit(this)')
+    //form(class='form',role='form',action='javascript:void(0);',onsubmit='OnTubeSubmit(this)')
+    form(class='form',role='form',action='javascript:void(0);')
       div(class='form-group')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') rmin:
-          input(type='number',step='0.0001',class='form-control',name='rmin')
+          input(type='number',step='0.0001',class='form-control',name='rmin',onchange='SolidTube.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') rmax:
-          input(type='number',step='0.0001',class='form-control',name='rmax')
+          input(type='number',step='0.0001',class='form-control',name='rmax',onchange='SolidTube.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') z:
-          input(type='number',step='0.0001',class='form-control',name='z')
+          input(type='number',step='0.0001',class='form-control',name='z',onchange='SolidTube.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') start phi:
-          input(type='number',step='0.0001',class='form-control',name='startphi')
+          input(type='number',step='0.0001',class='form-control',name='startphi',onchange='SolidTube.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') delta phi:
-          input(type='number',step='0.0001',class='form-control',name='deltaphi')
+          input(type='number',step='0.0001',class='form-control',name='deltaphi',onchange='SolidTube.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') lunit:
-          select(class='form-control',name='lunit')
+          select(class='form-control',name='lunit',onchange='SolidTube.UnitChanged(this)')
               option m
               option cm
               option mm
               option km
         div(class='input-group input-group-sm')
           span(class='input-group-addon') aunit:
-          select(class='form-control',name='aunit')
+          select(class='form-control',name='aunit',onchange='SolidTube.UnitChanged(this)')
               option deg
               option rad
-      button(type='submit',class="btn btn-default") Save
+      //button(type='submit',class="btn btn-default") Save
 
 div(id='property-solid-sphere', class='hidden')
   div(class='row')
     label Sphere
   div(class='row')
-    form(class='form',role='form',action='javascript:void(0);',onsubmit='OnSphereSubmit(this)')
+    //form(class='form',role='form',action='javascript:void(0);',onsubmit='OnSphereSubmit(this)')
+    form(class='form',role='form',action='javascript:void(0);')
       div(class='form-group')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') rmin:
-          input(type='number',step='0.0001',class='form-control',name='rmin')
+          input(type='number',step='0.0001',class='form-control',name='rmin',onchange='SolidSphere.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') rmax:
-          input(type='number',step='0.0001',class='form-control',name='rmax')
+          input(type='number',step='0.0001',class='form-control',name='rmax',onchange='SolidSphere.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') start theta:
-          input(type='number',step='0.0001',class='form-control',name='starttheta')
+          input(type='number',step='0.0001',class='form-control',name='starttheta',onchange='SolidSphere.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') delta theta:
-          input(type='number',step='0.0001',class='form-control',name='deltatheta')
+          input(type='number',step='0.0001',class='form-control',name='deltatheta',onchange='SolidSphere.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') start phi:
-          input(type='number',step='0.0001',class='form-control',name='startphi')
+          input(type='number',step='0.0001',class='form-control',name='startphi',onchange='SolidSphere.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') delta phi:
-          input(type='number',step='0.0001',class='form-control',name='deltaphi')
+          input(type='number',step='0.0001',class='form-control',name='deltaphi',onchange='SolidSphere.ValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') lunit:
-          select(class='form-control',name='lunit')
+          select(class='form-control',name='lunit',onchange='SolidSphere.UnitChanged(this)')
               option m
               option cm
               option mm
               option km
         div(class='input-group input-group-sm')
           span(class='input-group-addon') aunit:
-          select(class='form-control',name='aunit')
+          select(class='form-control',name='aunit',onchange='SolidSphere.UnitChanged(this)')
               option deg
               option rad
-      button(type='submit',class="btn btn-default") Save
+      //button(type='submit',class="btn btn-default") Save
 
 
 div(id='property-placement-simple', class='hidden')
   div(class='row')
     label Placement
-  form(class='form',role='form',action='javascript:void(0);',onsubmit='OnPlacementSimpleSubmit(this)')
+  //form(class='form',role='form',action='javascript:void(0);',onsubmit='OnPlacementSimpleSubmit(this)')
+  form(class='form',role='form',action='javascript:void(0);')
     div(class='form-group')
       div(class='row')
         label Position
       div(class='row')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') x:
-          input(type='number',step='0.0001',class='form-control',name='px')
+          input(type='number',step='0.0001',class='form-control',name='px',onchange='PlacementSimple.PosValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') y:
-          input(type='number',step='0.0001',class='form-control',name='py')
+          input(type='number',step='0.0001',class='form-control',name='py',onchange='PlacementSimple.PosValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') z:
-          input(type='number',step='0.0001',class='form-control',name='pz')
+          input(type='number',step='0.0001',class='form-control',name='pz',onchange='PlacementSimple.PosValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') lunit:
-          select(class='form-control',name='lunit')
+          select(class='form-control',name='lunit',onchange='PlacementSimple.LUnitChanged(this)')
               option m
               option cm
               option mm
@@ -125,17 +129,17 @@ div(id='property-placement-simple', class='hidden')
       div(class='row')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') x:
-          input(type='number',step='0.0001',class='form-control',name='rx')
+          input(type='number',step='0.0001',class='form-control',name='rx',onchange='PlacementSimple.RotValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') y:
-          input(type='number',step='0.0001',class='form-control',name='ry')
+          input(type='number',step='0.0001',class='form-control',name='ry',onchange='PlacementSimple.RotValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') z:
-          input(type='number',step='0.0001',class='form-control',name='rz')
+          input(type='number',step='0.0001',class='form-control',name='rz',onchange='PlacementSimple.RotValueChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') aunit:
-          select(class='form-control',name='aunit')
+          select(class='form-control',name='aunit',onchange='PlacementSimple.AUnitChanged(this)')
               option deg
               option rad
-    button(type='submit',class="btn btn-default") Save
+    //button(type='submit',class="btn btn-default") Save
 
