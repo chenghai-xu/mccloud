@@ -1,0 +1,31 @@
+div(id='sensitive-detector',class='table-responsive ui-widget', title='Detector setup')
+
+  div(class='row')
+    form(class='form',role='form',action='javascript:void(0);')
+      div(class='form-group')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') SD type:
+          select(class='form-control',name='type',onchange='DetectorForm.TypeChanged(this)')
+              option mesh
+              option dist
+
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Name:
+          input(class='form-control',name='name',onchange='DetectorForm.NameChanged(this)')
+
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Bins(XYZ):
+          input(class='form-control',name='bins',onchange='DetectorForm.BinsChanged(this)')
+
+  div(class='row')
+    table(id="sd-quantities-table",class="table table-hover ui-widget ui-widget-content")
+        thead
+          tr(class='ui-widget-header')
+            th Quantity Type
+            th Quantity Name
+            th Quantity Parameter
+            th Filter Type
+            th Filter Name
+            th Filter Parameter
+        tbody(id='sd-quantities-tbody')
+    div(class='ui-dialog-buttonpane')

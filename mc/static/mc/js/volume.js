@@ -143,6 +143,23 @@ function InitPlacementForm(wigdet,tube)
     $('#property-detail-container').append(wigdet);
 }
 
+var VolumeForm={
+    EditDetector: function()
+    {
+        var instance = $('#project-view').jstree(true);
+        var selects=instance.get_selected(true);
+        if(selects.length < 1)
+            return;
+        var current=selects[0];
+        if(current.type != 'volume')
+            return;
+        if(current.data.detector===undefined)
+            current.data.detector=DetectorModel.NewSD();
+        DetectorForm.InitForm(current.data.detector);
+        DetectorForm.Open();
+    },
+};
+
 var PlacementSimple = {
     InitForm: function(form, placement)
     {
