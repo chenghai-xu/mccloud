@@ -14,7 +14,6 @@ function InitProject(){
 } 
 
 function LoadProject(project) {
-    CloseProject();
     $('#project-view').jstree(
         {
             core : {
@@ -84,6 +83,7 @@ function LoadProject(project) {
 }
 
 function NewProject() {
+    CloseProject();
     var project=NewNode('MyProject','project');
     project.children.push(NewGeometryNode('Geometry')); 
     project.children.push(NewPhysicsNode()); 
@@ -143,6 +143,18 @@ function SaveProject() {
     if (!$.jstree.reference($('#project-view'))) {
         return;
     }
+
+    var instance = $('#project-view').jstree(true);
+    for(var t in instance._model.data)
+    {
+        var node=instance._model.data[t];
+        if(node.type=='default')
+        {
+            console.log('project is invalid, refuse to save!');
+            return;
+        }
+    }
+
     var json=$('#project-view').jstree().get_json('#',{no_state:true, no_li_attr:true, no_a_attr: true });
     //console.log(JSON.stringify(json[0]));
     console.log('Save project', current_project);
@@ -151,14 +163,14 @@ function SaveProject() {
         data:JSON.stringify(json[0]),
         success: function(data){
             //console.log(data);
-            console.log('Post project tree: ',current_project);
+            console.log('Post project tree success: ');
         }
     });
 }
 
 function CloseProject() {
     SaveProject();
-    if ($.jstree.reference($('#project-view'))) {
+    if($.jstree.reference($('#project-view'))) {
         $('#project-view').jstree().delete_node($('#project-view').jstree().get_json());
     }
     $('#project-view').jstree('destroy');
@@ -175,7 +187,7 @@ function ProjectDialogInit()
         modal: true,
         buttons: {
             "Open": function() {
-                console.log('Load project ',project_selection);
+                CloseProject();
                 current_project=parseInt(project_selection);
                 DownloadProject(project_selection);
                 $( this ).dialog( "close" );
@@ -206,7 +218,7 @@ var project_selection=null;
 function SelectProject(data)
 {
     //console.log(data);
-    console.log('Select project: ',data.length);
+    console.log('List of projects: ',data.length);
     var tbody=$('#project-tbody');
     tbody.empty();
     for(var i=0; i< data.length; i++)
