@@ -27,6 +27,19 @@ function SelectedVolume(current)
         $(property).find('select[name=placement]').val(current.data.placement.type);
     $(property).find('input[name=material]').val(current.data.material);
 
+    if(current.text=='world' ||current.text=='parallel' )
+    {
+        property.find('#edit-detector').addClass('hidden');
+        property.find('#delete-node').addClass('hidden');
+    }
+    var instance = $('#project-view').jstree(true);
+    var par = instance.get_node(instance.get_parent(current));
+    if(par.text == 'parallel')
+    {
+        property.find('#new-node').addClass('hidden');
+        //property.find('#delete-node').addClass('hidden');
+    }
+
     $('#property-container').append(property);
     DrawModel(current);
 }
@@ -155,6 +168,25 @@ var VolumeForm={
             return;
         if(current.data.detector===undefined)
             current.data.detector=DetectorModel.NewSD();
+
+        var par = instance.get_node(instance.get_parent(current));
+
+        var opts=$('#sensitive-detector').find('select[name=type]');
+        opts.empty();
+
+        if(par.text=='world')
+        {
+            opts.append('<option>dist</option>');
+        }
+        else if(par.text=='parallel' )
+        {
+            opts.append('<option>mesh</option>');
+        }
+        else
+        {
+            opts.append('<option>dist</option>');
+        }
+
         DetectorForm.InitForm(current.data.detector);
         DetectorForm.Open();
     },
