@@ -64,6 +64,9 @@ function LoadProject(project) {
                 physics: {
                     "icon": ""
                 },
+                run: {
+                    "icon": ""
+                },
             },
             plugins: ["types","contextmenu"],
             contextmenu: {
@@ -89,6 +92,7 @@ function NewProject() {
     project.children.push(NewPhysicsNode()); 
     project.children.push(NewPrimaryNode()); 
     project.children.push(NewMaterialsNode()); 
+    project.children.push(RunModel.New()); 
     LoadProject(project);
     $.post({ 
         url: "/mc/api/project/", 
@@ -121,6 +125,7 @@ function RenameAble(node, parent) {
     return false;
 }
 
+var NodeWatch=[];
 function NodeSelected(event, data) {
     var current=data.instance.get_selected(true)[0];
     console.log('Select node: ',current.id);
@@ -130,6 +135,10 @@ function NodeSelected(event, data) {
     SelectedMaterials(current);
     SelectedPrimary(current);
     SelectedPhysics(current);
+    for(var i in NodeWatch)
+    {
+        NodeWatch[i](current);
+    }
 }
 function OpenProject() {
     $.get({ 

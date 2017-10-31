@@ -1,0 +1,26 @@
+div(id='property-run', class='hidden')
+  div(class='row')
+    label Run
+  div(class='row')
+    form(class='form',role='form',action='javascript:void(0);')
+      div(class='form-group')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Instance
+          select(class='form-control',name='type',onchange='RunForm.TypeChanged(this)')
+              option 4Core
+              option 8Core
+              option 16Core
+              option 36Core
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Node Size
+          input(type='number',class='form-control',name='nodes',onchange='RunForm.NodesChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Run Time
+          input(type='number',class='form-control',name='time',onchange='RunForm.TimeChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Time Unit
+          select(class='form-control',name='unit',onchange='RunForm.UnitChanged(this)')
+              option minute
+              option hour
+      button(id='verify',class="btn btn-default",onclick='RunForm.Verify(this)') Verify
+      button(id='run',class="btn btn-default",onclick='RunForm.Run(this)') Run
