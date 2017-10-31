@@ -30,7 +30,7 @@ div(id='property-material', class='hidden')
           span(class='input-group-addon') Name:
           input(class='form-control',name='name')
         div(class='input-group input-group-sm')
-          span(class='input-group-addon') Density:
+          span(class='input-group-addon') Density(g/cm3):
           input(type='number',step='0.0001',class='form-control',name='density')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Type:
@@ -61,7 +61,7 @@ div(id='property-component', class='hidden')
       div(class='form-group')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Name:
-          input(class='form-control',name='name')
+          input(class='form-control',name='name',disabled='disabled')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Weight:
           input(type='number',step='0.0001',class='form-control',name='weight')
@@ -73,3 +73,11 @@ div(id='dialog-input-name',class='ui-widget', title='Dialog')
     fieldset
       label(for="name")Name
       input(type="text", name="name", class="text ui-widget-content ui-corner-all")
+
+div(id='dialog-select-name',class='ui-widget', title='Dialog')
+  p(class="validateTips") Select
+  form
+    fieldset
+      label(for="name")Name
+      select(name="name", class="ui-widget-content ui-corner-all")
+        option None

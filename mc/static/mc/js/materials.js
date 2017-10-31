@@ -1,8 +1,48 @@
 $(document).ready(function () {
     //MaterialDialogInit();
     InputNameDialogInit();
+    MaterialsForm.InputSelectDialogInit();
 });
+var MaterialsModel={};
+var MaterialsForm={};
 var InputCallBack=null;
+MaterialsModel.Elements=[
+    'a',
+    'b',
+    'c',
+];
+
+MaterialsForm.GetID=function()
+{
+    var instance = $('#project-view').jstree(true);
+    var id='';
+    for(var t in instance._model.data)
+    {
+        var node=instance._model.data[t];
+        if(node.type=='materials')
+        {
+            id=node.id;
+            break;
+        }
+    }
+    return id;
+};
+
+MaterialsForm.GetAllMaterials=function()
+{
+    var instance = $('#project-view').jstree(true);
+    var id=this.GetID();
+    var node=instance.get_node(id);
+    var res=[];
+
+    for(var i in node.children)
+    {
+        var n=instance.get_node(node.children[i]);
+        res.push(n.data.name);
+    }
+    return res;
+};
+
 
 function SelectedMaterials(current)
 {
@@ -67,7 +107,29 @@ function MaterialDelete(){
 
 function CheckMaterialName(name)
 {
-    return true;
+    if(name=='')
+        return false;
+
+    var instance = $('#project-view').jstree(true);
+    var all=MaterialsForm.GetAllMaterials();
+    var res=true;
+    for(var i in all)
+    {
+        if(all[i]==name)
+        {
+            res=false;
+            break;
+        }
+    }
+    for(var i in MaterialsModel.Elements)
+    {
+        if(MaterialsModel.Elements[i]==name)
+        {
+            res=false;
+            break;
+        }
+    }
+    return res;
 }
 
 function NewComponentNode(t,w){
@@ -221,7 +283,7 @@ function MaterialAddComponent(){
         return;
 
     InputCallBack=CheckAndAddComponent;
-    $('#dialog-input-name').dialog('open');
+    $('#dialog-select-name').dialog('open');
 } 
 
 function CheckAndAddComponent(name)
@@ -311,3 +373,57 @@ function OnMaterialComponentSubmit(form)
     current.data.weight=weight;
     instance.rename_node(current,name);
 }
+
+MaterialsForm.InputSelectDialogInit=function()
+{
+    $( "#dialog-select-name" ).dialog({
+        autoOpen: false,
+        height: 200,
+        width: 400,
+        modal: true,
+        buttons: {
+            Element: function() {
+                var select=$( "#dialog-select-name" ).find('select[name=name]');
+                select.empty();
+                for(var i in MaterialsModel.Elements)
+                {
+                    var name=MaterialsModel.Elements[i];
+                    select.append('<option>'+name+'</option>');
+                }
+
+            },
+            Material: function() {
+
+                var select=$( "#dialog-select-name" ).find('select[name=name]');
+                select.empty();
+                var instance = $('#project-view').jstree(true);
+
+                var selects=instance.get_selected(true);
+                if(selects.length < 1)
+                    return false;
+                var current=selects[0];
+                if(current.type != 'material')
+                    return false;
+
+                var all=MaterialsForm.GetAllMaterials();
+                for (var i in all)
+                {
+                    if(all[i]!=current.data.name)
+                        select.append('<option>' + all[i] +'</option>');
+                }
+            },
+            OK: function() {
+                var value= $( "#dialog-select-name select[name=name]").val();
+                console.log('select text: ', value);
+                if(InputCallBack(value))
+                    $( this ).dialog( "close" );
+            },
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            },
+        },
+        close: function() {
+        }
+    });
+};
+

@@ -30,7 +30,9 @@ div(id='property-volume', class='hidden')
               option sphere
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Material:
-          input(class='form-control',name='material')
+          //input(class='form-control',name='material')
+          select(class='form-control',name='material',onchange='VolumeForm.OnMaterialChanged(this)')
+            option --
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Placement:
           select(class='form-control',name='placement',onclick='InitPlacementForm()',onchange='ChangePlacementType(this)')

@@ -25,7 +25,16 @@ function SelectedVolume(current)
         $(property).find('input[name=name]').attr("disabled","disabled");
     if(current.text!='world' && current.text!='parallel' )
         $(property).find('select[name=placement]').val(current.data.placement.type);
-    $(property).find('input[name=material]').val(current.data.material);
+
+    //$(property).find('input[name=material]').val(current.data.material);
+    var select=property.find('select[name=material]');
+    select.empty();
+    var all=MaterialsForm.GetAllMaterials();
+    for (var i in all)
+    {
+        select.append('<option>' + all[i] +'</option>');
+    }
+    select.val(current.data.material);
 
     if(current.text=='world' ||current.text=='parallel' )
     {
@@ -190,6 +199,17 @@ var VolumeForm={
         DetectorForm.InitForm(current.data.detector);
         DetectorForm.Open();
     },
+};
+
+VolumeForm.OnMaterialChanged = function(el){
+    var instance = $('#project-view').jstree(true);
+    var selects=instance.get_selected(true);
+    if(selects.length < 1)
+        return;
+    var current=selects[0];
+    if(current.type != 'volume')
+        return;
+    current.data.material=$(el).val();
 };
 
 var PlacementSimple = {
