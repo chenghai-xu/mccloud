@@ -20,6 +20,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 
 import os
+from datetime import *
 
 from .serializers import *
 from .models import *
@@ -48,6 +49,10 @@ def ReadProjectConfig(pk):
 def WriteProjectConfig(pk,data):
     os.makedirs('%s/%s'%(projects_root,pk), exist_ok=True)
     fname= '%s/%s/config.json' % (projects_root,pk)
+    if os.path.exists(fname):
+        postfix='.'+str(datetime.now()).replace(' ','T')
+        postfix=postfix.replace(':','-')
+        os.rename(fname,fname+postfix)
     f=open(fname,'w')
     f.write(data)
     f.close()
