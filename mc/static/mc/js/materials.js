@@ -4,6 +4,7 @@ $(document).ready(function () {
     MaterialsForm.InputSelectDialogInit();
 });
 var MaterialsModel={};
+var MaterialComponentForm={};
 var MaterialsForm={};
 var InputCallBack=null;
 MaterialsModel.Elements=[
@@ -64,6 +65,7 @@ function SelectedMaterialComponent(current)
     $(property).find('input[name=name]').val(current.data.name);
     $(property).find('input[name=weight]').val(current.data.weight);
     $('#property-container').append(property);
+    MaterialComponentForm.current=current;
 }
 function SelectedMaterial(current)
 {
@@ -78,6 +80,7 @@ function SelectedMaterial(current)
     $(property).find('select[name=type]').val(current.data.type);
     $(property).find('select[name=weight]').val(current.data.weight);
     $('#property-container').append(property);
+    MaterialsForm.current=current;
 }
 function MaterialAdd(){
     var instance = $('#project-view').jstree(true);
@@ -213,66 +216,6 @@ function InputNameDialogInit()
     });
 }
 
-/*
-function MaterialEdit(){
-    $( "#material-list" ).dialog("open");
-} 
-
-function MaterialDialogInit()
-{
-    $( "#material-list" ).dialog({
-        autoOpen: false,
-        height: 480,
-        width: 600,
-        modal: true,
-        buttons: {
-            OK: function() {
-                console.log('Modify material');
-                $( this ).dialog( "close" );
-            },
-            Cancel: function() {
-                $( this ).dialog( "close" );
-            }
-        },
-        close: function() {
-        }
-    });
-    //$("#material-table" ).DataTable();
-
-
-}
-
-function MaterialAddRow()
-{
-    var tbody = $("#material-tbody");
-    var id=0;
-        tbody.append('<tr id='+id+'>' +
-            '<td name=com>' + 'He' + '</td>' +
-            '<td name=weight>' + '1' + '</td>' +
-            '</tr>');
-    $("#material-tbody td").dblclick(function () { 
-        var OriginalContent = $(this).text(); 
-        if($(this).attr('name')==='com')
-        {
-            $(this).html("<input type='text' value='" + OriginalContent + "' />"); 
-        }
-        else if($(this).attr('name')==='weight')
-        {
-            $(this).html("<input type='number' value='" + OriginalContent + "' />"); 
-        }
-        $(this).children().first().focus(); 
-        $(this).children().first().keypress(function (e) { 
-            if (e.which == 13) { 
-                var newContent = $(this).val(); 
-                $(this).parent().text(newContent); 
-            } }); 
-        $(this).children().first().blur(function(){ 
-            $(this).parent().text(OriginalContent); 
-        }); 
-    });
-}
-*/
- 
 function MaterialAddComponent(){
     var instance = $('#project-view').jstree(true);
     var selects=instance.get_selected(true);
@@ -311,32 +254,6 @@ function CheckComponentName(name,current)
     return true;
 }
 
-function OnMaterialSubmit(form)
-{
-    var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'material')
-        return;
-
-    var name=$(form).find('input[name=name]').val();
-    var type=$(form).find('select[name=type]').val();
-    var density=$(form).find('input[name=density]').val();
-    var weight=$(form).find('select[name=weight]').val();
-    if(!CheckMaterialName(name))
-    {
-        alert('Already exist the same material!');
-        return false;
-    }
-    current.data.name=name;
-    current.data.type=type;
-    current.data.density=density;
-    current.data.weight=weight;
-    instance.rename_node(current,name);
-}
-
 function MaterialDeleteComponent()
 {
     var instance = $('#project-view').jstree(true);
@@ -351,29 +268,6 @@ function MaterialDeleteComponent()
     console.log('delete component: ' + res);
 }
 
-function OnMaterialComponentSubmit(form)
-{
-    var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'component')
-        return;
-
-    var name=$(form).find('input[name=name]').val();
-    var weight=$(form).find('input[name=weight]').val();
-    var par = instance.get_node(current.parent);
-    if(!CheckComponentName(name,par))
-    {
-        alert('Already exist the same material!');
-        return false;
-    }
-    current.data.name=name;
-    current.data.weight=weight;
-    instance.rename_node(current,name);
-}
-
 MaterialsForm.InputSelectDialogInit=function()
 {
     $( "#dialog-select-name" ).dialog({
@@ -382,36 +276,6 @@ MaterialsForm.InputSelectDialogInit=function()
         width: 400,
         modal: true,
         buttons: {
-            Element: function() {
-                var select=$( "#dialog-select-name" ).find('select[name=name]');
-                select.empty();
-                for(var i in MaterialsModel.Elements)
-                {
-                    var name=MaterialsModel.Elements[i];
-                    select.append('<option>'+name+'</option>');
-                }
-
-            },
-            Material: function() {
-
-                var select=$( "#dialog-select-name" ).find('select[name=name]');
-                select.empty();
-                var instance = $('#project-view').jstree(true);
-
-                var selects=instance.get_selected(true);
-                if(selects.length < 1)
-                    return false;
-                var current=selects[0];
-                if(current.type != 'material')
-                    return false;
-
-                var all=MaterialsForm.GetAllMaterials();
-                for (var i in all)
-                {
-                    if(all[i]!=current.data.name)
-                        select.append('<option>' + all[i] +'</option>');
-                }
-            },
             OK: function() {
                 var value= $( "#dialog-select-name select[name=name]").val();
                 console.log('select text: ', value);
@@ -427,3 +291,86 @@ MaterialsForm.InputSelectDialogInit=function()
     });
 };
 
+MaterialsForm.NameChanged=function(el)
+{
+    var name=$(el).val();
+    if(!CheckMaterialName(name))
+    {
+        alert('Already exist the same material!');
+        return false;
+    }
+    MaterialsForm.current.data.name=name;
+    var instance = $('#project-view').jstree(true);
+    instance.rename_node(MaterialsForm.current,name);
+};
+
+MaterialsForm.DensityChanged=function(el)
+{
+    var name=$(el).val();
+    MaterialsForm.current.data.density=name;
+};
+
+MaterialsForm.TypeChanged=function(el)
+{
+    var current =MaterialsForm.current;
+    var name=$(el).val();
+    current.data.type=name;
+
+    var instance = $('#project-view').jstree(true);
+    while(current.children.length>0)
+    {
+        var id=current.children[0];
+        var node=instance.get_node(id);
+        var res = instance.delete_node(node);
+    }
+    console.log('delete all components: ' + current.data.name);
+};
+
+MaterialsForm.WeightChanged=function(el)
+{
+    var name=$(el).val();
+    MaterialsForm.current.data.weight=name;
+};
+MaterialComponentForm.WeightChanged=function(el)
+{
+    var name=$(el).val();
+    MaterialComponentForm.current.data.weight=name;
+};
+
+MaterialsForm.AddComponent=function(){
+    var current=MaterialsForm.current;
+    if(current.data.type=='element') {
+        var select=$( "#dialog-select-name" ).find('select[name=name]');
+        select.empty();
+        for(var i in MaterialsModel.Elements)
+        {
+            var name=MaterialsModel.Elements[i];
+            select.append('<option>'+name+'</option>');
+        }
+
+    }
+
+    else if(current.data.type=='mixture'){
+
+        var select=$( "#dialog-select-name" ).find('select[name=name]');
+        select.empty();
+        var instance = $('#project-view').jstree(true);
+
+        var selects=instance.get_selected(true);
+        if(selects.length < 1)
+            return false;
+        var current=selects[0];
+        if(current.type != 'material')
+            return false;
+
+        var all=MaterialsForm.GetAllMaterials();
+        for (var i in all)
+        {
+            if(all[i]!=current.data.name)
+                select.append('<option>' + all[i] +'</option>');
+        }
+    }
+
+    InputCallBack=CheckAndAddComponent;
+    $('#dialog-select-name').dialog('open');
+}; 
