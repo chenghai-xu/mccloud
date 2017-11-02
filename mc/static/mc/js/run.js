@@ -69,6 +69,16 @@ RunForm.UnitChanged=function(el)
 RunForm.Verify=function()
 {
     console.log('Verify setup');
+    SaveProject(function(){
+        $.post({ 
+            url: "/mc/job/?id="+current_project, 
+            data:JSON.stringify({verify:true}),
+            success: function(data){
+                console.log(data);
+                console.log('Verify project success');
+            }
+        });
+    });
 };
 
 RunForm.Run=function()

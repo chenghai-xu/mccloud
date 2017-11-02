@@ -148,7 +148,7 @@ function OpenProject() {
     });
 }
 
-function SaveProject() {
+function SaveProject(cb=null) {
     if (!$.jstree.reference($('#project-view'))) {
         return;
     }
@@ -173,6 +173,10 @@ function SaveProject() {
         success: function(data){
             //console.log(data);
             console.log('Post project tree success: ');
+            if(cb)
+            {
+                cb();
+            }
         }
     });
 }
