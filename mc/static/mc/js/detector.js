@@ -359,6 +359,27 @@ var DetectorForm = {
         this.detector.name=value;
     },
 
+    BinsChanged: function(elem)
+    {
+        var v=$(elem).val();
+        v=v.split(',');
+        if(v.length<3)
+        {
+            alert("Invalid bins setup");
+        }
+        x=parseFloat(v[0]);
+        y=parseFloat(v[1]);
+        z=parseFloat(v[2]);
+        if(isNaN(x) || isNaN(y) || isNaN(z))
+        {
+            alert("Invalid bins setup");
+        }
+        this.detector.parameter.x=x;
+        this.detector.parameter.y=y;
+        this.detector.parameter.z=z;
+    },
+
+
     InitDialog: function()
     {
         $( "#sd-quantities-tbody" ).selectable();
