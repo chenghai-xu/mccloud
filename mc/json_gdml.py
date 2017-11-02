@@ -219,6 +219,8 @@ class MacFile:
             line="/score/mesh/translate/rotateZ %s %s" % (rot[2],rot[3])
             det.append(line)
         self.mesh.append(det)
+        line="/score/mesh/nBin %s %s %s" % (bins[0],bins[1],bins[2])
+        det.append(line)
         return det
       
     def AddMeshQuantity(self,det,dname,qtype,qname,qargs):
