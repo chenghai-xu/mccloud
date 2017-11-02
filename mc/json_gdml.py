@@ -478,8 +478,10 @@ def DecodeQuantity(quantity):
     return qtype,qname,qargs,ftype,fname,fargs
 
 def DetectorDist(mac,dname,solid,place,detector):
-    det=mac.AddDistDetector(dname)
     quantities=detector["quantities"]
+    if len(quantities) < 1:
+        return
+    det=mac.AddDistDetector(dname)
     for quantity in quantities:
         qtype,qname,qargs,ftype,fname,fargs=DecodeQuantity(quantity)
         mac.AddDistQuantity(det,dname,qtype,qname,qargs)
@@ -489,6 +491,9 @@ def DetectorDist(mac,dname,solid,place,detector):
     return det
 
 def DetectorMesh(mac,dname,solid,place,detector):
+    quantities=detector["quantities"]
+    if len(quantities) < 1:
+        return
     spar=solid["parameter"]
     size=(spar["x"],spar["y"],spar["z"],spar["lunit"])
     ppar=place["position"]
@@ -499,7 +504,6 @@ def DetectorMesh(mac,dname,solid,place,detector):
     bins=(dpar["x"],dpar["y"],dpar["z"])
     det=mac.AddMeshDetector(dname,size=size,pos=pos,
                        rot=rot,bins=bins)
-    quantities=detector["quantities"]
     for quantity in quantities:
         qtype,qname,qargs,ftype,fname,fargs=DecodeQuantity(quantity)
         mac.AddMeshQuantity(det,dname,qtype,qname,qargs)
