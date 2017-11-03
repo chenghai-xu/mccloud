@@ -9,11 +9,11 @@ nav(class='navbar navbar-default navbar-static-top',role='navigation')
         li
           a(href='/') Home
         li
-          a(href='/mc') MC
+          a(href='/mc') MCCloud
     ul(class='nav navbar-nav navbar-right nav-pills')
       if user.is_authenticated
         li 
-          a(href='/accounts/profile') #{user.email}
+          a(href='/home') #{user.email}
         li
           a(href='/accounts/logout') Logout
       else
