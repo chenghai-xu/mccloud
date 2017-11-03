@@ -143,5 +143,8 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder"
 )
-DEBUG = True
+
+
+LOGIN_REDIRECT_URL = '/mc'
+
 
