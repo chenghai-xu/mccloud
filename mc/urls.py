@@ -3,6 +3,7 @@ from django.conf.urls import url
 from . import views
 from . import project
 from . import job
+from . import material
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
@@ -12,5 +13,6 @@ urlpatterns = [
     url(r'^api/solid/', views.SolidView.as_view(), name='SolidView'),
     url(r'^project-tree/', project.ProjectView.as_view(), name='Project-Tree'),
     url(r'^job/', job.JobView.as_view(), name='JobView'),
+    url(r'^material/', material.MaterialView.as_view(), name='MaterialView'),
 
 ]

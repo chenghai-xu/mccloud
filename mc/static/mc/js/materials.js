@@ -2,6 +2,7 @@ $(document).ready(function () {
     //MaterialDialogInit();
     InputNameDialogInit();
     MaterialsForm.InputSelectDialogInit();
+    MaterialsForm.GetDefaultMaterial();
 });
 var MaterialsModel={};
 var MaterialComponentForm={};
@@ -12,6 +13,20 @@ MaterialsModel.Elements=[
     'b',
     'c',
 ];
+MaterialsForm.GetDefaultMaterial=function()
+{
+    $.get({ 
+        url: "/mc/material/", 
+        data:{},
+        success: function(data){
+            //console.log(data);
+            mat=JSON.parse(data);
+            MaterialsModel.Elements=mat.Elements;
+            MaterialsModel.Materials=mat.Materials;
+            mat=null;
+        },
+    });
+};
 
 MaterialsForm.GetID=function()
 {
@@ -126,7 +141,15 @@ function CheckMaterialName(name)
     }
     for(var i in MaterialsModel.Elements)
     {
-        if(MaterialsModel.Elements[i]==name)
+        if(MaterialsModel.Elements[i].name==name)
+        {
+            res=false;
+            break;
+        }
+    }
+    for(var i in MaterialsModel.Materials)
+    {
+        if(MaterialsModel.Materials[i].name==name)
         {
             res=false;
             break;
@@ -344,7 +367,7 @@ MaterialsForm.AddComponent=function(){
         select.empty();
         for(var i in MaterialsModel.Elements)
         {
-            var name=MaterialsModel.Elements[i];
+            var name=MaterialsModel.Elements[i].name;
             select.append('<option>'+name+'</option>');
         }
 
@@ -368,6 +391,13 @@ MaterialsForm.AddComponent=function(){
         {
             if(all[i]!=current.data.name)
                 select.append('<option>' + all[i] +'</option>');
+        }
+        for(var i in MaterialsModel.Materials)
+        {
+            if(MaterialsModel.Materials[i].name!=current.data.name)
+            {
+                select.append('<option>' + MaterialsModel.Materials[i].name +'</option>');
+            }
         }
     }
 

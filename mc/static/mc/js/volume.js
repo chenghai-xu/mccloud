@@ -34,6 +34,13 @@ function SelectedVolume(current)
     {
         select.append('<option>' + all[i] +'</option>');
     }
+    for(var i in MaterialsModel.Materials)
+    {
+        if(MaterialsModel.Materials[i].name!=current.data.name)
+        {
+            select.append('<option>' + MaterialsModel.Materials[i].name +'</option>');
+        }
+    }
     select.val(current.data.material);
 
     if(current.text=='world' ||current.text=='parallel' )
