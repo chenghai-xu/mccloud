@@ -134,6 +134,17 @@ function ChangeSolidType(sel){
     var solid=current.data.solid;
     if(selected==solid.type)
         return;
+
+    var par = instance.get_node(instance.get_parent(current));
+    if(par.text=='parallel' )
+    {
+        if(selected != "box")
+        {
+            alert("Only Box is support!");
+            $(sel).val("box");
+            return;
+        }
+    }
     current.data.solid=NewSolid(selected);
     InitSolidForm();
     DrawModel(current);
@@ -189,6 +200,11 @@ var VolumeForm={
         }
         else if(par.text=='parallel' )
         {
+            if(current.data.solid.type != "box")
+            {
+                alert("Only Box is support!");
+                return;
+            }
             opts.append('<option>mesh</option>');
         }
         else
