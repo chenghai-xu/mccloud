@@ -76,12 +76,12 @@ class GDML:
         child.set("unit",unit)
         return child
     def AddElement(self,name,formula,Z,atom):
-        child=ET.SubElement(self.materials, "rotation")
+        child=ET.SubElement(self.materials, "element")
         child.set("name",name)
         child.set("formula",formula)
         child.set("Z",str(Z))
-        atom=ET.SubElement(child, "atom")
-        atom.set("value",str(atom))
+        a=ET.SubElement(child, "atom")
+        a.set("value",str(atom))
         return child
     
     def AddMaterialComposite(self,name,density,unit,cmps):
@@ -99,6 +99,17 @@ class GDML:
             cmp=ET.SubElement(child, cmp_type)
             cmp.set("ref",str(item[0]))
             cmp.set("n",str(item[1]))
+        return child
+
+    def AddMaterialZ(self,name,Z,density,atom,unit="g/cm3"):
+        child=ET.SubElement(self.materials, "material")
+        child.set("name",name)
+        child.set("Z",str(Z))
+        d=ET.SubElement(child, "D")
+        d.set("value",str(density))
+        d.set("unit",unit)
+        a=ET.SubElement(child, "atom")
+        a.set("value",atom)
         return child
     
     def AddSolid(self,sld_type,name,args):
@@ -832,6 +843,7 @@ class ProjectJSON:
         
         self.mac=MacFile()
         self.gdml=GDML()
+        self.AddDefaultMaterials(self.gdml)
         self.DecodeMaterials(self.materials)
         vname,pname,rname=self.DecodeVolume(self.mass_world)
         self.gdml.AddSetup("Default",vname)
@@ -845,6 +857,18 @@ class ProjectJSON:
         self.DecodePhysics(self.mac,self.physics)
         self.mac.Write(fname+".mac")
         
+    def AddDefaultMaterials(self,gdml):
+        with open("./data/mc/Elements.json") as f:
+            json_data=json.load(f)
+            for item in json_data:
+                if item["name"] != "":
+                    gdml.AddElement(item["name"],item["formula"],item["Z"],item["atom"])
+        with open("./data/mc/Materials.json") as f:
+            json_data=json.load(f)
+            for item in json_data:
+                if item["name"] != "":
+                    gdml.AddMaterialZ(item["name"],item["Z"],item["density"],item["atom"])
+
     def DecodePhysics(self,mac,physics):
         data=physics["data"]
         self.physics_list="%s%s" % (data["list"],data["em"])
