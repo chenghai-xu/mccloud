@@ -4,6 +4,7 @@ div(id='property-solid-box', class='hidden')
   div(class='row')
     //form(class='form',role='form',action='javascript:void(0);',onsubmit='OnBoxSubmit(this)')
     form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
       div(class='form-group')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') x:
@@ -29,6 +30,7 @@ div(id='property-solid-tube', class='hidden')
   div(class='row')
     //form(class='form',role='form',action='javascript:void(0);',onsubmit='OnTubeSubmit(this)')
     form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
       div(class='form-group')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') rmin:
@@ -65,6 +67,7 @@ div(id='property-solid-sphere', class='hidden')
   div(class='row')
     //form(class='form',role='form',action='javascript:void(0);',onsubmit='OnSphereSubmit(this)')
     form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
       div(class='form-group')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') rmin:
@@ -104,6 +107,7 @@ div(id='property-placement-simple', class='hidden')
     label Placement
   //form(class='form',role='form',action='javascript:void(0);',onsubmit='OnPlacementSimpleSubmit(this)')
   form(class='form',role='form',action='javascript:void(0);')
+    {% csrf_token %}
     div(class='form-group')
       div(class='row')
         label Position

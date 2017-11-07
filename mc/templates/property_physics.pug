@@ -3,6 +3,7 @@ div(id='property-physics', class='hidden')
     label Physics
   div(class='row')
     form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
       div(class='form-group')
         div(id='gps-phy-list',class='input-group input-group-sm')
           span(class='input-group-addon') Physics Lists:

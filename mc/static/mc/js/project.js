@@ -1,10 +1,23 @@
 $(document).ready(function () {
     InitProject(); 
     ProjectDialogInit();
+    csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
 });
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
 var current_project = null;
 var project_records = new Map();
 var node_selected_hook = new Map();
+var csrftoken=null;
 
 function InitProject(){
     $('#new-project').click(NewProject);

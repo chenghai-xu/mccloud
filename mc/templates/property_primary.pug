@@ -3,6 +3,7 @@ div(id='property-primary', class='hidden')
     label Primaries
   div(class='row')
     form(class='form',role='form')
+      {% csrf_token %}
       div(class='btn-group')
         button(type='button',class='btn btn-sm dropdown-toggle',data-toggle="dropdown") Action 
           span(class='caret')
@@ -15,6 +16,7 @@ div(id='property-source', class='hidden')
     label Source
   div(class='row')
     form(class='form',role='form')
+      {% csrf_token %}
       div(class='btn-group')
         button(type='button',class='btn btn-sm dropdown-toggle',data-toggle="dropdown") Action 
           span(class='caret')
@@ -23,6 +25,7 @@ div(id='property-source', class='hidden')
             a(id='delete-node',href='#',onclick='SourceDelete()') Delete Current  
   div(class='row')
     form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
       div(class='form-group')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Name:
@@ -36,6 +39,7 @@ div(id='property-particle', class='hidden')
     label Particle
   div(class='row')
     form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
       div(class='form-group')
         div(id='gps-par-type',class='input-group input-group-sm')
           span(class='input-group-addon') Type:
@@ -64,6 +68,7 @@ div(id='property-position', class='hidden')
     label Position
   div(class='row')
     form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
       div(class='form-group')
         div(id='gps-pos-type',class='input-group input-group-sm')
           span(class='input-group-addon') Type:
@@ -139,6 +144,7 @@ div(id='property-angular', class='hidden')
     label Angular
   div(class='row')
     form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
       div(class='form-group')
         div(id='gps-ang-type',class='input-group input-group-sm')
           span(class='input-group-addon') Type:
@@ -200,6 +206,7 @@ div(id='property-energy', class='hidden')
     label Energy
   div(class='row')
     form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
       div(class='form-group')
         div(id='gps-ene-type',class='input-group input-group-sm')
           span(class='input-group-addon') Type:
@@ -269,6 +276,7 @@ div(id='property-time', class='hidden')
     label Time
   div(class='row')
     form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
       div(class='form-group')
         div(id='gps-time-time',class='input-group input-group-sm')
           span(class='input-group-addon') Time:

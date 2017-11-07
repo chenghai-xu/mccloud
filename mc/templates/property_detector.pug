@@ -2,6 +2,7 @@ div(id='sensitive-detector',class='table-responsive ui-widget', title='Detector 
 
   div(class='row')
     form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
       div(class='form-group')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') SD type:
