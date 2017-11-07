@@ -56,23 +56,57 @@ def ReadProjectConfigMac(pk):
 @method_decorator(csrf_exempt, name='dispatch')
 class JobView(View):
     def get(self, request, *args, **kwargs):
-        #pk=request.GET.get('id',-1)
-        #user=User.objects.get(email='xuchenghai1984@163.com')
-        ##user=request.user
-        #try:
-        #    job = Job.objects.filter(pk=pk,user=user)
-        #except Job.DoesNotExist:
-        #    return handler404(request)
-        #return JsonResponse(ReadJobConfig(pk), content_type='application/json',safe=False)
-        return JsonResponse(True)
+        pk=request.GET.get('id',-1)
+        user=request.user
+        try:
+            job = Job.objects.get(pk=pk,user=user)
+        except:
+            return handler404(request)
+                                      
+        serializer = JobSerializer(job)
+        return JsonResponse(serializer.data, content_type='application/json',safe=False)
 
     def post(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
-        #This is not useable because it will change the primay id
-        #job,created=Job.objects.update_or_create(user=user,pk=pk,defaults=request.POST)
-        #
-        #return JsonResponse(WriteJobConfig(pk,request.body.decode("utf-8")), content_type='application/json',safe=False)
+        user=request.user
+        pid=request.GET.get('project',-1)
+        fname=EncodeProjectConfig(pid)
+        data={}
+
+        try:
+            project = Project.objects.get(pk=pid,user=user)
+        except:
+            response = HttpResponse('Error: Invalid project')
+            response.status_code = 404
+            print('get project error')
+            return response
+
+        try:
+            prj_json=json_gdml.ProjectJSON(fname)
+        except:
+            response = HttpResponse('Error: Invalid config file')
+            response.status_code = 404
+            print('generate config error')
+            return response
+        try:
+            job=Job.objects.create(user=user,project=project)
+        except:
+            print('create job error')
+            return handler404(request)
+
+        job.instance=prj_json.instance
+        job.nodes=prj_json.nodes
+        job.times=prj_json.run_time
+        job.save()
+
+        serializer = JobSerializer(job)
+        return JsonResponse(serializer.data, content_type='application/json',safe=False)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class JobVerifyView(View):
+    def get(self, request, *args, **kwargs):
+        return JsonResponse(True)
+    def post(self, request, *args, **kwargs):
+        user=request.user
         pk=request.GET.get('id',-1)
         if pk==-1:
             return handler404(request)

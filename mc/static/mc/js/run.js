@@ -71,7 +71,7 @@ RunForm.Verify=function()
     console.log('Verify setup');
     SaveProject(function(){
         $.post({ 
-            url: "/mc/job/?id="+current_project, 
+            url: "/mc/job/verify/?id="+current_project, 
             data:JSON.stringify({verify:true}),
             success: function(data){
                 console.log(data);
@@ -84,4 +84,14 @@ RunForm.Verify=function()
 RunForm.Run=function()
 {
     console.log('Run setup');
+    SaveProject(function(){
+        $.post({ 
+            url: "/mc/job/create/?project="+current_project, 
+            data:JSON.stringify({create:true}),
+            success: function(data){
+                console.log(data);
+                console.log('Run project success');
+            }
+        });
+    });
 };

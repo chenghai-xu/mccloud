@@ -22,3 +22,13 @@ class SolidSerializer(serializers.ModelSerializer):
     class Meta:
         model = Solid
         fields = ('id', 'project', 'name', 'type', 'parameter')
+
+class JobSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Job
+        fields = ('id', 'project', 'instance', 'nodes', 'times','executed','create_time')
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ('id', 'job', 'price', 'charge', 'paied','create_time')

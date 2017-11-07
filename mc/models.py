@@ -86,20 +86,31 @@ class ProjectArchived(models.Model):
     def __str__(self):
         return self.id
 
+INSTANCE_TYPE_CHOICES = (
+    ('CPU4', 'CPU4'),
+    ('CPU8', 'CPU8'),
+    ('CPU16', 'CPU16'),
+    ('CPU36', 'CPU36'),
+)
 class Job(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
+    user = models.ForeignKey(User, editable=False)
     project = models.ForeignKey(Project, editable=False)
-    config = models.IntegerField(default=1)
-    consume = models.FloatField(default=0.0)
+    instance = models.CharField(choices=INSTANCE_TYPE_CHOICES,max_length=24,default='CPU8')
+    nodes = models.IntegerField(default=0)
+    times = models.FloatField(default=0.0)
+    executed = models.BooleanField(default=False)
     create_time = models.DateTimeField(u'create time', auto_now_add=True)
     def __str__(self):
         return self.id
 
 class Order(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
+    user = models.ForeignKey(User, editable=False)
     job = models.ForeignKey(Job, editable=False)
     price = models.FloatField(default=0.0)
     charge = models.FloatField(default=0.0)
+    paied = models.BooleanField(default=False)
     create_time = models.DateTimeField(u'create time', auto_now_add=True)
     def __str__(self):
         return self.id
