@@ -34,12 +34,10 @@ def handler404(request):
 #https://stackoverflow.com/questions/13031058/how-to-serialize-to-json-a-list-of-model-objects-in-django-python
 #http post csrf in postman
 #https://stackoverflow.com/questions/43196888/sending-csrf-tokens-via-postman
-@method_decorator(csrf_exempt, name='dispatch')
 class ProjectView(View):
     def get(self, request, *args, **kwargs):
         id_list=request.GET.getlist('id')
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
+        user=request.user
         try:
             pk=request.GET.get('id',-1)
             if len(id_list)>0:
@@ -52,8 +50,7 @@ class ProjectView(View):
         return JsonResponse(serializer.data, content_type='application/json',safe=False)
 
     def post(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
+        user=request.user
         #This is not useable because it will change the primay id
         #project,created=Project.objects.update_or_create(user=user,pk=pk,defaults=request.POST)
         #
@@ -73,8 +70,7 @@ class ProjectView(View):
         return JsonResponse(serializer.data, content_type='application/json',safe=False)
 
     def delete(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
+        user=request.user
         try:
             pk=request.GET.get('id',-1)
             project = Project.objects.get(pk=pk,user=user)
@@ -83,11 +79,9 @@ class ProjectView(View):
         project.delete()
         return HttpResponse('Delete: %s' % pk)
 
-@method_decorator(csrf_exempt, name='dispatch')
 class LogicalView(View):
     def get(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
+        user=request.user
         id_list=request.GET.getlist('id')
         project_id=request.GET.get('project',-1)
 
@@ -109,8 +103,7 @@ class LogicalView(View):
         return JsonResponse(serializer.data, content_type='application/json',safe=False)
 
     def post(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
+        user=request.user
         pk=request.POST.get('id',-1)
         project_id=request.POST.get('project',-1)
 
@@ -137,8 +130,7 @@ class LogicalView(View):
         return JsonResponse(serializer.data, content_type='application/json',safe=False)
 
     def delete(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
+        user=request.user
         pk=request.GET.get('id',-1)
         project_id=request.GET.get('project',-1)
         try:
@@ -148,11 +140,9 @@ class LogicalView(View):
         volume.delete()
         return HttpResponse('Delete: %s' % pk)
 
-@method_decorator(csrf_exempt, name='dispatch')
 class PhysicalView(View):
     def get(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
+        user=request.user
         id_list=request.GET.getlist('id')
         project_id=request.GET.get('project',-1)
 
@@ -174,8 +164,7 @@ class PhysicalView(View):
         return JsonResponse(serializer.data, content_type='application/json',safe=False)
 
     def post(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
+        user=request.user
         pk=request.POST.get('id',-1)
         project_id=request.POST.get('project',-1)
 
@@ -202,8 +191,7 @@ class PhysicalView(View):
         return JsonResponse(serializer.data, content_type='application/json',safe=False)
 
     def delete(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
+        user=request.user
         pk=request.GET.get('id',-1)
         project_id=request.GET.get('project',-1)
         try:
@@ -213,11 +201,9 @@ class PhysicalView(View):
         volume.delete()
         return HttpResponse('Delete: %s' % pk)
 
-@method_decorator(csrf_exempt, name='dispatch')
 class SolidView(View):
     def get(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
+        user=request.user
         id_list=request.GET.getlist('id')
         project_id=request.GET.get('project',-1)
 
@@ -239,8 +225,7 @@ class SolidView(View):
         return JsonResponse(serializer.data, content_type='application/json',safe=False)
 
     def post(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
+        user=request.user
         pk=request.POST.get('id',-1)
         project_id=request.POST.get('project',-1)
 
@@ -267,8 +252,7 @@ class SolidView(View):
         return JsonResponse(serializer.data, content_type='application/json',safe=False)
 
     def delete(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
+        user=request.user
         pk=request.GET.get('id',-1)
         project_id=request.GET.get('project',-1)
         try:

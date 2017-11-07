@@ -62,12 +62,10 @@ def WriteProjectConfig(pk,data):
 #https://stackoverflow.com/questions/13031058/how-to-serialize-to-json-a-list-of-model-objects-in-django-python
 #http post csrf in postman
 #https://stackoverflow.com/questions/43196888/sending-csrf-tokens-via-postman
-@method_decorator(csrf_exempt, name='dispatch')
 class ProjectView(View):
     def get(self, request, *args, **kwargs):
         pk=request.GET.get('id',-1)
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
+        user=request.user
         try:
             project = Project.objects.filter(pk=pk,user=user)
         except Project.DoesNotExist:
@@ -75,11 +73,7 @@ class ProjectView(View):
         return JsonResponse(ReadProjectConfig(pk), content_type='application/json',safe=False)
 
     def post(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
-        #user=request.user
-        #This is not useable because it will change the primay id
-        #project,created=Project.objects.update_or_create(user=user,pk=pk,defaults=request.POST)
-        #
+        user=request.user
         pk=request.GET.get('id',-1)
         try:
             project = Project.objects.get(pk=pk,user=user)

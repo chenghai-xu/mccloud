@@ -60,10 +60,8 @@ def ReadDefaultMaterial():
 #https://stackoverflow.com/questions/13031058/how-to-serialize-to-json-a-list-of-model-objects-in-django-python
 #http post csrf in postman
 #https://stackoverflow.com/questions/43196888/sending-csrf-tokens-via-postman
-@method_decorator(csrf_exempt, name='dispatch')
 class MaterialView(View):
     def get(self, request, *args, **kwargs):
-        user=User.objects.get(email='xuchenghai1984@163.com')
         user=request.user
         return JsonResponse(ReadDefaultMaterial(), content_type='application/json',safe=False)
 
