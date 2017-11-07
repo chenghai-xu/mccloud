@@ -84,34 +84,58 @@ class ProjectArchived(models.Model):
     project = models.ForeignKey(Project, editable=False)
     create_time = models.DateTimeField(u'create time', auto_now_add=True)
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 INSTANCE_TYPE_CHOICES = (
-    ('CPU4', 'CPU4'),
-    ('CPU8', 'CPU8'),
-    ('CPU16', 'CPU16'),
-    ('CPU36', 'CPU36'),
+    ('4Core', '4Core'),
+    ('8Core', '8Core'),
+    ('16Core', '16Core'),
+    ('36Core', '36Core'),
+)
+JOB_STATUS_CHOICES=(
+    ('UNPAY', 'UNPAY'),
+    ('UNDO', 'UNDO'),
+    ('DOING', 'DOING'),
+    ('FINISH', 'FINISH'),
 )
 class Job(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     user = models.ForeignKey(User, editable=False)
     project = models.ForeignKey(Project, editable=False)
-    instance = models.CharField(choices=INSTANCE_TYPE_CHOICES,max_length=24,default='CPU8')
+    instance = models.CharField(choices=INSTANCE_TYPE_CHOICES,max_length=24,default='Core8')
     nodes = models.IntegerField(default=0)
     times = models.FloatField(default=0.0)
-    executed = models.BooleanField(default=False)
+    status = models.CharField(choices=JOB_STATUS_CHOICES,max_length=24,default='UNPAY')
     create_time = models.DateTimeField(u'create time', auto_now_add=True)
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 class Order(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     user = models.ForeignKey(User, editable=False)
-    job = models.ForeignKey(Job, editable=False)
-    price = models.FloatField(default=0.0)
+    job = models.OneToOneField(Job, editable=False)
     charge = models.FloatField(default=0.0)
     paied = models.BooleanField(default=False)
     create_time = models.DateTimeField(u'create time', auto_now_add=True)
     def __str__(self):
-        return self.id
+        return str(self.id)
 
+class Cash(models.Model):
+    id = models.AutoField(primary_key=True,editable=False)
+    user = models.OneToOneField(User, editable=False)
+    value = models.FloatField(default=0.0)
+    create_time = models.DateTimeField(u'create time',auto_now_add=True)
+    update_time = models.DateTimeField(u'update time',auto_now=True, null=True)
+    def __str__(self):
+        return str(self.id)
+
+class Charge(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    user = models.ForeignKey(User, editable=False)
+    value = models.FloatField(default=0.0)
+    executed = models.BooleanField(default=False)
+    create_time = models.DateTimeField(u'create time', auto_now_add=True)
+    def __str__(self):
+        return str(self.id)
+
+Instance_Price={'4Core':8,'8Core':16, '16Core':32, '36Core':72}

@@ -13,6 +13,7 @@ from . import views
 from . import project
 from . import job
 from . import material
+from . import order
 
 urlpatterns = [
     url(r'^$', require_login(views.index), name='index'),
@@ -23,6 +24,8 @@ urlpatterns = [
     url(r'^project-tree/', require_login(project.ProjectView.as_view()), name='Project-Tree'),
     url(r'^job/create/', require_login(job.JobView.as_view()), name='JobView'),
     url(r'^job/verify/', require_login(job.JobVerifyView.as_view()), name='JobVerifyView'),
+    url(r'^job/execute/', require_login(job.JobExecuteView.as_view()), name='JobExecuteView'),
     url(r'^material/', require_login(material.MaterialView.as_view()), name='MaterialView'),
+    url(r'^order/pay/', require_login(order.OrderPayView.as_view()), name='OrderPayView'),
 
 ]

@@ -26,9 +26,19 @@ class SolidSerializer(serializers.ModelSerializer):
 class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
-        fields = ('id', 'project', 'instance', 'nodes', 'times','executed','create_time')
+        fields = ('id', 'project', 'instance', 'nodes', 'times','status','create_time')
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ('id', 'job', 'price', 'charge', 'paied','create_time')
+        fields = ('id', 'job', 'charge', 'paied','create_time')
+
+class CashSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cash
+        fields = ('id','user','value','update_time')
+
+class ChargeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Charge
+        fields = ('id', 'user', 'value', 'executed','create_time')
