@@ -90,8 +90,60 @@ RunForm.Run=function()
             data:JSON.stringify({create:true}),
             success: function(data){
                 console.log(data);
-                console.log('Run project success');
+                if(data.success==false && data.cash ==0)
+                {
+                }
+                else
+                {
+                    RunForm.job=data.job;
+                    RunForm.order=data.order;
+                    RunForm.cash=data.cash;
+                    RunForm.PayOrder();
+                }
             }
         });
+    });
+};
+
+RunForm.PayOrder=function()
+{
+    if(!RunForm.order)
+        return;
+    var id = RunForm.order.id;
+    console.log('Pay order ',id);
+    $.post({ 
+        url: "/mc/order/pay/?id="+id, 
+        data:JSON.stringify({create:true}),
+        success: function(data){
+            console.log(data);
+            if(data.success==false && data.cash ==0)
+            {
+            }
+            else
+            {
+                RunForm.ExecuteJob();
+            }
+        }
+    });
+};
+
+RunForm.ExecuteJob=function(id)
+{
+    if(!RunForm.job)
+        return;
+    var id=RunForm.job.id;
+    console.log('Execute job ',id);
+    $.post({ 
+        url: "/mc/job/execute/?id="+id, 
+        data:JSON.stringify({create:true}),
+        success: function(data){
+            console.log(data);
+            if(data.success==false && data.cash ==0)
+            {
+            }
+            else
+            {
+            }
+        }
     });
 };

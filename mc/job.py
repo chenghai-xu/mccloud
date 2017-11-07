@@ -26,6 +26,7 @@ from .serializers import *
 from .models import *
 
 from . import json_gdml
+from . import execute_job
 
 def handler404(request):
     response = HttpResponse('Error: 404')
@@ -194,6 +195,7 @@ class JobExecuteView(View):
             data={'sucess':False,'tips':'Job is already executed'}
             return JsonResponse(data, content_type='application/json',safe=False)
 
+        execute_job.run(job)
         data={'sucess':True,'tips':'Job is in executing'}
         return JsonResponse(data, content_type='application/json',safe=False)
 
