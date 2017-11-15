@@ -16,8 +16,14 @@ pip install psycopg2
 pip install pypugjs
 pip install celery
 
+#celery support
+#https://fernandofreitasalves.com/executing-time-consuming-tasks-asynchronously-with-django-and-celery/
+
 #to start celery, cd to project dir
 celery --app=mccloud worker --loglevel=INFO
+#on windows:
+celery -A mccloud worker --pool=solo --loglevel=INFO
+
 
 #git clone
 git clone git@host:/path/to/git
