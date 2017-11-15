@@ -123,10 +123,15 @@ class JobView(View):
 
         #check if exist job which is not executed and the order is not paied
         jobs=Job.objects.filter(user=user,project=project,status='UNPAY').order_by('-create_time')
+        print(jobs)
         if len(jobs)>0:
             job=jobs[0]
-            order=Order.objects.get(user=user,job=job)
-            print('Use exist job and order: ',job,order)
+            try:
+                order=Order.objects.get(user=user,job=job)
+                print('Use exist job and order: ',job,order)
+            except:
+                print('get order error: ',job)
+                order=None
         else:
             print('Create new job and order')
 
@@ -141,8 +146,15 @@ class JobView(View):
         job.nodes=prj_json.nodes
         job.times=prj_json.run_time
         job.save()
+
         if MakeJobConfig(project.id,job.id)!=True:
             print('make job config error')
+            return handler404(request)
+
+        try:
+            job_script=execute_job.JobScript(job.id,job.instance,job.nodes,job.times*60)
+        except:
+            print('create job script error')
             return handler404(request)
 
         if order is None:
