@@ -2,6 +2,7 @@
 #https://fernandofreitasalves.com/executing-time-consuming-tasks-asynchronously-with-django-and-celery/
 #redirect all shell output 
 #https://stackoverflow.com/questions/11229385/redirect-all-output-in-a-bash-script-when-using-set-x
+from __future__ import absolute_import
 
 import subprocess
 import os
@@ -9,6 +10,8 @@ import stat
 
 from . import config
 
+from celery import shared_task
+@shared_task  # Use this decorator to make this a asyncronous function
 def run(job):
     args="%s/%s/execute_job.sh" % (config.jobs_root,job)
     cwd="%s/%s/" % (config.jobs_root,job)

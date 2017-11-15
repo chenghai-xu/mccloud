@@ -206,7 +206,7 @@ class JobExecuteView(View):
             data={'sucess':False,'tips':'Job is already executed'}
             return JsonResponse(data, content_type='application/json',safe=False)
 
-        execute_job.run(job)
+        execute_job.run.delay(job.id)
         data={'sucess':True,'tips':'Job is in executing'}
         return JsonResponse(data, content_type='application/json',safe=False)
 
