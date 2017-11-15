@@ -19,8 +19,9 @@ def run(job_id):
     args=os.path.abspath(args)
     cwd=os.path.abspath(cwd)
     print("run job_id script %s in %s" % (args,cwd))
-    job_id=subprocess.Popen(args=args,cwd=cwd,shell=True)
-    job_id.wait()
+    job_sh=subprocess.Popen(args=args,cwd=cwd,shell=True)
+    job_sh.wait()
+
     job = Job.objects.get(pk=pk)
     job.status='DONE'
     job.save()
