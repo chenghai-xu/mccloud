@@ -1,5 +1,7 @@
 #run long time tasks.
 #https://fernandofreitasalves.com/executing-time-consuming-tasks-asynchronously-with-django-and-celery/
+#redirect all shell output 
+#https://stackoverflow.com/questions/11229385/redirect-all-output-in-a-bash-script-when-using-set-x
 
 import subprocess
 import os
