@@ -4,6 +4,8 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.fields import JSONField
 import json
 
+from . import config
+
 User = get_user_model()
 
 class Project(models.Model):
@@ -36,34 +38,20 @@ class Physical(models.Model):
     position = ArrayField(models.FloatField(),size=4,default=[0,0,0,1])
     rotation = ArrayField(models.FloatField(),size=3,default=[0,0,0])
 
-SOLID_TYPE_BOX = 'box'
-SOLID_TYPE_CYLINDER = 'tube'
-SOLID_TYPE_CHOICES = (
-    (SOLID_TYPE_BOX, 'box'),
-    (SOLID_TYPE_CYLINDER, 'tube'),
-)
-
 class Solid(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     project = models.ForeignKey(Project, editable=False)
     name = models.CharField(max_length=32,default="solid")
-    type = models.CharField(choices=SOLID_TYPE_CHOICES,max_length=64,default=SOLID_TYPE_BOX)
+    type = models.CharField(choices=config.SOLID_TYPE_CHOICES,max_length=64,default=config.SOLID_TYPE_BOX)
     parameter = JSONField(default={"default":True})
     def __str__(self):
         return self.name
-
-MAT_TYPE_ELE = 'ELE'
-MAT_TYPE_MIX = 'MIX'
-MAT_TYPE_CHOICES = (
-    (MAT_TYPE_ELE, 'Element'),
-    (MAT_TYPE_MIX, 'Mixture'),
-)
 
 class Material(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     project = models.ForeignKey(Project, editable=False)
     name = models.CharField(max_length=32,default="material")
-    type = models.CharField(choices=MAT_TYPE_CHOICES,max_length=64,default=MAT_TYPE_ELE)
+    type = models.CharField(choices=config.MAT_TYPE_CHOICES,max_length=64,default=config.MAT_TYPE_ELE)
     d = models.FloatField(default=1.00)
     component = ArrayField(models.IntegerField(),default=[0])
     weight    = ArrayField(models.IntegerField(),default=[0])
@@ -86,26 +74,14 @@ class ProjectArchived(models.Model):
     def __str__(self):
         return str(self.id)
 
-INSTANCE_TYPE_CHOICES = (
-    ('4Core', '4Core'),
-    ('8Core', '8Core'),
-    ('16Core', '16Core'),
-    ('36Core', '36Core'),
-)
-JOB_STATUS_CHOICES=(
-    ('UNPAY', 'UNPAY'),
-    ('UNDO', 'UNDO'),
-    ('DOING', 'DOING'),
-    ('FINISH', 'FINISH'),
-)
 class Job(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     user = models.ForeignKey(User, editable=False)
     project = models.ForeignKey(Project, editable=False)
-    instance = models.CharField(choices=INSTANCE_TYPE_CHOICES,max_length=24,default='Core8')
+    instance = models.CharField(choices=config.INSTANCE_TYPE_CHOICES,max_length=24,default='Core8')
     nodes = models.IntegerField(default=0)
     times = models.FloatField(default=0.0)
-    status = models.CharField(choices=JOB_STATUS_CHOICES,max_length=24,default='UNPAY')
+    status = models.CharField(choices=config.JOB_STATUS_CHOICES,max_length=24,default='UNPAY')
     create_time = models.DateTimeField(u'create time', auto_now_add=True)
     def __str__(self):
         return str(self.id)
@@ -138,4 +114,3 @@ class Charge(models.Model):
     def __str__(self):
         return str(self.id)
 
-Instance_Price={'4Core':8,'8Core':16, '16Core':32, '36Core':72}

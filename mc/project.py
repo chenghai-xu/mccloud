@@ -24,31 +24,31 @@ from datetime import *
 
 from .serializers import *
 from .models import *
+from . import config
 
 def handler404(request):
     response = HttpResponse('Error: 404')
     response.status_code = 404
     return response
 
-projects_root='./data/mc/projects'
 def ReadProjectConfig(pk):
-    os.makedirs('%s/%s'%(projects_root,pk), exist_ok=True)
-    fname = '%s/%s/config.json' % (projects_root,pk)
+    os.makedirs('%s/%s'%(config.projects_root,pk), exist_ok=True)
+    fname = '%s/%s/config.json' % (config.projects_root,pk)
     data = '{}'
     try:
         f=open(fname,'r')
         data=f.read()
         f.close()
     except IOError as e:
-        fname = '%s/config.json' % projects_root
+        fname = '%s/config.json' % config.projects_root
         f=open(fname,'r')
         data=f.read()
         f.close()
     return data
 
 def WriteProjectConfig(pk,data):
-    os.makedirs('%s/%s'%(projects_root,pk), exist_ok=True)
-    fname= '%s/%s/config.json' % (projects_root,pk)
+    os.makedirs('%s/%s'%(config.projects_root,pk), exist_ok=True)
+    fname= '%s/%s/config.json' % (config.projects_root,pk)
     if os.path.exists(fname):
         postfix='.'+str(datetime.now()).replace(' ','T')
         postfix=postfix.replace(':','-')

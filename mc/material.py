@@ -26,15 +26,15 @@ from .serializers import *
 from .models import *
 
 from . import json_gdml
+from . import config
 
 def handler404(request):
     response = HttpResponse('Error: 404')
     response.status_code = 404
     return response
 
-data_root='./data/mc'
 def ReadDefaultMaterial():
-    fname = '%s/Elements.json' % (data_root)
+    fname = '%s/Elements.json' % (config.data_root)
     elements = '[]'
     try:
         f=open(fname,'r')
@@ -42,7 +42,7 @@ def ReadDefaultMaterial():
         f.close()
     except IOError as e:
         elements='[]'
-    fname = '%s/Materials.json' % (data_root)
+    fname = '%s/Materials.json' % (config.data_root)
     materials = '[]'
     try:
         f=open(fname,'r')

@@ -5,22 +5,7 @@ import subprocess
 import os
 import stat
 
-INSTANCE_TYPES= {
-        '4Core': 'c4.xlarge',
-        '8Core': 'c4.2xlarge',
-        '16Core': 'c4.4xlarge',
-        '36Core': 'c4.8xlarge',
-        }
-
-INSTANCE_CORES= {
-        'c4.xlarge': 4,
-        'c4.2xlarge': 8,
-        'c4.4xlarge': 16,
-        'c4.8xlarge': 36,
-        }
-
-local_jobs='./data/mc/jobs'
-remote_jobs='/home/www/jobs'
+from . import config
 
 def run(job):
     #start cluster
@@ -40,11 +25,11 @@ def run(job):
 
 class Cluster:
     def __init__(self,name,instance,nodes):
-        self.instance=INSTANCE_TYPES[instance]
+        self.instance=config.AWS_INSTANCE_TYPES[instance]
         self.nodes=nodes
         self.name=name
-        self.template="dose"
-        self.user="scadmin"
+        self.template=config.cluster_template
+        self.user=config.cluster_user
         self.hosts=[]
         self.ips={}
         self.cors={}
@@ -68,13 +53,13 @@ class Cluster:
         script.append(args)
     
     def GetCores(self):
-        return int(self.nodes) * int(INSTANCE_CORES[self.instance])
+        return int(self.nodes) * int(config.AWS_INSTANCE_CORES[self.instance])
 
 class JobScript:
     def __init__(self,name,instance,nodes,minutes):
         self.cluster=Cluster(name,instance,nodes)
-        self.remote_dir= "%s/%s" % (remote_jobs,name)
-        self.local_dir= "%s/%s"  % (local_jobs,name)
+        self.remote_dir= "%s/%s" % (config.cluster_jobs_root,name)
+        self.local_dir= "%s/%s"  % (config.jobs_root,name)
         self.minutes=minutes
         self.name=name
 
@@ -124,9 +109,9 @@ class JobScript:
         job_tar="%s.tar.gz" % self.name
         self.local_script.append('tar_opt="--exclude-vcs --exclude-backups --exclude=.tar --exclude=.gz --exclude=.tgz --exclude=.bz  --exclude=.Z --exclude=.zip --exclude=.rar --exclude=.7z"')
         self.local_script.append("tar ${tar_opt} -czf %s ." % job_tar)
-        cmd='"mkdir -p %s"' % remote_jobs
+        cmd='"mkdir -p %s"' % config.cluster_jobs_root
         self.cluster.RunCmd(self.local_script,cmd)
-        self.cluster.PutCmd(self.local_script,job_tar,remote_jobs)
+        self.cluster.PutCmd(self.local_script,job_tar,config.cluster_jobs_root)
 
         cmd="rm -rf %s " % job_tar
         self.local_script.append(cmd)
@@ -134,7 +119,7 @@ class JobScript:
         cmd="master_node=$(grep 'master\s\+running' %s.info.list | awk '{print $4}')"  % self.cluster.name
         self.local_script.append(cmd)
 
-        cmd='"cd %s && tar -xf %s -C %s && rm %s"' %(remote_jobs,job_tar,self.remote_dir,job_tar)
+        cmd='"cd %s && tar -xf %s -C %s && rm %s"' %(config.cluster_jobs_root,job_tar,self.remote_dir,job_tar)
         self.cluster.RunCmd(self.local_script,cmd)
         cmd="'cd %s && nohup ./mpiexec.sh >nohup.out 2>&1   </dev/null &'" % self.remote_dir
         cmd='"sh -c %s "' % cmd
@@ -145,7 +130,7 @@ class JobScript:
     
     def ConfigRemoteScript(self):
         self.remote_script.append("#!/bin/bash")
-        self.remote_script.append("source /home/%s/opt/simpit/bin/simpit.sh" % self.cluster.user)
+        self.remote_script.append("source %s" % config.cluster_env_setup)
 
         np=self.cluster.GetCores()
         args=["mpiexec",

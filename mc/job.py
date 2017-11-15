@@ -27,21 +27,21 @@ from .models import *
 
 from . import json_gdml
 from . import execute_job
+from . import config
 
 def handler404(request):
     response = HttpResponse('Error: 404')
     response.status_code = 404
     return response
 
-projects_root='./data/mc/projects'
 def EncodeProjectConfig(pk):
-    os.makedirs('%s/%s'%(projects_root,pk), exist_ok=True)
-    fname = '%s/%s/config.json' % (projects_root,pk)
+    os.makedirs('%s/%s'%(config.projects_root,pk), exist_ok=True)
+    fname = '%s/%s/config.json' % (config.projects_root,pk)
     return fname
 
 def ReadProjectConfigMac(pk):
-    os.makedirs('%s/%s'%(projects_root,pk), exist_ok=True)
-    fname = '%s/%s/config.json.mac' % (projects_root,pk)
+    os.makedirs('%s/%s'%(config.projects_root,pk), exist_ok=True)
+    fname = '%s/%s/config.json.mac' % (config.projects_root,pk)
     data = '{}'
     try:
         f=open(fname,'r')
@@ -53,11 +53,9 @@ def ReadProjectConfigMac(pk):
 
 import shutil
 
-jobs_root='./data/mc/jobs'
-
 def MakeJobConfig(project,job):
-    job_dir='%s/%s'%(jobs_root,job)
-    project_dir='%s/%s'%(projects_root,project)
+    job_dir='%s/%s'%(config.jobs_root,job)
+    project_dir='%s/%s'%(config.projects_root,project)
     os.makedirs(job_dir, exist_ok=True)
     gdml='%s/config.json.gdml' % project_dir
     mac='%s/config.json.mac' % project_dir
@@ -66,6 +64,7 @@ def MakeJobConfig(project,job):
         shutil.copy(mac,job_dir)
         return True
     except:
+        print("Make Job Config error")
         return False
 
     
@@ -107,7 +106,7 @@ class JobView(View):
             response.status_code = 404
             print('generate config file error')
             return response
-        charge= Instance_Price[prj_json.instance] * int(prj_json.nodes) * prj_json.run_time
+        charge= config.Instance_Price[prj_json.instance] * int(prj_json.nodes) * prj_json.run_time
         print('The charge of the new job: ', charge)
         try:
             cash=Cash.objects.get(user=user)
