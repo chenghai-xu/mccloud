@@ -8,19 +8,13 @@ import stat
 from . import config
 
 def run(job):
-    #start cluster
-
-    #config cluster, update...
-
-    #config job
-
-    #submit job
-
-    #watch cluster
-
-    #get job result
-
-    #terminate cluster.
+    args="%s/%s/execute_job.sh" % (config.jobs_root,job)
+    cwd="%s/%s/" % (config.jobs_root,job)
+    args=os.path.abspath(args)
+    cwd=os.path.abspath(cwd)
+    print("run job script %s in %s" % (args,cwd))
+    job=subprocess.Popen(args=args,cwd=cwd,shell=True)
+    job.wait()
     return True
 
 class Cluster:
@@ -71,15 +65,18 @@ class JobScript:
         fname="%s/mpiexec.sh" % self.local_dir
         with open(fname,'w') as f:
             f.writelines("\n".join(self.remote_script))
-        os.chmod(fname,stat.S_IXOTH+stat.S_IRWXG+stat.S_IRWXU)    
+        os.chmod(fname,775)    
             
         fname="%s/execute_job.sh" % self.local_dir
         with open(fname,'w') as f:
             f.writelines("\n".join(self.local_script))
-        os.chmod(fname,stat.S_IXOTH+stat.S_IRWXG+stat.S_IRWXU)    
+        os.chmod(fname,775)    
     def ConfigLocalScript(self):
         self.local_script.append("#!/bin/bash")
-        self.local_script.append("cd %s" % self.local_dir)
+        #self.local_script.append("cd %s" % os.path.abspath(self.local_dir))
+        self.local_script.append("set -x")
+        self.local_script.append("logfile=execute_job.sh.log")
+        self.local_script.append("exec > $logfile 2>&1")
 
         self.cluster.StartCmd(self.local_script)
         self.ConfigNodesInfo()
@@ -93,7 +90,7 @@ class JobScript:
         cmd=["let count=0",
              "while [ ${count} -lt 3 ]",
              "do",
-             "pid=$(starcluster sshmaster %s pidof mpiexec)" % self.cluster.name,
+             "pid=$(starcluster sshmaster %s 'pidof mpiexec')" % self.cluster.name,
              'if [ "X$pid" == "X" ]',
              "then",
              "let count=$count+1",
@@ -123,13 +120,14 @@ class JobScript:
         self.cluster.RunCmd(self.local_script,cmd)
         cmd="'cd %s && nohup ./mpiexec.sh >nohup.out 2>&1   </dev/null &'" % self.remote_dir
         cmd='"sh -c %s "' % cmd
-        key_file='/home/www/key.key'
-        cmd="ssh -i %s %s@${master_node} %s" %(key_file,self.cluster.user,cmd)
+        cmd="ssh -i %s %s@${master_node} %s" %(config.cluster_key_file,self.cluster.user,cmd)
         #ssh -i $key_file ${user}@${master_node} "sh -c 'cd ${job_dir} && nohup ./mpiexec.sh >nohup.out 2>&1     </dev/null &' "
         self.local_script.append(cmd)
     
     def ConfigRemoteScript(self):
         self.remote_script.append("#!/bin/bash")
+        self.remote_script.append("logfile=mpiexec.sh.log")
+        self.remote_script.append("exec > $logfile 2>&1")
         self.remote_script.append("source %s" % config.cluster_env_setup)
 
         np=self.cluster.GetCores()

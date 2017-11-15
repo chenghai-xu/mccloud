@@ -6,6 +6,7 @@ cluster_user='scadmin'
 cluster_jobs_root='/home/%s/jobs' % cluster_user
 cluster_env_setup='/home/%s/opt/simpit/bin/simpit.sh' % cluster_user
 Instance_Price={'4Core':8,'8Core':16, '16Core':32, '36Core':72}
+cluster_key_file='/home/www/key.key'
 
 INSTANCE_TYPE_CHOICES = (
     ('4Core', '4Core'),
