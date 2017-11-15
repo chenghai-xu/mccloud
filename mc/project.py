@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core import serializers
@@ -20,11 +22,22 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 
 import os
+import glob
 from datetime import *
 
 from .serializers import *
 from .models import *
 from . import config
+
+from celery import shared_task
+@shared_task  # Use this decorator to make this a asyncronous function
+def DeleteBackups(pk):
+    patten= '%s/%s/config.json.[0-9][0-9][0-9][0-9]-*' % (config.projects_root,pk)
+    baks=glob.glob(patten)
+    baks.sort()
+    for fname in baks[0:-6]:
+        os.remove(fname)
+    return True
 
 def handler404(request):
     response = HttpResponse('Error: 404')
@@ -56,6 +69,7 @@ def WriteProjectConfig(pk,data):
     f=open(fname,'w')
     f.write(data)
     f.close()
+    DeleteBackups.delay(pk)
     return True
 
 #dump model as json

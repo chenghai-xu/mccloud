@@ -34,7 +34,7 @@ JOB_STATUS_CHOICES=(
     ('UNPAY', 'UNPAY'),
     ('UNDO', 'UNDO'),
     ('DOING', 'DOING'),
-    ('FINISH', 'FINISH'),
+    ('DONE', 'DONE'),
 )
 
 MAT_TYPE_ELE = 'ELE'

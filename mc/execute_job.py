@@ -9,17 +9,21 @@ import os
 import stat
 
 from . import config
+from .models import *
 
 from celery import shared_task
 @shared_task  # Use this decorator to make this a asyncronous function
-def run(job):
-    args="%s/%s/execute_job.sh" % (config.jobs_root,job)
-    cwd="%s/%s/" % (config.jobs_root,job)
+def run(job_id):
+    args="%s/%s/execute_job.sh" % (config.jobs_root,job_id)
+    cwd="%s/%s/" % (config.jobs_root,job_id)
     args=os.path.abspath(args)
     cwd=os.path.abspath(cwd)
-    print("run job script %s in %s" % (args,cwd))
-    job=subprocess.Popen(args=args,cwd=cwd,shell=True)
-    job.wait()
+    print("run job_id script %s in %s" % (args,cwd))
+    job_id=subprocess.Popen(args=args,cwd=cwd,shell=True)
+    job_id.wait()
+    job = Job.objects.get(pk=pk)
+    job.status='DONE'
+    job.save()
     return True
 
 class Cluster:
