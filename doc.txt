@@ -1,16 +1,33 @@
-#detete database table and recreate it
-https://stackoverflow.com/questions/33259477/table-was-deleted-how-can-i-make-django-recreate-it
+#deps:
+A. python
+B. python packages
+	postgresql
+ 	django
+ 	django-users2
+ 	djangorestframework
+ 	psycopg2
+ 	pypugjs
+ 	celery
+
+C. postgresql 
 
 
-#development setup
+#postgresql setup
 
 create database mccloud;
 create user xuch with password '123456';
 grant all privileges on database mccloud to xuch;
 
+#reference
+#detete database table and recreate it
+https://stackoverflow.com/questions/33259477/table-was-deleted-how-can-i-make-django-recreate-it
+
+
+#python package install
 #install anaconda
+#
 pip install django
-pip install django-user2
+pip install django-users2
 pip install djangorestframework
 pip install psycopg2
 pip install pypugjs
@@ -19,7 +36,7 @@ pip install celery
 #celery support
 #https://fernandofreitasalves.com/executing-time-consuming-tasks-asynchronously-with-django-and-celery/
 
-#to start celery, cd to project dir
+#how to use celery, cd to project dir
 celery --app=mccloud worker --loglevel=INFO
 #on windows:
 celery -A mccloud worker --pool=solo --loglevel=INFO
