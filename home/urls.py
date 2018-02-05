@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponseRedirect, Http404
 
 def require_login(view):
     def new_view(request,*args,**kwargs):
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return HttpResponseRedirect('/accounts/login/')
         return view(request,*args,**kwargs)
     return new_view
