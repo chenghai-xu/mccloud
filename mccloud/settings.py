@@ -92,7 +92,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mccloud',
         'USER': 'xuch',
-        'PASSWORD': 'fi3ohkiw',
+        'PASSWORD': '123456',
         "HOST": "localhost",
     },
 }
