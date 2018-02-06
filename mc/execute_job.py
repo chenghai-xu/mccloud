@@ -73,14 +73,14 @@ class JobScript:
         self.ConfigLocalScript()
         self.ConfigRemoteScript()
         fname="%s/mpiexec.sh" % self.local_dir
-        with open(fname,'w') as f:
+        with open(fname,'w+') as f:
             f.writelines("\n".join(self.remote_script))
-        os.chmod(fname,775)    
+        os.chmod(fname,755)    
             
         fname="%s/execute_job.sh" % self.local_dir
-        with open(fname,'w') as f:
+        with open(fname,'w+') as f:
             f.writelines("\n".join(self.local_script))
-        os.chmod(fname,775)    
+        os.chmod(fname,755)    
     def ConfigLocalScript(self):
         self.local_script.append("#!/bin/bash")
         #self.local_script.append("cd %s" % os.path.abspath(self.local_dir))
