@@ -21,6 +21,7 @@ from rest_framework.parsers import JSONParser
 
 import os
 from datetime import *
+import glob
 
 from .serializers import *
 from .models import *
@@ -209,4 +210,46 @@ class JobExecuteView(View):
         execute_job.run.delay(job.id)
         data={'sucess':True,'tips':'Job is in executing'}
         return JsonResponse(data, content_type='application/json',safe=False)
+
+class JobOutput(View):
+    """
+    function: get output of a job
+    parameter:
+    id=1
+    return:
+    json object, example: 
+    {"mesh":["1.mesh","2.mesh"],"dist":["1.dist","2.dist"],"log":["d.log.l.0","d.log.1.1"]}
+    """
+    def get(self, request, *args, **kwargs):
+        pk=request.GET.get('id',-1)
+        user=request.user
+        try:
+            job = Job.objects.get(pk=pk,user=user)
+        except:
+            return handler404(request)
+        fname="%s/%s/" %(config.jobs_root,pk)
+        meshs=glob.glob(fname+ "/*.mesh")
+        dists=glob.glob(fname+ "/*.dist")
+        logs=glob.glob(fname+ "/*.log.1.*")
+
+        for i in range(len(meshs)):
+            if os.path.isfile(meshs[i]):
+                meshs[i]=os.path.basename(meshs[i])
+            else:
+                meshs.remove(meshs[i])
+
+        for i in range(len(dists)):
+            if os.path.isfile(dists[i]):
+                dists[i]=os.path.basename(dists[i])
+            else:
+                dists.remove(dists[i])
+
+        for i in range(len(logs)):
+            if os.path.isfile(logs[i]):
+                logs[i]=os.path.basename(logs[i])
+            else:
+                logs.remove(logs[i])
+
+        data={"mesh":meshs,"dist":dists,"log":logs}
+        return JsonResponse(json.dumps(data), content_type='application/json',safe=False)
 
