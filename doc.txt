@@ -8,8 +8,10 @@ B. python packages
  	psycopg2
  	pypugjs
  	celery
+ 	redis	
 
 C. postgresql 
+D. redis or RabbitMQ
 
 
 #postgresql setup
