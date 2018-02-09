@@ -28,8 +28,8 @@ urlpatterns = [
     url(r'^job/execute/', require_login(job.JobExecuteView.as_view()), name='JobExecuteView'),
     url(r'^material/', require_login(material.MaterialView.as_view()), name='MaterialView'),
     url(r'^order/pay/', require_login(order.OrderPayView.as_view()), name='OrderPayView'),
-    url(r'^visual/mesh/', visual.Mesh.as_view(), name='MeshView'),
-    url(r'^visual/dist/', visual.Dist.as_view(), name='DistView'),
-    url(r'^job/output/', job.JobOutput.as_view(), name='JobOutputView'),
+    url(r'^api/mesh/', visual.Mesh.as_view(), name='MeshView'),
+    url(r'^api/dist/', visual.Dist.as_view(), name='DistView'),
+    url(r'^api/output/', job.JobOutput.as_view(), name='JobOutputView'),
 
 ]

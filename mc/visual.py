@@ -79,9 +79,10 @@ class Mesh(View):
 
         buff=io.BytesIO()
         ca.print_figure(buff,format="png")
-        src='<img src="data:image/png;base64,%s"/>' % base64.b64encode(buff.getvalue()).decode('utf-8').replace('\n', '')
-        #return JsonResponse(serializer.data, content_type='application/json',safe=False)
-        return HttpResponse(src)
+        #src='<img src="data:image/png;base64,%s"/>' % base64.b64encode(buff.getvalue()).decode('utf-8').replace('\n', '')
+        img="data:image/png;base64,%s" % base64.b64encode(buff.getvalue()).decode('utf-8').replace('\n', '')
+        return JsonResponse({'src':img}, content_type='application/json',safe=False)
+        #return HttpResponse(src)
 
 
 class Dist(View):
@@ -121,7 +122,8 @@ class Dist(View):
 
         buff=io.BytesIO()
         ca.print_figure(buff,format="png")
-        src='<img src="data:image/png;base64,%s"/>' % base64.b64encode(buff.getvalue()).decode('utf-8').replace('\n', '')
-        #return JsonResponse(serializer.data, content_type='application/json',safe=False)
-        return HttpResponse(src)
+        #src='<img src="data:image/png;base64,%s"/>' % base64.b64encode(buff.getvalue()).decode('utf-8').replace('\n', '')
+        #return HttpResponse(src)
+        img="data:image/png;base64,%s" % base64.b64encode(buff.getvalue()).decode('utf-8').replace('\n', '')
+        return JsonResponse({'src':img}, content_type='application/json',safe=False)
 

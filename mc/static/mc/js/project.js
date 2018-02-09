@@ -80,6 +80,18 @@ function LoadProject(project) {
                 run: {
                     "icon": ""
                 },
+                output: {
+                    "icon": ""
+                },
+                mesh: {
+                    "icon": ""
+                },
+                dist: {
+                    "icon": ""
+                },
+                log: {
+                    "icon": ""
+                },
             },
             plugins: ["types","contextmenu"],
             contextmenu: {
@@ -106,6 +118,7 @@ function NewProject() {
     project.children.push(NewPrimaryNode()); 
     project.children.push(NewMaterialsNode()); 
     project.children.push(RunModel.New()); 
+    project.children.push(OutputModel.New()); 
     LoadProject(project);
     $.post({ 
         url: "/mc/api/project/", 
@@ -148,9 +161,9 @@ function NodeSelected(event, data) {
     SelectedMaterials(current);
     SelectedPrimary(current);
     SelectedPhysics(current);
-    for(var i in NodeWatch)
+    for(var form of NodeWatch)
     {
-        NodeWatch[i](current);
+        form.OnClick(current);
     }
 }
 function OpenProject() {

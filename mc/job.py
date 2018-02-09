@@ -204,7 +204,7 @@ class JobExecuteView(View):
             return handler404(request)
 
         if job.status!='UNDO':
-            data={'sucess':False,'tips':'Job is already executed'}
+            data={'sucess':False,'tips':'Job is unpaied!'}
             return JsonResponse(data, content_type='application/json',safe=False)
 
         execute_job.run.delay(job.id)
@@ -250,6 +250,6 @@ class JobOutput(View):
             else:
                 logs.remove(logs[i])
 
-        data={"mesh":meshs,"dist":dists,"log":logs}
-        return JsonResponse(json.dumps(data), content_type='application/json',safe=False)
+        data={'mesh':meshs,'dist':dists,'log':logs}
+        return JsonResponse(data, content_type='application/json',safe=False)
 

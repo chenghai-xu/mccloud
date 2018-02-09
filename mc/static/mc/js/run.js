@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    NodeWatch.push(RunForm.OnClick);
+    NodeWatch.push(RunForm);
 });
 
 var RunModel = {};
@@ -95,9 +95,9 @@ RunForm.Run=function()
                 }
                 else
                 {
-                    RunForm.job=data.job;
-                    RunForm.order=data.order;
-                    RunForm.cash=data.cash;
+                    RunForm.current.data.job=data.job;
+                    RunForm.current.data.order=data.order;
+                    RunForm.current.data.cash=data.cash;
                     RunForm.PayOrder();
                 }
             }
@@ -107,9 +107,9 @@ RunForm.Run=function()
 
 RunForm.PayOrder=function()
 {
-    if(!RunForm.order)
+    if(!RunForm.current.data.order)
         return;
-    var id = RunForm.order.id;
+    var id = RunForm.current.data.order.id;
     console.log('Pay order ',id);
     $.post({ 
         url: "/mc/order/pay/?id="+id, 
@@ -129,9 +129,10 @@ RunForm.PayOrder=function()
 
 RunForm.ExecuteJob=function(id)
 {
-    if(!RunForm.job)
+    if(!RunForm.current.data.job)
         return;
-    var id=RunForm.job.id;
+    var id=RunForm.current.data.job.id;
+    OutputForm.New(RunForm.current.data.job);
     console.log('Execute job ',id);
     $.post({ 
         url: "/mc/job/execute/?id="+id, 
@@ -143,6 +144,7 @@ RunForm.ExecuteJob=function(id)
             }
             else
             {
+                OutputForm.Update();
             }
         }
     });
