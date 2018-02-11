@@ -10,11 +10,11 @@ div(id='property-volume', class='hidden')
           span(class='caret')
         ul(class='dropdown-menu',role='menu') 
           li
-            a(id='new-node',href='#',onclick='VolumeAdd()') Add Child 
+            a(id='new-node',href='#',onclick='VolumeControl.Add()') Add Child 
           li
-            a(id='delete-node',href='#',onclick='VolumeDelete()') Delete Current  
+            a(id='delete-node',href='#',onclick='VolumeControl.Delete()') Delete Current  
           li
-            a(id='edit-detector',href='#',onclick='VolumeForm.EditDetector()') Edit Detector  
+            a(id='edit-detector',href='#',onclick='VolumeControl.EditDetector()') Edit Detector  
     div(class='row')
       //div(class='form-group')
       //  button(id='volume-add',type='button', class='btn btn-default',onclick='VolumeAdd()') Add
@@ -22,20 +22,20 @@ div(id='property-volume', class='hidden')
       div(class='form-group')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Name:
-          input(class='form-control',name='name',onchange='ChangeVolumeName(this)')
+          input(class='form-control',name='name',onchange='VolumeControl.NameChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Solid:
-          select(class='form-control',name='solid',onclick='InitSolidForm()',onchange='ChangeSolidType(this)')
+          select(class='form-control',name='solid',onclick='VolumeControl.InitSolidForm()',onchange='VolumeControl.SolidTypeChanged(this)')
               option box
               option tube
               option sphere
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Material:
           //input(class='form-control',name='material')
-          select(class='form-control',name='material',onchange='VolumeForm.OnMaterialChanged(this)')
+          select(class='form-control',name='material',onchange='VolumeControl.OnMaterialChanged(this)')
             option --
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Placement:
-          select(class='form-control',name='placement',onclick='InitPlacementForm()',onchange='ChangePlacementType(this)')
+          select(class='form-control',name='placement',onclick='VolumeControl.InitPlacementForm()',onchange='VolumeControl.ChangePlacementType(this)')
               option simple
 

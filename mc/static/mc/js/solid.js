@@ -2,8 +2,13 @@ $(document).ready(function () {
 });
 
 var SolidBox = {
-    InitForm: function(form, box)
+    node: null,
+    data: null,
+    form: null,
+    Init: function()
     {
+        var box=this.data;
+        var form=this.form;
         $(form).find('input[name=x]').val(box.parameter.x);
         $(form).find('input[name=y]').val(box.parameter.y);
         $(form).find('input[name=z]').val(box.parameter.z);
@@ -13,39 +18,29 @@ var SolidBox = {
     LUnitChanged: function(elem)
     {
         var value=$(elem).val();
-        var instance = $('#project-view').jstree(true);
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
-            return;
-        var current=selects[0];
-        if(current.type != 'volume')
-            return;
-
         console.log('Change box parameter lunit to '+ value);
-        current.data.solid.parameter.lunit=value;
-        DrawModel(current);
+        this.data.parameter.lunit=value;
+        DrawModel(this.node);
     },
 
     ValueChanged: function(elem)
     {
         var value=$(elem).val();
-        var instance = $('#project-view').jstree(true);
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
-            return;
-        var current=selects[0];
-        if(current.type != 'volume')
-            return;
         var p=$(elem).attr('name');
         console.log('Change box parameter '+p+' to '+ value);
-        current.data.solid.parameter[p]=parseFloat(value);
-        DrawModel(current);
+        this.data.parameter[p]=parseFloat(value);
+        DrawModel(this.node);
     },
 }
 
 var SolidTube = {
-    InitForm: function(form, tube)
+    node: null,
+    data: null,
+    form: null,
+    Init: function()
     {
+        var tube=this.data;
+        var form=this.form;
         $(form).find('input[name=rmin]').val(tube.parameter.rmin);
         $(form).find('input[name=rmax]').val(tube.parameter.rmax);
         $(form).find('input[name=z]').val(tube.parameter.z);
@@ -58,40 +53,30 @@ var SolidTube = {
     UnitChanged: function(elem)
     {
         var value=$(elem).val();
-        var instance = $('#project-view').jstree(true);
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
-            return;
-        var current=selects[0];
-        if(current.type != 'volume')
-            return;
-
         var p=$(elem).attr('name');
         console.log('Change tube parameter '+p+' to '+ value);
-        current.data.solid.parameter[p]=value;
-        DrawModel(current);
+        this.data.parameter[p]=value;
+        DrawModel(this.node);
     },
 
     ValueChanged: function(elem)
     {
         var value=$(elem).val();
-        var instance = $('#project-view').jstree(true);
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
-            return;
-        var current=selects[0];
-        if(current.type != 'volume')
-            return;
         var p=$(elem).attr('name');
         console.log('Change tube parameter '+p+' to '+ value);
-        current.data.solid.parameter[p]=parseFloat(value);
-        DrawModel(current);
+        this.data.parameter[p]=parseFloat(value);
+        DrawModel(this.node);
     },
 }
 
 var SolidSphere = {
-    InitForm: function(form, sphere)
+    node: null,
+    data: null,
+    form: null,
+    Init: function()
     {
+        var sphere=this.data;
+        var form=this.form;
         $(form).find('input[name=rmin]').val(sphere.parameter.rmin);
         $(form).find('input[name=rmax]').val(sphere.parameter.rmax);
         $(form).find('input[name=starttheta]').val(sphere.parameter.starttheta);
@@ -105,33 +90,18 @@ var SolidSphere = {
     UnitChanged: function(elem)
     {
         var value=$(elem).val();
-        var instance = $('#project-view').jstree(true);
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
-            return;
-        var current=selects[0];
-        if(current.type != 'volume')
-            return;
-
         var p=$(elem).attr('name');
         console.log('Change sphere parameter '+p+' to '+ value);
-        current.data.solid.parameter[p]=value;
-        DrawModel(current);
+        this.data.parameter[p]=value;
+        DrawModel(this.node);
     },
 
     ValueChanged: function(elem)
     {
         var value=$(elem).val();
-        var instance = $('#project-view').jstree(true);
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
-            return;
-        var current=selects[0];
-        if(current.type != 'volume')
-            return;
         var p=$(elem).attr('name');
         console.log('Change sphere parameter '+p+' to '+ value);
-        current.data.solid.parameter[p]=parseFloat(value);
-        DrawModel(current);
+        this.data.parameter[p]=parseFloat(value);
+        DrawModel(this.node);
     },
 }

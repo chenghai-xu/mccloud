@@ -120,6 +120,26 @@ function LoadProject(project) {
             }
         });
     $('#project-view').on("select_node.jstree", NodeSelected);
+    //var instance = $('#project-view').jstree(true);
+    //InitControl(instance,'#');
+}
+
+function InitControl(instance,id)
+{
+    var node = instance.get_node(id);
+    if(!node || !node.type)
+    {
+        return;
+    }
+    var control=NodeWatch.type_control.get(node.type);
+    if(control)   
+    {
+        control.current=node;
+    }
+    for(let id of node.children)
+    {
+        InitControl(instance,id);
+    }
 }
 
 function NewProject() {
@@ -168,7 +188,6 @@ function NodeSelected(event, data) {
     console.log('Select node: ',current.id);
     $('#property-current').remove();
     $('#property-detail-current').remove();
-    SelectedVolume(current);
 
     control=NodeWatch.type_control.get(current.type);
     selector=NodeWatch.type_selector.get(current.type);

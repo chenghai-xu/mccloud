@@ -40,6 +40,8 @@ MaterialsControl.GetAllMaterials=function()
 {
     var instance = $('#project-view').jstree(true);
     var res=[];
+    if(!this.current)
+        return res;
 
     for(let id of this.current.children)
     {

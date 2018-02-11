@@ -1,24 +1,17 @@
 $(document).ready(function () {
+        NodeWatch.Add('volume', '#property-volume',VolumeControl);
 });
+var VolumeControl={ form: null, current: null,};
 
-function ChangeVolumeName(form){
+VolumeControl.NameChanged=function(form){
     var name=$(form).val();
     var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'volume')
-        return;
-    instance.rename_node(current,name);
+    instance.rename_node(this.current,name);
 } 
-function SelectedVolume(current)
+VolumeControl.Init=function()
 {
-    if(current.type != 'volume')
-        return;
-    var property = $('#property-volume').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
+    var current=this.current;
+    var property=this.form;
     $(property).find('select[name=solid]').val(current.data.solid.type);
     $(property).find('input[name=name]').val(current.text);
     if(current.text=='world' ||current.text=='parallel' )
@@ -29,7 +22,7 @@ function SelectedVolume(current)
     //$(property).find('input[name=material]').val(current.data.material);
     var select=property.find('select[name=material]');
     select.empty();
-    var all=MaterialsForm.GetAllMaterials();
+    var all=MaterialsControl.GetAllMaterials();
     for (var i in all)
     {
         select.append('<option>' + all[i] +'</option>');
@@ -56,67 +49,54 @@ function SelectedVolume(current)
         //property.find('#delete-node').addClass('hidden');
     }
 
-    $('#property-container').append(property);
+    //$('#property-container').append(property);
     DrawModel(current);
 }
 
-function VolumeAdd(){
+VolumeControl.Add=function(){
     var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'volume')
-        return;
-
     var node = NewVolumeNode('volume');
-    var res = instance.create_node(current,node);
+    var res = instance.create_node(this.current,node);
     console.log('create volume: ' + res);
 } 
 
-function VolumeDelete(){
+VolumeControl.Delete=function(){
     var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'volume')
-        return;
-
-    var par = instance.get_node(instance.get_parent(current));
+    var par = instance.get_node(instance.get_parent(this.current));
     if(par.type == 'geometry')
         return;
-
-    var res = instance.delete_node(current);
+    var res = instance.delete_node(this.current);
+    this.current=null;
     console.log('delete volume: ' + res);
     DrawModel(par);
 } 
-function InitSolidForm(){
+VolumeControl.InitSolidForm=function(){
     var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'volume')
-        return;
+    var current=this.current;
     var solid=current.data.solid;
     var wigdet=null;
     if(solid.type=='box'){
         wigdet = $('#property-solid-box').clone();
-        //InitBoxForm(wigdet,solid);
-        SolidBox.InitForm(wigdet,solid);
+        SolidBox.node=current;
+        SolidBox.data=solid;
+        SolidBox.form=wigdet;
+        SolidBox.Init();
     }
     else if(solid.type=='tube')
     {
         wigdet = $('#property-solid-tube').clone();
-        //InitTubeForm(wigdet,solid);
-        SolidTube.InitForm(wigdet,solid);
+        SolidTube.node=current;
+        SolidTube.data=solid;
+        SolidTube.form=wigdet;
+        SolidTube.Init();
     }
     else if(solid.type=='sphere')
     {
         wigdet = $('#property-solid-sphere').clone();
-        //InitSphereForm(wigdet,solid);
-        SolidSphere.InitForm(wigdet,solid);
+        SolidSphere.node=current;
+        SolidSphere.data=solid;
+        SolidSphere.form=wigdet;
+        SolidSphere.Init();
     }
     else 
         return;
@@ -129,15 +109,10 @@ function InitSolidForm(){
     $('#property-detail-container').append(wigdet);
 } 
 
-function ChangeSolidType(sel){
+VolumeControl.SolidTypeChanged=function(sel){
     var selected=$(sel).val();
     var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'volume')
-        return;
+    var current=this.current;
     var solid=current.data.solid;
     if(selected==solid.type)
         return;
@@ -153,19 +128,16 @@ function ChangeSolidType(sel){
         }
     }
     current.data.solid=NewSolid(selected);
-    InitSolidForm();
+    this.InitSolidForm();
     DrawModel(current);
 } 
 
-function InitPlacementForm(wigdet,tube)
+VolumeControl.ChangePlacementType=function()
+{};
+VolumeControl.InitPlacementForm=function()
 {
     var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'volume')
-        return;
+    var current=this.current;
     var placement=current.data.placement;
     var wigdet=null;
     if(placement==undefined || placement.type!='simple'){
@@ -173,8 +145,10 @@ function InitPlacementForm(wigdet,tube)
     }
 
     wigdet = $('#property-placement-simple').clone();
-    //InitPlacementSimpleForm(wigdet,placement);
-    PlacementSimple.InitForm(wigdet,placement);
+    PlacementSimple.data=placement;
+    PlacementSimple.node=current;
+    PlacementSimple.form=wigdet;
+    PlacementSimple.Init();
 
     $(wigdet).find('select[name=placement]').val(placement.type);
     wigdet.attr("id","property-detail-current");
@@ -183,61 +157,54 @@ function InitPlacementForm(wigdet,tube)
     $('#property-detail-container').append(wigdet);
 }
 
-var VolumeForm={
-    EditDetector: function()
+VolumeControl.EditDetector=function()
+{
+    var instance = $('#project-view').jstree(true);
+    var current=this.current;
+    if(current.data.detector===undefined)
+        current.data.detector=DetectorModel.NewSD();
+
+    var par = instance.get_node(instance.get_parent(current));
+
+    var opts=$('#sensitive-detector').find('select[name=type]');
+    opts.empty();
+
+    if(par.text=='world')
     {
-        var instance = $('#project-view').jstree(true);
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
+        opts.append('<option>dist</option>');
+    }
+    else if(par.text=='parallel' )
+    {
+        if(current.data.solid.type != "box")
+        {
+            alert("Only Box is support!");
             return;
-        var current=selects[0];
-        if(current.type != 'volume')
-            return;
-        if(current.data.detector===undefined)
-            current.data.detector=DetectorModel.NewSD();
-
-        var par = instance.get_node(instance.get_parent(current));
-
-        var opts=$('#sensitive-detector').find('select[name=type]');
-        opts.empty();
-
-        if(par.text=='world')
-        {
-            opts.append('<option>dist</option>');
         }
-        else if(par.text=='parallel' )
-        {
-            if(current.data.solid.type != "box")
-            {
-                alert("Only Box is support!");
-                return;
-            }
-            opts.append('<option>mesh</option>');
-        }
-        else
-        {
-            opts.append('<option>dist</option>');
-        }
+        opts.append('<option>mesh</option>');
+    }
+    else
+    {
+        opts.append('<option>dist</option>');
+    }
 
-        DetectorForm.InitForm(current.data.detector);
-        DetectorForm.Open();
-    },
+    DetectorForm.InitForm(current.data.detector);
+    DetectorForm.Open();
 };
 
-VolumeForm.OnMaterialChanged = function(el){
+VolumeControl.OnMaterialChanged = function(el){
     var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'volume')
-        return;
+    var current=this.current;
     current.data.material=$(el).val();
 };
 
 var PlacementSimple = {
-    InitForm: function(form, placement)
+    data: null,
+    node: null,
+    form: null,
+    Init: function()
     {
+        var placement=this.data;
+        var form=this.form;
         $(form).find('input[name=px]').val(placement.position.x);
         $(form).find('input[name=py]').val(placement.position.y);
         $(form).find('input[name=pz]').val(placement.position.z);
@@ -251,68 +218,38 @@ var PlacementSimple = {
     LUnitChanged: function(elem)
     {
         var value=$(elem).val();
-        var instance = $('#project-view').jstree(true);
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
-            return;
-        var current=selects[0];
-        if(current.type != 'volume')
-            return;
-
         var p=$(elem).attr('name');
         console.log('Change placement simple parameter '+p+' to '+ value);
-        current.data.placement.position.lunit=value;
-        DrawModel(current);
+        this.position.lunit=value;
+        DrawModel(this.node);
     },
 
     AUnitChanged: function(elem)
     {
         var value=$(elem).val();
-        var instance = $('#project-view').jstree(true);
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
-            return;
-        var current=selects[0];
-        if(current.type != 'volume')
-            return;
-
         var p=$(elem).attr('name');
         console.log('Change placement simple parameter '+p+' to '+ value);
-        current.data.placement.rotation.aunit=value;
-        DrawModel(current);
+        this.data.rotation.aunit=value;
+        DrawModel(this.node);
     },
 
     PosValueChanged: function(elem)
     {
         var value=$(elem).val();
-        var instance = $('#project-view').jstree(true);
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
-            return;
-        var current=selects[0];
-        if(current.type != 'volume')
-            return;
         var p=$(elem).attr('name');
         p=p.substr(1);
         console.log('Change placement parameter '+p+' to '+ value);
-        current.data.placement.position[p]=value;
-        DrawModel(current);
+        this.data.position[p]=value;
+        DrawModel(this.node);
     },
 
     RotValueChanged: function(elem)
     {
         var value=$(elem).val();
-        var instance = $('#project-view').jstree(true);
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
-            return;
-        var current=selects[0];
-        if(current.type != 'volume')
-            return;
         var p=$(elem).attr('name');
         p=p.substr(1);
         console.log('Change placement parameter '+p+' to '+ value);
-        current.data.placement.rotation[p]=value;
-        DrawModel(current);
+        this.data.rotation[p]=value;
+        DrawModel(this.node);
     },
 }
