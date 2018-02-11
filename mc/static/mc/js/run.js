@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    NodeWatch.push(RunForm);
+    NodeWatch.Add('run','#property-run',RunForm);
 });
 
 var RunModel = {};
@@ -15,22 +15,6 @@ RunModel.New=function()
         unit: 'second',
     };
     return node;
-};
-
-RunForm.OnClick=function(current)
-{
-    if(current.type != 'run')
-        return;
-
-    var property = $('#property-run').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-
-    RunForm.current=current;
-    RunForm.form=property;
-    RunForm.Init();
-
-    $('#property-container').append(property);
 };
 
 RunForm.Init=function()

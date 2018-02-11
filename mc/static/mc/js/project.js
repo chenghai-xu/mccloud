@@ -9,7 +9,7 @@ $(document).ready(function () {
             }
         }
     });
-    if(!current_project)
+    if(!id_current_project)
     {
         DownloadProject(-1);
     }
@@ -18,12 +18,18 @@ function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
-var id_project_selected=null;
-var current_project = null;
+var id_selected_project=null;
+var id_current_project = null;
 var project_records = new Map();
 var node_selected_hook = new Map();
 var csrftoken=null;
-var NodeWatch=[];
+
+var NodeWatch = {type_control: new Map(), type_selector: new Map(), }; 
+NodeWatch.Add=function(type,selector,control)
+{
+    this.type_control.set(type,control);
+    this.type_selector.set(type,selector);
+};
 
 function InitProject(){
     $('#new-project').click(NewProject);
@@ -137,7 +143,7 @@ function PostProject(data)
     //project=JSON.parse(data);
     project=data;
     project_records.set(data.id,project);
-    current_project=data.id;
+    id_current_project=data.id;
 }
 
 function RenameNode(data) {
@@ -166,9 +172,19 @@ function NodeSelected(event, data) {
     SelectedMaterials(current);
     SelectedPrimary(current);
     SelectedPhysics(current);
-    for(var form of NodeWatch)
+
+    control=NodeWatch.type_control.get(current.type);
+    selector=NodeWatch.type_selector.get(current.type);
+    if(control && selector)
     {
-        form.OnClick(current);
+        var property = $(selector).clone();
+        property.attr("id","property-current");
+        property.removeClass('hidden');
+
+        control.current=current;
+        control.form=property;
+        control.Init();
+        $('#property-container').append(property);
     }
 }
 function OpenProject() {
@@ -197,9 +213,9 @@ function SaveProject(cb=null) {
 
     var json=$('#project-view').jstree().get_json('#',{no_state:true, no_li_attr:true, no_a_attr: true });
     //console.log(JSON.stringify(json[0]));
-    console.log('Save project', current_project);
+    console.log('Save project', id_current_project);
     $.post({ 
-        url: "/mc/project-tree/?id="+current_project, 
+        url: "/mc/project-tree/?id="+id_current_project, 
         data:JSON.stringify(json[0]),
         success: function(data){
             //console.log(data);
@@ -232,8 +248,8 @@ function ProjectDialogInit()
         buttons: {
             "Open": function() {
                 CloseProject();
-                current_project=parseInt(id_project_selected);
-                DownloadProject(id_project_selected);
+                id_current_project=parseInt(id_selected_project);
+                DownloadProject(id_selected_project);
                 $( this ).dialog( "close" );
             },
             Cancel: function() {
@@ -250,10 +266,11 @@ function DownloadProject(id)
     $.get({ 
         url: "/mc/project-tree/?id="+id, 
         success: function(data){
-            data=JSON.parse(data)
+            project=JSON.parse(data.data)
             //console.log(data);
-            console.log('Download project tree: ',id);
-            LoadProject(data);
+            console.log('Download project tree: ',data.id);
+            LoadProject(project);
+            id_current_project=data.id;
         }
     });
 }
@@ -278,7 +295,7 @@ function SelectProject(data)
         $('#project-tbody tr').css("background-color", "white");
         var id=$(this).attr('id'); 
         $(this).css("background-color", "red");
-        id_project_selected=id;
+        id_selected_project=id;
     });
     $( "#project-list" ).dialog("open");
 }

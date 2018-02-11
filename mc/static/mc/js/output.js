@@ -1,8 +1,8 @@
 $(document).ready(function () {
-    NodeWatch.push(OutputForm);
-    NodeWatch.push(MeshForm);
-    NodeWatch.push(DistForm);
-    NodeWatch.push(LogForm);
+    NodeWatch.Add('output','#property-output',OutputForm);
+    NodeWatch.Add('mesh','#property-mesh',MeshForm);
+    NodeWatch.Add('dist','#property-dist',DistForm);
+    NodeWatch.Add('log','#property-log',LogForm);
 });
 var OutputForm = {};
 var OutputModel = {};
@@ -60,22 +60,6 @@ OutputForm.New=function(job)
     }
 }
 
-OutputForm.OnClick=function(current)
-{
-    if(current.type != 'output')
-        return;
-
-    var property = $('#property-output').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-
-    this.current=current;
-    this.form=property;
-    this.Init();
-
-    $('#property-container').append(property);
-};
-
 OutputForm.Init=function()
 {
     if(!this.current.data.job)
@@ -103,21 +87,6 @@ OutputForm.Download=function()
 {
 };
 
-MeshForm.OnClick=function(current)
-{
-    if(current.type != 'mesh')
-        return;
-
-    var property = $('#property-mesh').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-
-    this.current=current;
-    this.form=property;
-    this.Init();
-
-    $('#property-container').append(property);
-};
 MeshForm.Init=function()
 {
     if(!this.current.data.mesh)
@@ -151,21 +120,6 @@ MeshForm.Update=function()
     
 };
 
-DistForm.OnClick=function(current)
-{
-    if(current.type != 'dist')
-        return;
-
-    var property = $('#property-dist').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-
-    this.current=current;
-    this.form=property;
-    this.Init();
-
-    $('#property-container').append(property);
-};
 DistForm.Init=function()
 {
     if(!this.current.data.dist)
