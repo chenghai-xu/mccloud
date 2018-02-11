@@ -9,15 +9,21 @@ $(document).ready(function () {
             }
         }
     });
+    if(!current_project)
+    {
+        DownloadProject(-1);
+    }
 });
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
+var id_project_selected=null;
 var current_project = null;
 var project_records = new Map();
 var node_selected_hook = new Map();
 var csrftoken=null;
+var NodeWatch=[];
 
 function InitProject(){
     $('#new-project').click(NewProject);
@@ -151,7 +157,6 @@ function RenameAble(node, parent) {
     return false;
 }
 
-var NodeWatch=[];
 function NodeSelected(event, data) {
     var current=data.instance.get_selected(true)[0];
     console.log('Select node: ',current.id);
@@ -227,8 +232,8 @@ function ProjectDialogInit()
         buttons: {
             "Open": function() {
                 CloseProject();
-                current_project=parseInt(project_selection);
-                DownloadProject(project_selection);
+                current_project=parseInt(id_project_selected);
+                DownloadProject(id_project_selected);
                 $( this ).dialog( "close" );
             },
             Cancel: function() {
@@ -253,7 +258,6 @@ function DownloadProject(id)
     });
 }
 
-var project_selection=null;
 function SelectProject(data)
 {
     //console.log(data);
@@ -274,7 +278,7 @@ function SelectProject(data)
         $('#project-tbody tr').css("background-color", "white");
         var id=$(this).attr('id'); 
         $(this).css("background-color", "red");
-        project_selection=id;
+        id_project_selected=id;
     });
     $( "#project-list" ).dialog("open");
 }
