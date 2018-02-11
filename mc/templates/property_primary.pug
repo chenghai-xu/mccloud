@@ -9,7 +9,7 @@ div(id='property-primary', class='hidden')
           span(class='caret')
         ul(class='dropdown-menu',role='menu') 
           li
-            a(id='new-node',href='#',onclick='PrimaryAdd()') Add GPS Source 
+            a(id='new-node',href='#',onclick='PrimaryControl.Add()') Add GPS Source 
 
 div(id='property-source', class='hidden')
   div(class='row')
@@ -72,7 +72,7 @@ div(id='property-position', class='hidden')
       div(class='form-group')
         div(id='gps-pos-type',class='input-group input-group-sm')
           span(class='input-group-addon') Type:
-          select(class='form-control',name='type',onchange='ChangePositionType(this)')
+          select(class='form-control',name='type',onchange='PositionControl.ChangePositionType(this)')
               option Point
               option Plane
               option Beam
@@ -80,7 +80,7 @@ div(id='property-position', class='hidden')
               option Volume
         div(id='gps-pos-shape',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Shape:
-          select(class='form-control',name='shape',onchange='ChangePositionShape(this)')
+          select(class='form-control',name='shape',onchange='PositionControl.ChangePositionShape(this)')
               option Circle
               option Annulus
               option Ellipse
@@ -91,50 +91,50 @@ div(id='property-position', class='hidden')
               option Para
         div(id='gps-pos-centre',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Centre(x,y,z):
-          input(class='form-control',name='centre',onchange='PositionCentreChanged(this)')
+          input(class='form-control',name='centre',onchange='PositionControl.PositionCentreChanged(this)')
         div(id='gps-pos-rot1',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Rot1:
-          input(class='form-control',name='rot1',onchange='PositionRot1Changed(this)')
+          input(class='form-control',name='rot1',onchange='PositionControl.PositionRot1Changed(this)')
         div(id='gps-pos-rot2',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Rot2:
-          input(class='form-control',name='rot2',onchange='PositionRot2Changed(this)')
+          input(class='form-control',name='rot2',onchange='PositionControl.PositionRot2Changed(this)')
         div(id='gps-pos-half',class='input-group input-group-sm hidden')
           span(id='halfxyz',class='input-group-addon') Half XYZ(x,y,z):
-          input(class='form-control',name='half',onchange='PositionHalfChanged(this)')
+          input(class='form-control',name='half',onchange='PositionControl.PositionHalfChanged(this)')
         div(id='gps-pos-radius',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Radius:
-          input(class='form-control',type='number',step='0.0001',name='radius',onchange='PositionRadiusChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='radius',onchange='PositionControl.PositionRadiusChanged(this)')
         div(id='gps-pos-inner-radius',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Inner Radius:
-          input(class='form-control',type='number',step='0.0001',name='inner-radius',onchange='PositionInnerRadiusChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='inner-radius',onchange='PositionControl.PositionInnerRadiusChanged(this)')
         div(id='gps-pos-sigma-radius',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Sigma Radius:
-          input(class='form-control',type='number',step='0.0001',name='sigma-radius',onchange='PositionSigmaRChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='sigma-radius',onchange='PositionControl.PositionSigmaRChanged(this)')
         div(id='gps-pos-sigma-x',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Sigma X:
-          input(class='form-control',type='number',step='0.0001',name='sigma-x',onchange='PositionSigmaXChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='sigma-x',onchange='PositionControl.PositionSigmaXChanged(this)')
         div(id='gps-pos-sigma-y',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Sigma Y:
-          input(class='form-control',type='number',step='0.0001',name='sigma-y',onchange='PositionSigmaYChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='sigma-y',onchange='PositionControl.PositionSigmaYChanged(this)')
         div(id='gps-pos-paralp',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Para Alpha:
-          input(class='form-control',type='number',step='0.0001',name='paralp',onchange='PositionParalpChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='paralp',onchange='PositionControl.PositionParalpChanged(this)')
         div(id='gps-pos-parthe',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Para Theta:
-          input(class='form-control',type='number',step='0.0001',name='parthe',onchange='PositionPartheChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='parthe',onchange='PositionControl.PositionPartheChanged(this)')
         div(id='gps-pos-parphi',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Para Phi:
-          input(class='form-control',type='number',step='0.0001',name='parphi',onchange='PositionParphiChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='parphi',onchange='PositionControl.PositionParphiChanged(this)')
         div(id='gps-pos-lunit',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Length Unit:
-          select(class='form-control',name='lunit',onchange='PositionLUnitChanged(this)')
+          select(class='form-control',name='lunit',onchange='PositionControl.PositionLUnitChanged(this)')
               option cm
               option m
               option mm
               option km
         div(id='gps-pos-aunit',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Angle Unit:
-          select(class='form-control',name='aunit',onchange='PositionAUnitChanged(this)')
+          select(class='form-control',name='aunit',onchange='PositionControl.PositionAUnitChanged(this)')
               option deg
               option rad
       //button(type='submit',class="btn btn-default") Save
@@ -148,7 +148,7 @@ div(id='property-angular', class='hidden')
       div(class='form-group')
         div(id='gps-ang-type',class='input-group input-group-sm')
           span(class='input-group-addon') Type:
-          select(class='form-control',name='type',onchange='ChangeAngularType(this)')
+          select(class='form-control',name='type',onchange='DirectionControl.ChangeAngularType(this)')
               option Planar
               option Iso
               option Cos
@@ -157,47 +157,47 @@ div(id='property-angular', class='hidden')
               option Focused
         div(id='gps-ang-direction',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Direction(x,y,z):
-          input(class='form-control',name='direction',onchange='AngularDirectionChanged(this)')
+          input(class='form-control',name='direction',onchange='DirectionControl.AngularDirectionChanged(this)')
         div(id='gps-ang-rot1',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Rot1:
-          input(class='form-control',name='rot1',onchange='AngularRot1Changed(this)')
+          input(class='form-control',name='rot1',onchange='DirectionControl.AngularRot1Changed(this)')
         div(id='gps-ang-rot2',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Rot2:
-          input(class='form-control',name='rot2',onchange='AngularRot2Changed(this)')
+          input(class='form-control',name='rot2',onchange='DirectionControl.AngularRot2Changed(this)')
         div(id='gps-ang-mintheta',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Min Theta:
-          input(class='form-control',type='number',step='0.0001',name='mintheta',onchange='AngularMinThetaChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='mintheta',onchange='DirectionControl.AngularMinThetaChanged(this)')
         div(id='gps-ang-maxtheta',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Max Theta:
-          input(class='form-control',type='number',step='0.0001',name='maxtheta',onchange='AngularMaxThetaChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='maxtheta',onchange='DirectionControl.AngularMaxThetaChanged(this)')
         div(id='gps-ang-minphi',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Min Phi:
-          input(class='form-control',type='number',step='0.0001',name='minphi',onchange='AngularMinPhiChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='minphi',onchange='DirectionControl.AngularMinPhiChanged(this)')
         div(id='gps-ang-maxphi',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Max Phi:
-          input(class='form-control',type='number',step='0.0001',name='maxphi',onchange='AngularMaxPhiChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='maxphi',onchange='DirectionControl.AngularMaxPhiChanged(this)')
         div(id='gps-ang-sigma-radius',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Sigma Radius:
-          input(class='form-control',type='number',step='0.0001',name='sigma-radius',onchange='AngularSigmaRChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='sigma-radius',onchange='DirectionControl.AngularSigmaRChanged(this)')
         div(id='gps-ang-sigma-x',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Sigma X:
-          input(class='form-control',type='number',step='0.0001',name='sigma-x',onchange='AngularSigmaXChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='sigma-x',onchange='DirectionControl.AngularSigmaXChanged(this)')
         div(id='gps-ang-sigma-y',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Sigma Y:
-          input(class='form-control',type='number',step='0.0001',name='sigma-y',onchange='AngularSigmaYChanged(this)')
+          input(class='form-control',type='number',step='0.0001',name='sigma-y',onchange='DirectionControl.AngularSigmaYChanged(this)')
         div(id='gps-ang-focuspoint',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Focus Point:
-          input(class='form-control',name='focuspoint',onchange='AngularFocusPointChanged(this)')
+          input(class='form-control',name='focuspoint',onchange='DirectionControl.AngularFocusPointChanged(this)')
         div(id='gps-ang-lunit',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Length Unit:
-          select(class='form-control',name='lunit',onchange='AngularLUnitChanged(this)')
+          select(class='form-control',name='lunit',onchange='DirectionControl.AngularLUnitChanged(this)')
               option cm
               option m
               option mm
               option km
         div(id='gps-ang-aunit',class='input-group input-group-sm hidden')
           span(class='input-group-addon') Angle Unit:
-          select(class='form-control',name='aunit',onchange='AngularAUnitChanged(this)')
+          select(class='form-control',name='aunit',onchange='DirectionControl.AngularAUnitChanged(this)')
               option deg
               option rad
 

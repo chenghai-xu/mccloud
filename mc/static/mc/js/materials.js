@@ -1,19 +1,27 @@
 $(document).ready(function () {
     //MaterialDialogInit();
     InputNameDialogInit();
-    MaterialsForm.InputSelectDialogInit();
-    MaterialsForm.GetDefaultMaterial();
+    InputSelectDialogInit();
+    MaterialsControl.GetDefaultMaterial();
+    NodeWatch.Add('materials','#property-materials',MaterialsControl);
+    NodeWatch.Add('material','#property-material',MaterialControl);
+    NodeWatch.Add('component','#property-component',ComponentControl);
 });
+
 var MaterialsModel={};
-var MaterialComponentForm={};
-var MaterialsForm={};
-var InputCallBack=null;
+var MaterialsControl={};
+
+var ComponentControl={};
+var MaterialControl={};
+
+var InputCBObject=null;
 MaterialsModel.Elements=[
     'a',
     'b',
     'c',
 ];
-MaterialsForm.GetDefaultMaterial=function()
+
+MaterialsControl.GetDefaultMaterial=function()
 {
     $.get({ 
         url: "/mc/material/", 
@@ -28,98 +36,51 @@ MaterialsForm.GetDefaultMaterial=function()
     });
 };
 
-MaterialsForm.GetID=function()
+MaterialsControl.GetAllMaterials=function()
 {
     var instance = $('#project-view').jstree(true);
-    var id='';
-    for(var t in instance._model.data)
-    {
-        var node=instance._model.data[t];
-        if(node.type=='materials')
-        {
-            id=node.id;
-            break;
-        }
-    }
-    return id;
-};
-
-MaterialsForm.GetAllMaterials=function()
-{
-    var instance = $('#project-view').jstree(true);
-    var id=this.GetID();
-    var node=instance.get_node(id);
     var res=[];
 
-    for(var i in node.children)
+    for(let id of this.current.children)
     {
-        var n=instance.get_node(node.children[i]);
+        var n=instance.get_node(id);
         res.push(n.data.name);
     }
     return res;
 };
 
 
-function SelectedMaterials(current)
+MaterialsControl.Init=function()
 {
-    SelectedMaterial(current);
-    if(current.type != 'materials')
-        return;
-    var property = $('#property-materials').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-    $('#property-container').append(property);
-}
-function SelectedMaterialComponent(current)
+};
+
+ComponentControl.Init=function()
 {
-    if(current.type != 'component' )
-        return;
-    var property = $('#property-component').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
+    var property=this.form;
+    var current=this.current;
     $(property).find('input[name=name]').val(current.data.name);
     $(property).find('input[name=weight]').val(current.data.weight);
-    $('#property-container').append(property);
-    MaterialComponentForm.current=current;
-}
-function SelectedMaterial(current)
+};
+
+MaterialControl.Init=function()
 {
-    SelectedMaterialComponent(current);
-    if(current.type != 'material' )
-        return;
-    var property = $('#property-material').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
+    var property=this.form;
+    var current=this.current;
     $(property).find('input[name=name]').val(current.data.name);
     $(property).find('input[name=density]').val(current.data.density);
     $(property).find('select[name=type]').val(current.data.type);
     $(property).find('select[name=weight]').val(current.data.weight);
-    $('#property-container').append(property);
-    MaterialsForm.current=current;
 }
-function MaterialAdd(){
-    var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'materials')
-        return;
 
-    InputCallBack=CheckAndAddMaterial;
+MaterialsControl.Add=function(){
+    InputCBObject=MaterialsControl;
     $('#dialog-input-name').dialog('open');
 } 
 
-function MaterialDelete(){
+MaterialControl.MaterialDelete=function(){
     var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'material')
-        return;
-
-    var res = instance.delete_node(current);
+    var res = instance.delete_node(this.current);
+    this.current=null;
     console.log('delete material: ' + res);
 } 
 
@@ -128,8 +89,7 @@ function CheckMaterialName(name)
     if(name=='')
         return false;
 
-    var instance = $('#project-view').jstree(true);
-    var all=MaterialsForm.GetAllMaterials();
+    var all=MaterialsControl.GetAllMaterials();
     var res=true;
     for(var i in all)
     {
@@ -196,15 +156,10 @@ function NewMaterialsNode()
     return node;
 }
 
-function CheckAndAddMaterial(name)
+MaterialsControl.CheckAndAdd=function(name)
 {
     var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return false;
-    var current=selects[0];
-    if(current.type != 'materials')
-        return false;
+    var current=this.current;
     if(!CheckMaterialName(name))
     {
         alert('Already exist the same material!');
@@ -227,7 +182,7 @@ function InputNameDialogInit()
             OK: function() {
                 var value= $( "#dialog-input-name input[name=name]").val();
                 console.log('Input text: ', value);
-                if(InputCallBack(value))
+                if(InputCBObject.CheckAndAdd(value))
                     $( this ).dialog( "close" );
             },
             Cancel: function() {
@@ -239,34 +194,21 @@ function InputNameDialogInit()
     });
 }
 
-function MaterialAddComponent(){
-    var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'material')
-        return;
-
-    InputCallBack=CheckAndAddComponent;
+MaterialControl.AddComponent=function(){
+    InputCBObject=MaterialControl;
     $('#dialog-select-name').dialog('open');
 } 
 
-function CheckAndAddComponent(name)
+MaterialControl.CheckAndAdd=function(name)
 {
-    var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return false;
-    var current=selects[0];
-    if(current.type != 'material')
-        return false;
+    var current=this.current;
     if(!CheckComponentName(name,current))
     {
         alert('Already exist the same component!');
         return false;
     }
     var node = NewComponentNode(name,0);
+    var instance = $('#project-view').jstree(true);
     var res = instance.create_node(current,node);
     console.log('create component: ' + res);
     return true;
@@ -277,21 +219,15 @@ function CheckComponentName(name,current)
     return true;
 }
 
-function MaterialDeleteComponent()
+ComponentControl.DeleteComponent=function()
 {
     var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'component')
-        return;
-
-    var res = instance.delete_node(current);
+    var res = instance.delete_node(this.current);
+    this.current=null;
     console.log('delete component: ' + res);
 }
 
-MaterialsForm.InputSelectDialogInit=function()
+function InputSelectDialogInit()
 {
     $( "#dialog-select-name" ).dialog({
         autoOpen: false,
@@ -302,7 +238,7 @@ MaterialsForm.InputSelectDialogInit=function()
             OK: function() {
                 var value= $( "#dialog-select-name select[name=name]").val();
                 console.log('select text: ', value);
-                if(InputCallBack(value))
+                if(InputCBObject.CheckAndAdd(value))
                     $( this ).dialog( "close" );
             },
             Cancel: function() {
@@ -314,7 +250,7 @@ MaterialsForm.InputSelectDialogInit=function()
     });
 };
 
-MaterialsForm.NameChanged=function(el)
+MaterialControl.NameChanged=function(el)
 {
     var name=$(el).val();
     if(!CheckMaterialName(name))
@@ -322,46 +258,43 @@ MaterialsForm.NameChanged=function(el)
         alert('Already exist the same material!');
         return false;
     }
-    MaterialsForm.current.data.name=name;
+    this.current.data.name=name;
     var instance = $('#project-view').jstree(true);
-    instance.rename_node(MaterialsForm.current,name);
+    instance.rename_node(this.current,name);
 };
 
-MaterialsForm.DensityChanged=function(el)
+MaterialControl.DensityChanged=function(el)
 {
     var name=$(el).val();
-    MaterialsForm.current.data.density=name;
+    this.current.data.density=name;
 };
 
-MaterialsForm.TypeChanged=function(el)
+MaterialControl.TypeChanged=function(el)
 {
-    var current =MaterialsForm.current;
+    var current =this.current;
     var name=$(el).val();
     current.data.type=name;
 
     var instance = $('#project-view').jstree(true);
-    while(current.children.length>0)
+    for(let id of current.children)
     {
-        var id=current.children[0];
-        var node=instance.get_node(id);
-        var res = instance.delete_node(node);
+        var res = instance.delete_node(id);
+    }
+    for(let id of current.children)
+    {
+        var res = instance.delete_node(id);
     }
     console.log('delete all components: ' + current.data.name);
 };
 
-MaterialsForm.WeightChanged=function(el)
+ComponentControl.WeightChanged=function(el)
 {
     var name=$(el).val();
-    MaterialsForm.current.data.weight=name;
-};
-MaterialComponentForm.WeightChanged=function(el)
-{
-    var name=$(el).val();
-    MaterialComponentForm.current.data.weight=name;
+    this.current.data.weight=name;
 };
 
-MaterialsForm.AddComponent=function(){
-    var current=MaterialsForm.current;
+MaterialControl.AddComponent=function(){
+    var current=this.current;
     if(current.data.type=='element') {
         var select=$( "#dialog-select-name" ).find('select[name=name]');
         select.empty();
@@ -377,16 +310,7 @@ MaterialsForm.AddComponent=function(){
 
         var select=$( "#dialog-select-name" ).find('select[name=name]');
         select.empty();
-        var instance = $('#project-view').jstree(true);
-
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
-            return false;
-        var current=selects[0];
-        if(current.type != 'material')
-            return false;
-
-        var all=MaterialsForm.GetAllMaterials();
+        var all=MaterialsControl.GetAllMaterials();
         for (var i in all)
         {
             if(all[i]!=current.data.name)
@@ -401,6 +325,6 @@ MaterialsForm.AddComponent=function(){
         }
     }
 
-    InputCallBack=CheckAndAddComponent;
+    InputCBObject=MaterialControl;
     $('#dialog-select-name').dialog('open');
 }; 

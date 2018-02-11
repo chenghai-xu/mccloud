@@ -169,7 +169,6 @@ function NodeSelected(event, data) {
     $('#property-current').remove();
     $('#property-detail-current').remove();
     SelectedVolume(current);
-    SelectedMaterials(current);
 
     control=NodeWatch.type_control.get(current.type);
     selector=NodeWatch.type_selector.get(current.type);
