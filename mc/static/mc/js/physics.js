@@ -1,21 +1,11 @@
 $(document).ready(function () {
+    NodeWatch.Add('physics','#property-physics',PPhysics);
 });
 
 function NewPhysicsNode(t){
     var node=NewNode('Physics','physics'); 
     node.data=PPhysics.New();
     return node;
-}
-
-function SelectedPhysics(current)
-{
-    if(current.type != 'physics')
-        return;
-    var property = $('#property-physics').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-    PPhysics.InitForm(property,current);
-    $('#property-container').append(property);
 }
 
 var PPhysics = {
@@ -59,10 +49,11 @@ var PPhysics = {
         return node;
     },
 
-    InitForm: function(form, current)
+    Init: function()
     {
+        var form=this.form;
+        var data=this.current.data;
         $(form).find('div .input-group').addClass('hidden');
-        var data=current.data;
         $(form).find('#gps-phy-list').removeClass('hidden');
         $(form).find('select[name=list]').val(data.list);
         $(form).find('#gps-phy-em').removeClass('hidden');
@@ -72,31 +63,15 @@ var PPhysics = {
     ListChanged: function(elem)
     {
         var value=$(elem).val();
-        var instance = $('#project-view').jstree(true);
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
-            return;
-        var current=selects[0];
-        if(current.type != 'physics')
-            return;
-
-        var form=$('#property-current');
+        this.current.data.list=value;
         console.log('Change physics list to: ',value);
-        current.data.list=value;
     },
 
     EmChanged: function(elem)
     {
         var value=$(elem).val();
-        var instance = $('#project-view').jstree(true);
-        var selects=instance.get_selected(true);
-        if(selects.length < 1)
-            return;
-        var current=selects[0];
-        if(current.type != 'physics')
-            return;
+        this.current.data.em=value;
         console.log('Change physics parameter em to '+ value);
-        current.data.em=value;
 
     },
 }

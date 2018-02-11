@@ -171,7 +171,7 @@ function NodeSelected(event, data) {
     SelectedVolume(current);
     SelectedMaterials(current);
     SelectedPrimary(current);
-    SelectedPhysics(current);
+    //SelectedPhysics(current);
 
     control=NodeWatch.type_control.get(current.type);
     selector=NodeWatch.type_selector.get(current.type);
