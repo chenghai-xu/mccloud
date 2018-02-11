@@ -79,10 +79,24 @@ def WriteProjectConfig(pk,data):
 class ProjectView(View):
     def get(self, request, *args, **kwargs):
         pk=request.GET.get('id',-1)
+        pk=int(pk)
         user=request.user
         try:
-            project = Project.objects.filter(pk=pk,user=user)
+            last=LastOpen.objects.get(user=user)
+        except LastOpen.DoesNotExist:
+            last=LastOpen.objects.create(user=user)
+        
+        if pk==-1:
+            pk=last.pid
+        else:
+            last.pid=pk
+            last.save()
+
+        try:
+            project = Project.objects.get(pk=pk,user=user)
+            print("get project success: ", project.id)
         except Project.DoesNotExist:
+            print("get project fail:",pk)
             return handler404(request)
         return JsonResponse(ReadProjectConfig(pk), content_type='application/json',safe=False)
 

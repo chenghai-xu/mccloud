@@ -114,3 +114,8 @@ class Charge(models.Model):
     def __str__(self):
         return str(self.id)
 
+class LastOpen(models.Model):
+    user = models.OneToOneField(User, primary_key=True, editable=False,on_delete=models.PROTECT)
+    pid = models.IntegerField(default=-1)
+    def __str__(self):
+        return self.user
