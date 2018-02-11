@@ -98,7 +98,7 @@ class ProjectView(View):
         except Project.DoesNotExist:
             print("get project fail:",pk)
             return handler404(request)
-        return JsonResponse(ReadProjectConfig(pk), content_type='application/json',safe=False)
+        return JsonResponse({'id':pk,'data':ReadProjectConfig(pk)}, content_type='application/json',safe=False)
 
     def post(self, request, *args, **kwargs):
         user=request.user
