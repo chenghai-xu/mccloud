@@ -1,7 +1,19 @@
 $(document).ready(function () {
+        NodeWatch.Add('primary', '#property-primary',PrimaryControl);
+        NodeWatch.Add('particle', '#property-particle',PParticle);
+        NodeWatch.Add('position', '#property-position',PositionControl);
+        NodeWatch.Add('direction', '#property-angular',DirectionControl);
+        NodeWatch.Add('energy','#property-energy',PEnergy);
+        NodeWatch.Add('time','#property-time',PTime);
 });
+var PrimaryControl={current: null, form: null};
+var PositionControl={current: null, form: null};
+var DirectionControl={current: null, form: null};
 
-function NewPositionBase(t)
+var PrimaryModel={};
+var DirectionModel={};
+var PositionModel={};
+PositionModel.NewPositionBase=function(t)
 {
     var node={type:t};
     node.lunit='cm';
@@ -9,16 +21,16 @@ function NewPositionBase(t)
     return node;
 }
 
-function NewPositionPoint()
+PositionModel.NewPositionPoint=function()
 {
-    var node = NewPositionBase('Point');
+    var node = this.NewPositionBase('Point');
     node.centre={x:0,y:0,z:0};
     return node;
 }
 
-function NewPositionPlane(shape='Circle')
+PositionModel.NewPositionPlane=function(shape='Circle')
 {
-    var node = NewPositionBase('Plane');
+    var node = this.NewPositionBase('Plane');
     node.shape=shape;
     node.centre={x:0,y:0,z:0};
     node.rot1={x:1,y:0,z:0};
@@ -43,9 +55,9 @@ function NewPositionPlane(shape='Circle')
     return node;
 }
 
-function NewPositionBeam(shape='Circle')
+PositionModel.NewPositionBeam=function(shape='Circle')
 {
-    var node = NewPositionBase('Beam');
+    var node = this.NewPositionBase('Beam');
     node.shape=shape;
     node.centre={x:0,y:0,z:0};
     node.rot1={x:1,y:0,z:0};
@@ -71,9 +83,9 @@ function NewPositionBeam(shape='Circle')
     return node;
 }
 
-function NewPositionSurface(shape='Sphere')
+PositionModel.NewPositionSurface=function(shape='Sphere')
 {
-    var node = NewPositionBase('Surface');
+    var node = this.NewPositionBase('Surface');
     node.shape=shape;
     node.centre={x:0,y:0,z:0};
     node.rot1={x:1,y:0,z:0};
@@ -106,9 +118,9 @@ function NewPositionSurface(shape='Sphere')
     return node;
 }
 
-function NewPositionVolume(shape='Sphere')
+PositionModel.NewPositionVolume=function(shape='Sphere')
 {
-    var node = NewPositionBase('Volume');
+    var node = this.NewPositionBase('Volume');
     node.shape=shape;
     node.centre={x:0,y:0,z:0};
     node.rot1={x:1,y:0,z:0};
@@ -143,202 +155,102 @@ function NewPositionVolume(shape='Sphere')
     }
     return node;
 }
-function NewPosition(type='Point',shape='Circle')
+PositionModel.NewPosition=function(type='Point',shape='Circle')
 {
     if(type=='Point')
-        return NewPositionPoint();
+        return this.NewPositionPoint();
     else if(type=='Plane')
-        return NewPositionPlane(shape);
+        return this.NewPositionPlane(shape);
     else if(type=='Beam')
-        return NewPositionBeam(shape);
+        return this.NewPositionBeam(shape);
     else if(type=='Surface')
-        return NewPositionSurface(shape);
+        return this.NewPositionSurface(shape);
     else if(type=='Volume')
-        return NewPositionVolume(shape);
-    return NewPositionPoint();
+        return this.NewPositionVolume(shape);
+    return this.NewPositionPoint();
 }
 
-function NewPositionNode(t){
+PrimaryModel.NewPositionNode=function(t){
     var node=NewNode(t,'position');
-    node.data=NewPosition();
+    node.data=PositionModel.NewPosition();
     return node;
 }
 
-function NewDirectionNode(t){
+PrimaryModel.NewDirectionNode=function(t){
     var node=NewNode(t,'direction');
-    node.data=NewAngular();
+    node.data=DirectionModel.NewAngular();
     return node;
 }
 
-function NewEnergyNode(t){
+PrimaryModel.NewEnergyNode=function(t){
     var node=NewNode(t,'energy');
     node.data=PEnergy.New();
     return node;
 }
 
-function NewParticleNode(t){
+PrimaryModel.NewParticleNode=function(t){
     var node=NewNode(t,'particle');
     node.data=PParticle.New();
     return node;
 }
 
-function NewTimeNode(t){
+PrimaryModel.NewTimeNode=function(t){
     var node=NewNode(t,'time');
     node.data=PTime.New();
     return node;
 }
 
 
-function NewSourceNode(t){
+PrimaryModel.NewSourceNode=function(t){
     var node=NewNode(t,'source');
-    node.children.push(NewParticleNode('Particle'));
-    node.children.push(NewPositionNode('Position'));
-    node.children.push(NewDirectionNode('Direction'));
-    node.children.push(NewEnergyNode('Energy'));
-    node.children.push(NewTimeNode('Time'));
+    node.children.push(this.NewParticleNode('Particle'));
+    node.children.push(this.NewPositionNode('Position'));
+    node.children.push(this.NewDirectionNode('Direction'));
+    node.children.push(this.NewEnergyNode('Energy'));
+    node.children.push(this.NewTimeNode('Time'));
     return node;
 }
 
 function NewPrimaryNode()
 {
     var node=NewNode('Primary','primary');
-    node.children.push(NewSourceNode('Source'));
+    node.children.push(PrimaryModel.NewSourceNode('Source'));
     return node;
 }
 
-function PrimaryAdd()
+PrimaryControl.Add=function()
 {
     var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'primary')
-        return;
-    var node = NewSourceNode('Source');
-    var res = instance.create_node(current,node);
+    var node = PrimaryModel.NewSourceNode('Source');
+    var res = instance.create_node(this.current,node);
     console.log('create source: ' + res);
-
 }
-
-function SelectedSource(current)
+PrimaryControl.Init=function()
 {
-    SelectedParticle(current);
-    SelectedPosition(current);
-    SelectedDirection(current);
-    SelectedEnergy(current);
-    SelectedTime(current);
-    if(current.type != 'source')
-        return;
+};
 
-    var property = $('#property-source').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-    InitPositionForm(property,current);
-    $('#property-container').append(property);
-}
-
-function SelectedParticle(current)
-{
-    if(current.type != 'particle')
-        return;
-    var property = $('#property-particle').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-    PParticle.InitForm(property,current);
-    $('#property-container').append(property);
-}
-
-function SelectedPosition(current)
-{
-    if(current.type != 'position')
-        return;
-    var property = $('#property-position').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-    InitPositionForm(property,current);
-    $('#property-container').append(property);
-}
-
-function SelectedDirection(current)
-{
-    if(current.type != 'direction')
-        return;
-    var property = $('#property-angular').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-    InitAngularForm(property,current);
-    $('#property-container').append(property);
-}
-
-function SelectedEnergy(current)
-{
-    if(current.type != 'energy')
-        return;
-    var property = $('#property-energy').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-    PEnergy.InitForm(property,current);
-    $('#property-container').append(property);
-}
-
-function SelectedTime(current)
-{
-    if(current.type != 'time')
-        return;
-    var property = $('#property-time').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-    PTime.InitForm(property,current);
-    $('#property-container').append(property);
-}
-
-function SelectedPrimary(current)
-{
-    SelectedSource(current);
-    if(current.type != 'primary')
-        return;
-
-    var property = $('#property-primary').clone();
-    property.attr("id","property-current");
-    property.removeClass('hidden');
-    $('#property-container').append(property);
-}
-
-function ChangePositionType(sel){
+PositionControl.ChangePositionType=function(sel){
     var selected=$(sel).val();
-    var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'position')
-        return;
-
-    var form=$('#property-current');
+    var form=this.form;
+    var current=this.current;
     console.log('Change position type to: ',selected);
-    current.data=NewPosition(selected);
-    InitPositionForm(form,current);
+    current.data=PositionModel.NewPosition(selected);
+    this.Init();
 } 
 
-function ChangePositionShape(sel){
+PositionControl.ChangePositionShape=function(sel){
     var selected=$(sel).val();
-    var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'position')
-        return;
-
-    var form=$('#property-current');
+    var form=this.form;
+    var current=this.current;
     console.log('Change position shape to: ',selected);
-    current.data=NewPosition(current.data.type,selected);
-    InitPositionForm(form,current);
+    current.data=PositionModel.NewPosition(current.data.type,selected);
+    this.Init();
 } 
 
-function InitPositionForm(form,current)
+PositionControl.Init=function()
 {
+    var form=this.form;
+    var current=this.current;
     console.log('Init position form');
     $(form).find('div .input-group').addClass('hidden');
     $(form).find('#gps-pos-type').removeClass('hidden');
@@ -352,22 +264,22 @@ function InitPositionForm(form,current)
     $(form).find('input[name=centre]').val(data.centre.x+', '+data.centre.y+', '+data.centre.z);
 
     if(current.data.type==='Point')
-        InitPositionPointForm(form,current);
+        this.InitPositionPointForm(form,current);
     if(current.data.type==='Plane')
-        InitPositionPlaneForm(form,current);
+        this.InitPositionPlaneForm(form,current);
     if(current.data.type==='Beam')
-        InitPositionBeamForm(form,current);
+        this.InitPositionBeamForm(form,current);
     if(current.data.type==='Surface')
-        InitPositionSurfaceForm(form,current);
+        this.InitPositionSurfaceForm(form,current);
     if(current.data.type==='Volume')
-        InitPositionVolumeForm(form,current);
+        this.InitPositionVolumeForm(form,current);
 }
 
-function InitPositionPointForm(form,current)
+PositionControl.InitPositionPointForm=function(form,current)
 {
 }
 
-function InitPositionPlaneForm(form,current)
+PositionControl.InitPositionPlaneForm=function(form,current)
 {
     $(form).find('#gps-pos-shape').removeClass('hidden');
     $(form).find('#gps-pos-rot1').removeClass('hidden');
@@ -410,7 +322,7 @@ function InitPositionPlaneForm(form,current)
     select.val(shape);
 }
 
-function InitPositionBeamForm(form,current)
+PositionControl.InitPositionBeamForm=function(form,current)
 {
     $(form).find('#gps-pos-shape').removeClass('hidden');
     $(form).find('#gps-pos-rot1').removeClass('hidden');
@@ -444,7 +356,7 @@ function InitPositionBeamForm(form,current)
     select.val(shape);
 }
 
-function InitPositionSurfaceForm(form,current)
+PositionControl.InitPositionSurfaceForm=function(form,current)
 {
     $(form).find('#gps-pos-shape').removeClass('hidden');
     $(form).find('#gps-pos-rot1').removeClass('hidden');
@@ -493,7 +405,7 @@ function InitPositionSurfaceForm(form,current)
     select.val(shape);
 }
 
-function InitPositionVolumeForm(form,current)
+PositionControl.InitPositionVolumeForm=function(form,current)
 {
     $(form).find('#gps-pos-shape').removeClass('hidden');
     $(form).find('#gps-pos-rot1').removeClass('hidden');
@@ -546,21 +458,9 @@ function InitPositionVolumeForm(form,current)
     select.val(shape);
 }
 
-function GetCurrentPosition()
+PositionControl.PositionCentreChanged=function(elem)
 {
-    var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return false;
-    var current=selects[0];
-    if(current.type != 'position')
-        return false;
-    return current;
-}
-
-function PositionCentreChanged(elem)
-{
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
@@ -578,9 +478,9 @@ function PositionCentreChanged(elem)
     current.data.centre.z=parseFloat(val[2]);
 }
 
-function PositionRot1Changed(elem)
+PositionControl.PositionRot1Changed=function(elem)
 {
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     if(current.data.type==='Point')
@@ -600,9 +500,9 @@ function PositionRot1Changed(elem)
     current.data.rot1.z=parseFloat(val[2]);
 }
 
-function PositionRot2Changed(elem)
+PositionControl.PositionRot2Changed=function(elem)
 {
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     if(current.data.type==='Point')
@@ -622,9 +522,9 @@ function PositionRot2Changed(elem)
     current.data.rot2.z=parseFloat(val[2]);
 }
 
-function PositionHalfChanged(elem)
+PositionControl.PositionHalfChanged=function(elem)
 {
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     if(current.data.type==='Point')
@@ -663,97 +563,97 @@ function PositionHalfChanged(elem)
     }
 }
 
-function PositionRadiusChanged(elem)
+PositionControl.PositionRadiusChanged=function(elem)
 {
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.radius=parseFloat(val);
 }
 
-function PositionInnerRadiusChanged(elem)
+PositionControl.PositionInnerRadiusChanged=function(elem)
 {
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.inner_radius=parseFloat(val);
 }
 
-function PositionSigmaRChanged(elem)
+PositionControl.PositionSigmaRChanged=function(elem)
 {
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.sigma_r=parseFloat(val);
 }
 
-function PositionSigmaXChanged(elem)
+PositionControl.PositionSigmaXChanged=function(elem)
 {
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.sigma_x=parseFloat(val);
 }
 
-function PositionSigmaYChanged(elem)
+PositionControl.PositionSigmaYChanged=function(elem)
 {
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.sigma_y=parseFloat(val);
 }
 
-function PositionParalpChanged(elem)
+PositionControl.PositionParalpChanged=function(elem)
 {
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.alpha=parseFloat(val);
 }
 
-function PositionPartheChanged(elem)
+PositionControl.PositionPartheChanged=function(elem)
 {
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.theta=parseFloat(val);
 }
 
-function PositionParphiChanged(elem)
+PositionControl.PositionParphiChanged=function(elem)
 {
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.phi=parseFloat(val);
 }
 
-function PositionLUnitChanged(elem)
+PositionControl.PositionLUnitChanged=function(elem)
 {
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.lunit=val;
 }
 
-function PositionAUnitChanged(elem)
+PositionControl.PositionAUnitChanged=function(elem)
 {
-    var current=GetCurrentPosition();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.aunit=val;
 }
 
-function NewAngularBase(t)
+DirectionModel.NewAngularBase=function(t)
 {
     var node={type:t};
     node.lunit='cm';
@@ -761,9 +661,9 @@ function NewAngularBase(t)
     return node;
 }
 
-function NewAngularIso()
+DirectionModel.NewAngularIso=function()
 {
-    var node = NewAngularBase('Iso');
+    var node = this.NewAngularBase('Iso');
     node.mintheta=0;
     node.maxtheta=180;
     node.minphi=0;
@@ -773,9 +673,9 @@ function NewAngularIso()
     return node;
 }
 
-function NewAngularCos()
+DirectionModel.NewAngularCos=function()
 {
-    var node = NewAngularBase('Cos');
+    var node = this.NewAngularBase('Cos');
     node.mintheta=0;
     node.maxtheta=90;
     node.minphi=0;
@@ -785,18 +685,18 @@ function NewAngularCos()
     return node;
 }
 
-function NewAngularBeam1d()
+DirectionModel.NewAngularBeam1d=function()
 {
-    var node = NewAngularBase('Beam1d');
+    var node = this.NewAngularBase('Beam1d');
     node.sigma_r=0;
     node.rot1={x:1,y:0,z:0};
     node.rot2={x:0,y:1,z:0};
     return node;
 }
 
-function NewAngularBeam2d()
+DirectionModel.NewAngularBeam2d=function()
 {
-    var node = NewAngularBase('Beam2d');
+    var node = this.NewAngularBase('Beam2d');
     node.sigma_x=0;
     node.sigma_y=0;
     node.rot1={x:1,y:0,z:0};
@@ -804,39 +704,42 @@ function NewAngularBeam2d()
     return node;
 }
 
-function NewAngularFocused()
+DirectionModel.NewAngularFocused=function()
 {
-    var node = NewAngularBase('Focused');
+    var node = this.NewAngularBase('Focused');
     node.focuspoint={x:0,y:0,z:0};
     return node;
 }
 
-function NewAngularPlanar()
+DirectionModel.NewAngularPlanar=function()
 {
-    var node = NewAngularBase('Planar');
+    var node = this.NewAngularBase('Planar');
     node.direction={x:0,y:0,z:1};
     return node;
 }
 
-function NewAngular(type)
+DirectionModel.NewAngular=function(type)
 {
     if(type=='Iso')
-        return NewAngularIso();
+        return this.NewAngularIso();
     else if(type=='Cos')
-        return NewAngularCos();
+        return this.NewAngularCos();
     else if(type=='Beam1d')
-        return NewAngularBeam1d();
+        return this.NewAngularBeam1d();
     else if(type=='Beam2d')
-        return NewAngularBeam2d();
+        return this.NewAngularBeam2d();
     else if(type=='Planar')
-        return NewAngularPlanar();
+        return this.NewAngularPlanar();
     else if(type=='Focused')
-        return NewAngularFocused();
-    return NewAngularPlanar();
+        return this.NewAngularFocused();
+    return this.NewAngularPlanar();
 }
 
-function InitAngularForm(form,current)
+DirectionControl.Init=function()
 {
+    var form=this.form;
+    var current=this.current;
+
     console.log('Init angular form');
     $(form).find('div .input-group').addClass('hidden');
     var data=current.data;
@@ -844,34 +747,34 @@ function InitAngularForm(form,current)
     $(form).find('select[name=type]').val(data.type);
     if(current.data.type==='Planar')
     {
-        InitAngularPlanarForm(form,current);
+        this.InitAngularPlanarForm(form,current);
     }
     else if(current.data.type==='Focused')
     {
-        InitAngularFocusedForm(form,current);
+        this.InitAngularFocusedForm(form,current);
     }
     else if(current.data.type==='Iso' || current.data.type==='Cos')
     {
-        InitAngularIsoForm(form,current);
+        this.InitAngularIsoForm(form,current);
     }
     else if(current.data.type==='Beam1d')
     {
-        InitAngularBeam1dForm(form,current);
+        this.InitAngularBeam1dForm(form,current);
     }
     else if(current.data.type==='Beam2d')
     {
-        InitAngularBeam2dForm(form,current);
+        this.InitAngularBeam2dForm(form,current);
     }
 }
 
-function InitAngularPlanarForm(form,current)
+DirectionControl.InitAngularPlanarForm=function(form,current)
 {
     var data=current.data;
     $(form).find('input[name=direction]').val(data.direction.x+', ' + data.direction.y+', ' +data.direction.z);
     $(form).find('#gps-ang-direction').removeClass('hidden');
 }
 
-function InitAngularFocusedForm(form,current)
+DirectionControl.InitAngularFocusedForm=function(form,current)
 {
     var data=current.data;
     $(form).find('select[name=lunit]').val(data.lunit);
@@ -880,7 +783,7 @@ function InitAngularFocusedForm(form,current)
     $(form).find('#gps-ang-focuspoint').removeClass('hidden');
 }
 
-function InitAngularIsoForm(form,current)
+DirectionControl.InitAngularIsoForm=function(form,current)
 {
     var data=current.data;
     $(form).find('select[name=aunit]').val(data.aunit);
@@ -904,7 +807,7 @@ function InitAngularIsoForm(form,current)
     $(form).find('input[name=maxphi]').val(data.maxphi);
 }
 
-function InitAngularBeam1dForm(form,current)
+DirectionControl.InitAngularBeam1dForm=function(form,current)
 {
     var data=current.data;
     $(form).find('select[name=aunit]').val(data.aunit);
@@ -919,7 +822,7 @@ function InitAngularBeam1dForm(form,current)
     $(form).find('input[name=sigma-radius]').val(data.sigma_r);
 }
 
-function InitAngularBeam2dForm(form,current)
+DirectionControl.InitAngularBeam2dForm=function(form,current)
 {
     var data=current.data;
     $(form).find('select[name=aunit]').val(data.aunit);
@@ -937,25 +840,17 @@ function InitAngularBeam2dForm(form,current)
     $(form).find('input[name=sigma-y]').val(data.sigma_y);
 }
 
-function ChangeAngularType(sel){
+DirectionControl.ChangeAngularType=function(sel){
     var selected=$(sel).val();
-    var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return;
-    var current=selects[0];
-    if(current.type != 'direction')
-        return;
-
-    var form=$('#property-current');
+    var current=this.current;
     console.log('Change position type to: ',selected);
-    current.data=NewAngular(selected);
-    InitAngularForm(form,current);
+    current.data=DirectionModel.NewAngular(selected);
+    this.Init();
 } 
 
-function AngularDirectionChanged(elem)
+DirectionControl.AngularDirectionChanged=function(elem)
 {
-    var current=GetCurrentAngular();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
@@ -973,9 +868,9 @@ function AngularDirectionChanged(elem)
     current.data.direction.z=parseFloat(val[2]);
 }
 
-function AngularRot1Changed(elem)
+DirectionControl.AngularRot1Changed=function(elem)
 {
-    var current=GetCurrentAngular();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
@@ -993,9 +888,9 @@ function AngularRot1Changed(elem)
     current.data.rot1.z=parseFloat(val[2]);
 }
 
-function AngularRot2Changed(elem)
+DirectionControl.AngularRot2Changed=function(elem)
 {
-    var current=GetCurrentAngular();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
@@ -1013,72 +908,72 @@ function AngularRot2Changed(elem)
     current.data.rot2.z=parseFloat(val[2]);
 }
 
-function AngularMinThetaChanged(elem)
+DirectionControl.AngularMinThetaChanged=function(elem)
 {
-    var current=GetCurrentAngular();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.mintheta=parseFloat(val);
 }
 
-function AngularMaxThetaChanged(elem)
+DirectionControl.AngularMaxThetaChanged=function(elem)
 {
-    var current=GetCurrentAngular();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.maxtheta=parseFloat(val);
 }
 
-function AngularMinPhiChanged(elem)
+DirectionControl.AngularMinPhiChanged=function(elem)
 {
-    var current=GetCurrentAngular();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.minphi=parseFloat(val);
 }
 
-function AngularMaxPhiChanged(elem)
+DirectionControl.AngularMaxPhiChanged=function(elem)
 {
-    var current=GetCurrentAngular();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.maxphi=parseFloat(val);
 }
 
-function AngularSigmaRChanged(elem)
+DirectionControl.AngularSigmaRChanged=function(elem)
 {
-    var current=GetCurrentAngular();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.sigma_r=parseFloat(val);
 }
 
-function AngularSigmaXChanged(elem)
+DirectionControl.AngularSigmaXChanged=function(elem)
 {
-    var current=GetCurrentAngular();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.sigma_x=parseFloat(val);
 }
 
-function AngularSigmaYChanged(elem)
+DirectionControl.AngularSigmaYChanged=function(elem)
 {
-    var current=GetCurrentAngular();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.sigma_y=parseFloat(val);
 }
 
-function AngularFocusPointChanged(elem)
+DirectionControl.AngularFocusPointChanged=function(elem)
 {
-    var current=GetCurrentAngular();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
@@ -1096,34 +991,22 @@ function AngularFocusPointChanged(elem)
     current.data.focuspoint.z=parseFloat(val[2]);
 }
 
-function AngularLUnitChanged(elem)
+DirectionControl.AngularLUnitChanged=function(elem)
 {
-    var current=GetCurrentAngular();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.lunit=val;
 }
 
-function AngularAUnitChanged(elem)
+DirectionControl.AngularAUnitChanged=function (elem)
 {
-    var current=GetCurrentAngular();
+    var current=this.current;
     if(!current)
         return;
     var val=$(elem).val().trim();
     current.data.aunit=val;
-}
-
-function GetCurrentAngular()
-{
-    var instance = $('#project-view').jstree(true);
-    var selects=instance.get_selected(true);
-    if(selects.length < 1)
-        return false;
-    var current=selects[0];
-    if(current.type != 'direction')
-        return false;
-    return current;
 }
 
 var PEnergy = {
@@ -1146,8 +1029,10 @@ var PEnergy = {
         return node;
     },
 
-    InitForm: function(form, current)
+    Init: function()
     {
+        var form=this.form;
+        var current=this.current;
         $(form).find('div .input-group').addClass('hidden');
         $(form).find('#gps-ene-type').removeClass('hidden');
         $(form).find('#gps-ene-eunit').removeClass('hidden');
@@ -1177,7 +1062,7 @@ var PEnergy = {
         var form=$('#property-current');
         console.log('Change energy type to: ',value);
         current.data=this.New(value);
-        this.InitForm(form,current);
+        this.Init();
     },
 
     ValueChanged: function(elem)
@@ -1216,8 +1101,10 @@ var PParticle = {
         return node;
     },
 
-    InitForm: function(form, current)
+    Init: function()
     {
+        var form=this.form;
+        var current=this.current;
         $(form).find('div .input-group').addClass('hidden');
         $(form).find('#gps-par-type').removeClass('hidden');
         var data=current.data;
@@ -1245,7 +1132,7 @@ var PParticle = {
         var form=$('#property-current');
         console.log('Change particle type to: ',value);
         current.data=this.New(value);
-        this.InitForm(form,current);
+        this.Init();
     },
 
     ValueChanged: function(elem)
@@ -1270,8 +1157,10 @@ var PTime = {
         return node;
     },
 
-    InitForm: function(form, current)
+    Init: function()
     {
+        var form=this.form;
+        var current=this.current;
         $(form).find('div .input-group').addClass('hidden');
         $(form).find('#gps-time-tunit').removeClass('hidden');
         var data=current.data;
