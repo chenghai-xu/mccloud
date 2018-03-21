@@ -55,8 +55,8 @@ RunForm.Verify=function()
     console.log('Verify setup');
     SaveProject(function(){
         $.post({ 
-            url: "/mc/job/verify/?id="+current_project, 
-            data:JSON.stringify({verify:true}),
+            url: "/mc/job/verify/?id="+id_current_project, 
+            data:{verify:true},
             success: function(data){
                 console.log(data);
                 console.log('Verify project success');
@@ -70,12 +70,18 @@ RunForm.Run=function()
     console.log('Run setup');
     SaveProject(function(){
         $.post({ 
-            url: "/mc/job/create/?project="+current_project, 
-            data:JSON.stringify({create:true}),
+            url: "/mc/job/create/?project="+id_current_project, 
+            data:{create:true},
             success: function(data){
                 console.log(data);
-                if(data.success==false && data.cash ==0)
+                if(data.success==false)
                 {
+                    var x = confirm("Cash is not enough, do you want to charge?");
+                    if(x)
+                    {
+                        window.open('/home/charge');
+                    }
+
                 }
                 else
                 {
@@ -93,15 +99,20 @@ RunForm.PayOrder=function()
 {
     if(!RunForm.current.data.order)
         return;
+    var x = confirm("You will consume "+this.current.data.order.charge+" RMB, do you want to charge?");
+    if(!x)
+        return;
+
     var id = RunForm.current.data.order.id;
     console.log('Pay order ',id);
     $.post({ 
         url: "/mc/order/pay/?id="+id, 
-        data:JSON.stringify({create:true}),
+        data:{create:true},
         success: function(data){
             console.log(data);
-            if(data.success==false && data.cash ==0)
+            if(data.success==false)
             {
+                alert(data.tips);
             }
             else
             {
@@ -115,15 +126,18 @@ RunForm.ExecuteJob=function(id)
 {
     if(!RunForm.current.data.job)
         return;
+
+    //alert("Job is running, please wait!");
     var id=RunForm.current.data.job.id;
     OutputForm.New(RunForm.current.data.job);
     console.log('Execute job ',id);
     $.post({ 
         url: "/mc/job/execute/?id="+id, 
-        data:JSON.stringify({create:true}),
+        data:{create:true},
         success: function(data){
             console.log(data);
-            if(data.success==false && data.cash ==0)
+            alert(data.tips);
+            if(data.success==false)
             {
             }
             else
@@ -133,3 +147,4 @@ RunForm.ExecuteJob=function(id)
         }
     });
 };
+
