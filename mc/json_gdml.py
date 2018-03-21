@@ -692,7 +692,7 @@ class GPSSource:
                 
     def DecodeDirection(self,mac,direction):
         dtype=direction["type"]
-        line="/gps/ang/type %s" % dtype
+        line="/gps/ang/type %s" % dtype.lower()
         mac.append(line)
         try:
             rot1=(direction["rot1"]["x"],direction["rot1"]["y"],direction["rot1"]["z"],)
@@ -969,11 +969,19 @@ class ProjectJSON:
         children=vol['children']
         sname=self.DecodeSolid(ID,solid)
         vname=ID+"_vol"
-        vol=self.gdml.AddVolume(vname,material,sname)      
 
+        cvnames=[]
+        cpnames=[]
+        crnames=[]
         for child in children:
             cvname,cpname,crname=self.DecodeVolume(child)
-            self.gdml.AddPhysical(vol,cvname,cpname,crname)
+            cvnames.append(cvname)
+            cpnames.append(cpname)
+            crnames.append(crname)
+            
+        vol=self.gdml.AddVolume(vname,material,sname)      
+        for i in range(len(cvnames)):
+            self.gdml.AddPhysical(vol,cvnames[i],cpnames[i],crnames[i])
             
         detector=None
         try:
