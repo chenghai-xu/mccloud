@@ -251,7 +251,7 @@ function SaveProject(cb=null) {
         success: function(data){
             //console.log(data);
             console.log('Post project tree success: ');
-            if(cb)
+            if(cb && {}.toString.call(cb) === '[object Function]')
             {
                 cb();
             }
