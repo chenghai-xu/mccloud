@@ -1,0 +1,44 @@
+extends layout
+block content
+  {% load static %}
+  <script type="text/javascript" src="{% static "home/js/charge.js" %}"></script>
+  <link rel="stylesheet" href="/static/jquery-ui-1.12.1/jquery-ui.min.css">
+  <script type="text/javascript" src="/static/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+  {% csrf_token %}
+  div(class='row')
+    div(class="col-lg-4")
+      form(class='form',role='form',action='javascript:void(0);')
+        div(class='input-group input-group-sm')
+          button(class="btn btn-primary",onclick='ChargeForm.ChargeList(this)') Charge History
+    div(id='charge-input',class="col-lg-4",title='Charge')
+      form(class='form',role='form',action='javascript:void(0);')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') Value:
+          input(class='form-control',name='value',onchange='ChargeForm.ValueChanged(this)')
+
+        div(class='input-group input-group-sm')
+          button(class="btn btn-primary",onclick='ChargeForm.Next(this)') Next
+    div(class="col-lg-4")
+
+  div(id='charge-pay',class='table-responsive ui-widget', title='Charge')
+    div(class='row ui-widget ui-widget-content')
+      div(class='row',class="text-center")
+        p(id='tips')
+      div(class='row')
+        img(src='/static/weixin.jpg',class="img-responsive center-block")
+      div(class='row',class="text-center")
+        p Please transfer in 30 minuters.
+        p Please wait a moment after transfer sucessed.
+        p If any problem please contact the phone number: +8613811992129
+    div(class='row')
+      div(class='ui-dialog-buttonpane')
+  div(id='charge-list',class='table-responsive ui-widget', title='Charge History')
+    table(id="charge-table",class="table table-hover ui-widget ui-widget-content")
+        thead
+          tr(class='ui-widget-header')
+            th Time
+            th Value(RMB)
+            th Method
+            th Transfer
+        tbody(id='charge-tbody')
+    div(class='ui-dialog-buttonpane')

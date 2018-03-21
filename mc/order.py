@@ -26,6 +26,7 @@ from .serializers import *
 from .models import *
 
 from . import json_gdml
+from home.models import Cash
 
 def handler404(request):
     response = HttpResponse('Error: 404')

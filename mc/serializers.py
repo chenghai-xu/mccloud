@@ -2,7 +2,6 @@
 from rest_framework import serializers
 from .models import *
 
-
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
@@ -33,12 +32,3 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ('id', 'job', 'charge', 'paied','create_time')
 
-class CashSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Cash
-        fields = ('id','user','value','update_time')
-
-class ChargeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Charge
-        fields = ('id', 'user', 'value', 'executed','create_time')

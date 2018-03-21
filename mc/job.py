@@ -25,6 +25,7 @@ import glob
 
 from .serializers import *
 from .models import *
+from home.models import Cash
 
 from . import json_gdml
 from . import execute_job
@@ -112,7 +113,7 @@ class JobView(View):
         try:
             cash=Cash.objects.get(user=user)
         except:
-            cash=Cash.objects.create(user=user,value=10)
+            cash=Cash.objects.create(user=user)
 
         #if cash.value < charge:
         #    data={"success":False,"cash":0,"tips": "cash is not enough!"}
