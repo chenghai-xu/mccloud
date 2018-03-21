@@ -32,7 +32,7 @@ ChargeForm.Next=function(el)
         data:this.charge,
         success: function(data){
             console.log(data);
-            if(data.sucess)
+            if(data.success)
             {
                 ChargeForm.charge=data.charge;
                 ChargePayOpen(data);

@@ -23,7 +23,7 @@ class ChargeView(View):
         value=float(request.POST.get('value',-1))
         method=int(request.POST.get('method',0))
         if value<=0:
-            return JsonResponse({'sucess':False,'msg':'Charge value can not be <=0!'}, content_type='application/json',safe=False)
+            return JsonResponse({'success':False,'msg':'Charge value can not be <=0!'}, content_type='application/json',safe=False)
 
         try:
             charge=Charge.objects.get(pk=pk)
@@ -31,7 +31,7 @@ class ChargeView(View):
             charge=Charge.objects.create(user=user)
 
         if charge.executed:
-            return JsonResponse({'sucess':False,'msg':'Can not change executed charge!'}, content_type='application/json',safe=False)
+            return JsonResponse({'success':False,'msg':'Can not change executed charge!'}, content_type='application/json',safe=False)
 
         charge.value=value
         charge.method=method
@@ -44,7 +44,7 @@ class ChargeView(View):
             url='/static/weixin.jpg'
         else:
             url='/static/alipay.jpg'
-        return JsonResponse({'sucess':True,'charge':charge_serializer.data,'url':url}, content_type='application/json',safe=False)
+        return JsonResponse({'success':True,'charge':charge_serializer.data,'url':url}, content_type='application/json',safe=False)
 class ChargeListView(View):
     def get(self, request, *args, **kwargs):
         user=request.user
