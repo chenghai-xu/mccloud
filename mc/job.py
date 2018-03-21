@@ -26,6 +26,7 @@ import glob
 from .serializers import *
 from .models import *
 from home.models import Cash
+from home.serializers import *
 
 from . import json_gdml
 from . import execute_job
@@ -115,9 +116,9 @@ class JobView(View):
         except:
             cash=Cash.objects.create(user=user)
 
-        #if cash.value < charge:
-        #    data={"success":False,"cash":0,"tips": "cash is not enough!"}
-        #    return JsonResponse(json.dumps(data), content_type='application/json',safe=False)
+        if cash.value < charge:
+            data={"success":False,"cash":0,"tips": "cash is not enough!"}
+            return JsonResponse(data, content_type='application/json',safe=False)
 
         job=None
         order=None
@@ -166,7 +167,7 @@ class JobView(View):
         cash_serializer = CashSerializer(cash)
         job_serializer = JobSerializer(job)
         order_serializer = OrderSerializer(order)
-        data={'sucess':True,'cash':cash_serializer.data,'job':job_serializer.data,'order':order_serializer.data}
+        data={'success':True,'cash':cash_serializer.data,'job':job_serializer.data,'order':order_serializer.data}
         return JsonResponse(data, content_type='application/json',safe=False)
 
 class JobVerifyView(View):
@@ -179,9 +180,8 @@ class JobVerifyView(View):
             return handler404(request)
         fname=EncodeProjectConfig(pk)
         prj_json=json_gdml.ProjectJSON(fname)
-        data={}
-        data["mac"]=ReadProjectConfigMac(pk)
-        return JsonResponse(data, content_type='application/json',safe=False)
+        execute_job.verify_project.delay(pk)
+        return JsonResponse({'success':True}, content_type='application/json',safe=False)
 
 class JobExecuteView(View):
     def get(self, request, *args, **kwargs):
@@ -205,11 +205,11 @@ class JobExecuteView(View):
             return handler404(request)
 
         if job.status!='UNDO':
-            data={'sucess':False,'tips':'Job is unpaied!'}
+            data={'success':False,'tips':'Job is unpaied!'}
             return JsonResponse(data, content_type='application/json',safe=False)
 
         execute_job.run.delay(job.id)
-        data={'sucess':True,'tips':'Job is in executing'}
+        data={'success':True,'tips':'Job is in executing'}
         return JsonResponse(data, content_type='application/json',safe=False)
 
 class JobOutput(View):
