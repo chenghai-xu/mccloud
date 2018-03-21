@@ -27,6 +27,7 @@ from .models import *
 
 from . import json_gdml
 from home.models import Cash
+from home.serializers import *
 
 def handler404(request):
     response = HttpResponse('Error: 404')
@@ -57,7 +58,7 @@ class OrderPayView(View):
             if job.status=='UNPAY':
                 job.status=='UNDO'
                 job.save()
-            return JsonResponse(json.dumps(data), content_type='application/json',safe=False)
+            return JsonResponse(data, content_type='application/json',safe=False)
 
         try:
             cash=Cash.objects.get(user=user)
@@ -66,7 +67,7 @@ class OrderPayView(View):
 
         if cash.value < order.charge:
             data={"success":False,"cash":0,"tips": "cash is not enough!"}
-            return JsonResponse(json.dumps(data), content_type='application/json',safe=False)
+            return JsonResponse(data, content_type='application/json',safe=False)
 
         cash.value-=order.charge
         order.paied=True
@@ -77,6 +78,6 @@ class OrderPayView(View):
 
         cash_serializer = CashSerializer(cash)
         order_serializer = OrderSerializer(order)
-        data={'sucess':True,'cash':cash_serializer.data,'order':order_serializer.data}
+        data={'success':True,'cash':cash_serializer.data,'order':order_serializer.data}
         return JsonResponse(data, content_type='application/json',safe=False)
 
