@@ -144,15 +144,42 @@ RunForm.ExecuteJob=function(id)
         data:{create:true},
         success: function(data){
             console.log(data);
-            alert(data.tips);
             if(data.success==false)
             {
+                alert('Run job fail, please contact the admin!');
             }
             else
             {
-                OutputForm.Update();
+                RunForm.current.data.job.status='DOING';
+                RunForm.LoopCheck();
+                alert('Your job is running fail, please wait!');
             }
         }
     });
 };
 
+RunForm.LoopCheck=function()
+{
+    if(RunForm.current.data.job.status==='DOING')
+    {
+        console.log('check job status.');
+        RunForm.CheckJob();
+        setTimeout(RunForm.LoopCheck,30000); 
+    }
+    else
+    {
+        alert('Your job is done!');
+        OutputForm.New(RunForm.current.data.job);
+    }
+};
+
+RunForm.CheckJob=function()
+{
+    $.get({ 
+        url: "/mc/job/create/?id="+RunForm.current.data.job.id, 
+        success: function(data)
+        {
+            RunForm.current.data.job=data;
+        },
+    });
+};
