@@ -67,7 +67,6 @@ OutputForm.Init=function()
         return;
     $(this.form).find('#job-progress').text(this.current.data.job.status);
     $(this.form).find('#job-id').text(this.current.data.job.id);
-    $('#myTab #profile-tab').tab('show');
 };
 OutputForm.Select=function(el)
 {
@@ -165,6 +164,7 @@ MeshForm.Init=function()
 {
     if(!this.current.data.mesh)
         return;
+    $('#myTab #profile-tab').tab('show');
     var select=$(this.form).find('select[name=file]');
     select.empty();
     for (var m of this.current.data.mesh)
@@ -198,6 +198,7 @@ DistForm.Init=function()
 {
     if(!this.current.data.dist)
         return;
+    $('#myTab #profile-tab').tab('show');
     var select=$(this.form).find('select[name=file]');
     select.empty();
     for (var m of this.current.data.dist)
@@ -248,6 +249,7 @@ LogForm.Init=function()
 {
     if(!this.current.data.log)
         return;
+    $('#myTab #contact-tab').tab('show');
     var select=$(this.form).find('select[name=file]');
     select.empty();
     for (var m of this.current.data.log)
@@ -265,7 +267,6 @@ LogForm.Update=function()
         {
             console.log("job log.");
             $('#Console #output').text(data.data);
-            $('#myTab #contact-tab').tab('show');
         },
     });
 };
