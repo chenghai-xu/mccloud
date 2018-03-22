@@ -141,7 +141,7 @@ OutputForm.OpenJobListDlg=function(data)
             '<td>' + data[i].create_time.substring(0,10)+'</td>' +
             '<td>' + data[i].instance + '</td>' +
             '<td>' + data[i].nodes + '</td>' +
-            '<td>' + data[i].times + '</td>' +
+            '<td>' + data[i].times*60 + '</td>' +
             '</tr>');
     }
     $('#job-tbody tr').click(function (event) {
