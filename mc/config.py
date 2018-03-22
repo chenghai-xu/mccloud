@@ -1,12 +1,20 @@
 projects_root='./data/mc/projects'
 jobs_root='./data/mc/jobs'
 data_root='./data/mc'
-cluster_template='dose'
+cluster_template='template.mcdc'
 cluster_user='scadmin'
 cluster_jobs_root='/home/%s/jobs' % cluster_user
-cluster_env_setup='/home/%s/opt/simpit/bin/simpit.sh' % cluster_user
+
+cluster_geant4_env= '/opt/geant4/10.2.p03/install/bin/geant4.sh'
+
+cluster_simpit='/home/%s/opt/simpit' % cluster_user
+cluster_simpit_bin='%s/bin' % cluster_simpit
+local_simpit='/opt/tsimpit/0.9'
+local_simpit_bin='%s/bin' % local_simpit
+
+
+cluster_key_file='/home/xuchd/.ssh/starcluster.cn-northwest-1.rsa'
 Instance_Price={'4Core':8,'8Core':16, '16Core':32, '36Core':72}
-cluster_key_file='/home/www/key.key'
 
 INSTANCE_TYPE_CHOICES = (
     ('4Core', '4Core'),

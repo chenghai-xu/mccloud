@@ -26,12 +26,15 @@ def verify_project(pid):
     return ret,out
 
 @shared_task  # Use this decorator to make this a asyncronous function
-def run(job_id):
+def run(job_id,dry_run=False):
     args="%s/%s/execute_job.sh" % (config.jobs_root,job_id)
     cwd="%s/%s/" % (config.jobs_root,job_id)
     args=os.path.abspath(args)
     cwd=os.path.abspath(cwd)
     print("run job script %s in %s" % (args,cwd))
+    if dry_run:
+        print("return by dry run.")
+        return True
     job = Job.objects.get(pk=job_id)
     job.status='DOING'
     job.save()
@@ -48,9 +51,9 @@ class Cluster:
         self.name=name
         self.template=config.cluster_template
         self.user=config.cluster_user
-        self.hosts=[]
-        self.ips={}
-        self.cors={}
+        self.hosts_file='mpi-hosts'
+        self.IPs={}
+        self.cores={}
     def RunCmd(self,script,cmd):
         args="starcluster sshmaster -u %s %s %s" % (self.user,self.name,cmd)
         script.append(args)
@@ -59,7 +62,7 @@ class Cluster:
         script.append(args)
 
     def PutCmd(self,script,local,remote):
-        args="starcluster put %s %s %s" % (self.name,local,remote)
+        args="starcluster put -u %s %s %s %s" % (self.user,self.name,local,remote)
         script.append(args)
     
     def GetCmd(self,script,remote,local,):
@@ -97,19 +100,30 @@ class JobScript:
         os.chmod(fname,0o755)    
     def ConfigLocalScript(self):
         self.local_script.append("#!/bin/bash")
-        #self.local_script.append("cd %s" % os.path.abspath(self.local_dir))
+        self.local_script.append('#Auto generate script. do not modify!')
         self.local_script.append("set -x")
         self.local_script.append("logfile=execute_job.sh.log")
         self.local_script.append("exec > $logfile 2>&1")
+        self.local_script.append('')
+        self.local_script.append('echo "===Start cluster==="')
 
         self.cluster.StartCmd(self.local_script)
+        self.ConfigUpdateScript()
         self.ConfigNodesInfo()
         self.PackAndSubmitJob()
         self.ConfigWatchScript()
 
+    def ConfigUpdateScript(self):
+        self.local_script.append('')
+        self.local_script.append('echo "===Begin hot update==="')
+        self.cluster.RunCmd(self.local_script,'"mkdir -p %s"' % config.cluster_simpit)
+        self.cluster.PutCmd(self.local_script,config.local_simpit_bin,config.cluster_simpit)
+
     def ConfigWatchScript(self):
+        self.local_script.append('')
+        self.local_script.append('echo "===Begin watch cluster==="')
         seconds=self.minutes*60
-        cmd="sleep %s" % seconds
+        cmd="sleep 60" 
         self.local_script.append(cmd)
         cmd=["let count=0",
              "while [ ${count} -lt 3 ]",
@@ -123,42 +137,47 @@ class JobScript:
              "done"
             ]
         self.local_script.append("\n".join(cmd))
-        self.cluster.GetCmd(self.local_script,self.remote_dir,'./')
+        self.cluster.GetCmd(self.local_script,self.remote_dir,'../')
         self.cluster.TerminateCmd(self.local_script)
 
     def PackAndSubmitJob(self):
+        self.local_script.append('')
+        self.local_script.append('echo "===Pack and submit job==="')
         job_tar="%s.tar.gz" % self.name
         self.local_script.append('tar_opt="--exclude-vcs --exclude-backups --exclude=.tar --exclude=.gz --exclude=.tgz --exclude=.bz  --exclude=.Z --exclude=.zip --exclude=.rar --exclude=.7z"')
         self.local_script.append("tar ${tar_opt} -czf %s ." % job_tar)
-        cmd='"mkdir -p %s"' % config.cluster_jobs_root
+        cmd='"mkdir -p %s/%s"' % (config.cluster_jobs_root,self.name)
         self.cluster.RunCmd(self.local_script,cmd)
-        self.cluster.PutCmd(self.local_script,job_tar,config.cluster_jobs_root)
+        self.cluster.PutCmd(self.local_script,job_tar,"%s/%s" % (config.cluster_jobs_root,self.name))
 
-        cmd="rm -rf %s " % job_tar
-        self.local_script.append(cmd)
+        #cmd='"cd %s && tar -xf %s -C %s && rm %s"' %(config.cluster_jobs_root,job_tar,self.remote_dir,job_tar)
+        #self.cluster.RunCmd(self.local_script,cmd)
 
         cmd="master_node=$(grep 'master\s\+running' %s.info.list | awk '{print $4}')"  % self.cluster.name
         self.local_script.append(cmd)
 
-        cmd='"cd %s && tar -xf %s -C %s && rm %s"' %(config.cluster_jobs_root,job_tar,self.remote_dir,job_tar)
-        self.cluster.RunCmd(self.local_script,cmd)
-        cmd="'cd %s && nohup ./mpiexec.sh >nohup.out 2>&1   </dev/null &'" % self.remote_dir
+        cmd="'cd %s && tar -xf %s && rm %s && nohup ./mpiexec.sh >nohup.out 2>&1   </dev/null &'" % (self.remote_dir,job_tar,job_tar)
         cmd='"sh -c %s "' % cmd
         cmd="ssh -i %s %s@${master_node} %s" %(config.cluster_key_file,self.cluster.user,cmd)
-        #ssh -i $key_file ${user}@${master_node} "sh -c 'cd ${job_dir} && nohup ./mpiexec.sh >nohup.out 2>&1     </dev/null &' "
         self.local_script.append(cmd)
+
+        cmd="rm -rf %s " % job_tar
+        self.local_script.append(cmd)
+
     
     def ConfigRemoteScript(self):
         self.remote_script.append("#!/bin/bash")
+        self.remote_script.append('#Auto generate script. do not modify!')
         self.remote_script.append("logfile=mpiexec.sh.log")
         self.remote_script.append("exec > $logfile 2>&1")
-        self.remote_script.append("source %s" % config.cluster_env_setup)
+        self.remote_script.append('export PATH=$PATH:%s' % config.cluster_simpit_bin)
+        self.remote_script.append('source %s' %  config.cluster_geant4_env)
 
         np=self.cluster.GetCores()
         args=["mpiexec",
         "--output-filename config.json.log",
         "-n %s" % np,
-        "--hostfile mpi-hosts",
+        "--hostfile %s"%self.cluster.hosts_file,
         "-x G4LEVELGAMMADATA=$G4LEVELGAMMADATA",
         "-x G4NEUTRONXSDATA=$G4NEUTRONXSDATA",
         "-x G4LEDATA=$G4LEDATA",
@@ -170,7 +189,7 @@ class JobScript:
         "-x G4SAIDXSDATA=$G4SAIDXSDATA",
         "-x G4REALSURFACEDATA=$G4REALSURFACEDATA",
         "-x LD_LIBRARY_PATH=$LD_LIBRARY_PATH",
-        "-x PATH=$PATH","-stdin all",
+        "-x PATH=$PATH",
         "simpit"]
         args.append("-e=config.json.mac")
         args.append("&")
@@ -180,15 +199,15 @@ class JobScript:
         cmd="pid=$(pidof mpiexec)"
         self.remote_script.append(cmd)
         seconds=self.minutes*60
-        cmd="sleep %s" % seconds
-        self.remote_script.append(cmd)
-        cmd="kill -s 12 ${pid}"
+        cmd="sleep %s && kill -s 12 ${pid} && sleep 300 && kill ${pid} &" % seconds
         self.remote_script.append(cmd)
         cmd="wait ${pid}"
         self.remote_script.append(cmd)
         return True
     
     def ConfigNodesInfo(self):
+        self.local_script.append('')
+        self.local_script.append('echo "===Get cluster info==="')
         logfile="%s.info" % self.cluster.name
         nodelist="%s.list" % logfile
         hostfile="%s.hosts" % nodelist
@@ -200,3 +219,4 @@ class JobScript:
         self.local_script.append(cmd)
         cmd="rm -rf %s" % logfile
         self.local_script.append(cmd)
+        self.cluster.hosts_file=hostfile
