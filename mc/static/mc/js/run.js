@@ -58,8 +58,16 @@ RunForm.Verify=function()
             url: "/mc/job/verify/?id="+id_current_project, 
             data:{verify:true},
             success: function(data){
-                console.log(data);
-                console.log('Verify project success');
+                $('#Console #output').text(data.out);
+                $('#myTab #contact-tab').tab('show');
+                if(data.ret != 0)
+                {
+                    alert('It looks that they are some problems. Please check the console log!')
+                }
+                else
+                {
+                    alert('It looks that they are no problems. Please check the console log!')
+                }
             }
         });
     });
