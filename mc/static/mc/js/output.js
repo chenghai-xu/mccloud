@@ -3,6 +3,7 @@ $(document).ready(function () {
     NodeWatch.Add('mesh','#property-mesh',MeshForm);
     NodeWatch.Add('dist','#property-dist',DistForm);
     NodeWatch.Add('log','#property-log',LogForm);
+    OutputForm.InitJobListDlg();
 });
 var OutputForm = {};
 var OutputModel = {};
@@ -64,28 +65,92 @@ OutputForm.Init=function()
 {
     if(!this.current.data.job)
         return;
+    $(this.form).find('#job-progress').text(this.current.data.job.status);
+    $(this.form).find('#job-id').text(this.current.data.job.id);
     $('#myTab #profile-tab').tab('show');
 };
 OutputForm.Select=function(el)
 {
 };
-OutputForm.Update=function()
+OutputForm.Update=function(el,id=null)
 {
+    if(!id)
+        id=this.current.data.job.id;
     $.get({ 
-        url: "/mc/api/output/?id="+this.current.data.job.id, 
+        url: "/mc/api/output/?id="+id, 
         data:{},
         success: function(data)
         {
             console.log("job output:");
-            console.log(data);
             MeshForm.current.data.mesh=data.mesh;
             DistForm.current.data.dist=data.dist;
             LogForm.current.data.log=data.log;
+            OutputForm.current.data.job=data.job;
+            OutputForm.Init();
         },
     });
 };
 OutputForm.Download=function()
 {
+};
+
+OutputForm.Open=function()
+{
+    var that=this;
+    $.get({ 
+        url: "/mc/api/job/list/?id="+id_current_project, 
+        data:{},
+        success: function(data)
+        {
+            console.log("job list output:");
+            that.OpenJobListDlg(data);
+        },
+    });
+};
+OutputForm.InitJobListDlg=function()
+{
+    $( "#job-tbody" ).selectable();
+
+    $( "#job-list" ).dialog({
+        autoOpen: false,
+        height: 480,
+        width: 480,
+        modal: true,
+        buttons: {
+            "Open": function() {
+                OutputForm.Update(null,OutputForm.select_job_id);
+                $( this ).dialog( "close" );
+            },
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+        }
+    });
+};
+
+OutputForm.OpenJobListDlg=function(data)
+{
+    var tbody=$('#job-tbody');
+    tbody.empty();
+    var that=this;
+    for(var i=0; i< data.length; i++)
+    {
+        tbody.append('<tr id='+data[i].id+'>' +
+            '<td>' + data[i].create_time.substring(0,10)+'</td>' +
+            '<td>' + data[i].instance + '</td>' +
+            '<td>' + data[i].nodes + '</td>' +
+            '<td>' + data[i].times + '</td>' +
+            '</tr>');
+    }
+    $('#job-tbody tr').click(function (event) {
+        $('#job-tbody tr').css("background-color", "white");
+        var id=$(this).attr('id'); 
+        $(this).css("background-color", "red");
+        that.select_job_id=id;
+    });
+    $( "#job-list" ).dialog("open");
 };
 
 MeshForm.Init=function()
@@ -182,7 +247,18 @@ LogForm.Init=function()
         select.append('<option>' + m +'</option>');
     }
 };
+
 LogForm.Update=function()
 {
+    var file=$(this.form).find('select[name=file]').val();
+    $.get({ 
+        url: "/mc/api/log/?id="+OutputForm.current.data.job.id + "&fname="+file, 
+        success: function(data)
+        {
+            console.log("job log.");
+            $('#Console #output').text(data.data);
+            $('#myTab #contact-tab').tab('show');
+        },
+    });
 };
 

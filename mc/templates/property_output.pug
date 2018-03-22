@@ -2,11 +2,15 @@ div(id='property-output', class='hidden')
   div(class='row')
     label Output
   div(class='row')
+    label Job ID:
+    label(id='job-id')
+  div(class='row')
     label Job status:
-    div(class='progress  progress-striped active')
-      div(class="progress-bar progress-bar-success",role="progressbar",aria-valuenow="60", aria-valuemin="0",aria-valuemax="100",style="width: 50%;")
+    label(id='job-progress')
+  div(class='row')
     button(class="btn btn-default",onclick='OutputForm.Update(this)') Update
     button(class="btn btn-default",onclick='OutputForm.Download(this)') Download
+    button(class="btn btn-default",onclick='OutputForm.Open(this)') Open
 
 div(id='property-mesh', class='hidden')
   div(class='row')
@@ -63,3 +67,14 @@ div(id='property-log', class='hidden')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Rank
           select(class='form-control',name='file',onchange='LogForm.Update()')
+
+div(id='job-list',class='table-responsive ui-widget', title='Open Job')
+  table(id="job-table",class="table table-hover ui-widget ui-widget-content")
+      thead
+        tr(class='ui-widget-header')
+          th Date
+          th Instance
+          th Nodes
+          th Times
+      tbody(id='job-tbody')
+  div(class='ui-dialog-buttonpane')
