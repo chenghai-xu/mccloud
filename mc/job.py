@@ -220,7 +220,7 @@ class JobOutput(View):
     id=1
     return:
     json object, example: 
-    {"mesh":["1.mesh","2.mesh"],"dist":["1.dist","2.dist"],"log":["d.log.l.0","d.log.1.1"]}
+    {"job":{},"mesh":["1.mesh","2.mesh"],"dist":["1.dist","2.dist"],"log":["d.log.l.0","d.log.1.1"]}
     """
     def get(self, request, *args, **kwargs):
         pk=request.GET.get('id',-1)
@@ -252,6 +252,25 @@ class JobOutput(View):
             else:
                 logs.remove(logs[i])
 
-        data={'mesh':meshs,'dist':dists,'log':logs}
+        serializer = JobSerializer(job)
+        data={'mesh':meshs,'dist':dists,'log':logs,'job':serializer.data}
         return JsonResponse(data, content_type='application/json',safe=False)
 
+class JobListView(View):
+    """
+    function: get jobs of a project
+    parameter:
+    id=1
+    return:
+    json object, example: 
+    {"jobs":[]}
+    """
+    def get(self, request, *args, **kwargs):
+        pk=request.GET.get('id',-1)
+        user=request.user
+        try:
+            job = Job.objects.filter(user=user,project=pk,status='DONE')
+        except Job.DoesNotExist:
+            return JsonResponse({}, content_type='application/json',safe=False)
+        serializer = JobSerializer(job,many=True)
+        return JsonResponse(serializer.data, content_type='application/json',safe=False)
