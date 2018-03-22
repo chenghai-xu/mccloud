@@ -127,7 +127,7 @@ function NewComponentNode(t,w){
     return node;
 }
 
-function NewMaterialNode(t, d=0){
+function NewMaterialNode(t, d=1){
     var node=NewNode(t,'material');
     node.data.type='element';
     node.data.weight='composite';
@@ -139,15 +139,15 @@ function NewMaterialNode(t, d=0){
 function PackDefaultMaterial(node)
 {
     var child=NewMaterialNode('Water',1.0);
-    child.children.push(new NewComponentNode('el_H',2));
-    child.children.push(new NewComponentNode('el_O',1));
+    child.children.push(new NewComponentNode('e_Hydrogen',2));
+    child.children.push(new NewComponentNode('e_Oxygen',1));
     node.children.push(child);
-    child=NewMaterialNode('Vaccum',0.000129);
-    child.children.push(new NewComponentNode('el_H',1));
+    child=NewMaterialNode('Vaccum',0.0000000001);
+    child.children.push(new NewComponentNode('e_Hydrogen',1));
     node.children.push(child);
     child=NewMaterialNode('Air',0.000129);
-    child.children.push(new NewComponentNode('el_O',0.21));
-    child.children.push(new NewComponentNode('el_N',0.79));
+    child.children.push(new NewComponentNode('e_Oxygen',0.21));
+    child.children.push(new NewComponentNode('e_Nitrogen',0.79));
     node.children.push(child);
 }
 
