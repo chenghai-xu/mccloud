@@ -13,16 +13,30 @@ from .models import *
 
 from celery import shared_task
 @shared_task  # Use this decorator to make this a asyncronous function
+def verify_project(pid):
+    cwd="%s/%s/" % (config.projects_root,pid)
+    cwd=os.path.abspath(cwd)
+    args="simpit -e=config.json.mac >verify.out 2>&1"
+    print("verify project %s" % pid)
+    job_sh=subprocess.Popen(args=args,cwd=cwd,shell=True)
+    ret=job_sh.wait()
+    print('exit code: %s' % ret)
+    with open("%s/verify.out" % cwd) as f:
+        out=f.read()
+    return ret,out
+
+@shared_task  # Use this decorator to make this a asyncronous function
 def run(job_id):
     args="%s/%s/execute_job.sh" % (config.jobs_root,job_id)
     cwd="%s/%s/" % (config.jobs_root,job_id)
     args=os.path.abspath(args)
     cwd=os.path.abspath(cwd)
-    print("run job_id script %s in %s" % (args,cwd))
+    print("run job script %s in %s" % (args,cwd))
+    job = Job.objects.get(pk=job_id)
+    job.status='DOING'
+    job.save()
     job_sh=subprocess.Popen(args=args,cwd=cwd,shell=True)
     job_sh.wait()
-
-    job = Job.objects.get(pk=pk)
     job.status='DONE'
     job.save()
     return True
@@ -73,14 +87,14 @@ class JobScript:
         self.ConfigLocalScript()
         self.ConfigRemoteScript()
         fname="%s/mpiexec.sh" % self.local_dir
-        with open(fname,'w+') as f:
+        with open(fname,'w') as f:
             f.writelines("\n".join(self.remote_script))
-        os.chmod(fname,755)    
+        os.chmod(fname,0o755)    
             
         fname="%s/execute_job.sh" % self.local_dir
-        with open(fname,'w+') as f:
+        with open(fname,'w') as f:
             f.writelines("\n".join(self.local_script))
-        os.chmod(fname,755)    
+        os.chmod(fname,0o755)    
     def ConfigLocalScript(self):
         self.local_script.append("#!/bin/bash")
         #self.local_script.append("cd %s" % os.path.abspath(self.local_dir))
@@ -158,7 +172,7 @@ class JobScript:
         "-x LD_LIBRARY_PATH=$LD_LIBRARY_PATH",
         "-x PATH=$PATH","-stdin all",
         "simpit"]
-        args.append("-e config.json.mac")
+        args.append("-e=config.json.mac")
         args.append("&")
         args =" ".join(args)
         self.remote_script.append(args)

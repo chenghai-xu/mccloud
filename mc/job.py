@@ -179,9 +179,10 @@ class JobVerifyView(View):
         if pk==-1:
             return handler404(request)
         fname=EncodeProjectConfig(pk)
-        prj_json=json_gdml.ProjectJSON(fname)
-        execute_job.verify_project.delay(pk)
-        return JsonResponse({'success':True}, content_type='application/json',safe=False)
+        prj_json=json_gdml.ProjectJSON(fname,100)
+        #ret,out,err=execute_job.verify_project.delay(pk)
+        ret,out=execute_job.verify_project(pk)
+        return JsonResponse({'ret':ret,'out':out}, content_type='application/json',safe=False)
 
 class JobExecuteView(View):
     def get(self, request, *args, **kwargs):
