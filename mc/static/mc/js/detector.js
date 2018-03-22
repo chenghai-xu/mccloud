@@ -217,6 +217,7 @@ var DetectorForm = {
 
     InitForm: function(det)
     {
+        var that=this;
         this.detector=det;
         var form=$("#sensitive-detector");
         $(form).find('select[name=type]').val(this.detector.type);
@@ -248,6 +249,13 @@ var DetectorForm = {
         tbody.find('td#ft').makeTableEdit('select',this.MakeSelectForm(opts),this.FilterTypeChanged);
         tbody.find('td#fn').makeTableEdit('input','<input type="text" value="" />',this.FilterNameChanged);
         tbody.find('td#fp').makeTableEdit('input','<input type="text" value="" />',this.FilterParameterChanged,this.FilterParameterVerify);
+
+        $('#sd-quantities-tbody tr').click(function (event) {
+            $('#sd-quantities-tbody tr').css("background-color", "white");
+            var id=$(this).attr('id'); 
+            $(this).css("background-color", "red");
+            that.select_quantity_id=id;
+        });
 
     },
 
@@ -382,6 +390,7 @@ var DetectorForm = {
 
     InitDialog: function()
     {
+        var that=this;
         $( "#sd-quantities-tbody" ).selectable();
 
         $( "#sensitive-detector" ).dialog({
@@ -397,6 +406,11 @@ var DetectorForm = {
                 },
                 'Remove Quantity': function() {
                     console.log('remove quantity');
+                    if(that.select_quantity_id)
+                    {
+                        DetectorForm.detector.quantities.splice(that.select_quantity_id,1);
+                        DetectorForm.InitForm(DetectorForm.detector);
+                    }
                 },
                 Ok: function() {
                     $( this ).dialog( "close" );
