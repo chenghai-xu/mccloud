@@ -127,3 +127,30 @@ class Dist(View):
         img="data:image/png;base64,%s" % base64.b64encode(buff.getvalue()).decode('utf-8').replace('\n', '')
         return JsonResponse({'src':img}, content_type='application/json',safe=False)
 
+class Log(View):
+    """
+    function: Get log of a log file 
+    parameter:
+    id=1&fname=config.json.log.1.0
+    return:
+    log file content
+    """
+    def get(self, request, *args, **kwargs):
+        pk=request.GET.get('id',-1)
+        fname=request.GET.get('fname','')
+        if fname=='' or pk == -1:
+            return handler404(request)
+
+        user=request.user
+        try:
+            job = Job.objects.get(pk=pk,user=user)
+        except:
+            return handler404(request)
+                                      
+        fname="%s/%s/%s" %(config.jobs_root,pk,fname)
+        print("Read log file: ",fname)
+        data=None
+        with open(fname) as f:
+            data=f.read()
+        return JsonResponse({'data':data}, content_type='application/json',safe=False)
+
