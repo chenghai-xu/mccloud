@@ -274,3 +274,27 @@ class JobListView(View):
             return JsonResponse({}, content_type='application/json',safe=False)
         serializer = JobSerializer(job,many=True)
         return JsonResponse(serializer.data, content_type='application/json',safe=False)
+
+class JobDownloadView(View):
+    """
+    function: download job
+    parameter:
+    id=1
+    return:  
+    job files.
+    """
+    def get(self, request, *args, **kwargs):
+        pk=request.GET.get('id',-1)
+        user=request.user
+        try:
+            job = Job.objects.filter(pk=pk,user=user)
+        except Job.DoesNotExist:
+            return JsonResponse({}, content_type='application/json',safe=False)
+        
+        job_file='%s/%s/config.json.mac' % (config.jobs_root, pk)
+        response = HttpResponse()
+        response['Content-Type']='application/octet-stream'
+        response["Content-Disposition"] = "attachment; filename=%s" % job_file
+        response['Content-Length'] = os.path.getsize(job_file)
+        response['X-Accel-Redirect'] = "%s" % job_file
+        return response
