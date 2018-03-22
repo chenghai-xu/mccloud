@@ -223,11 +223,11 @@ class MacFile:
         line="/score/mesh/translate/xyz %s %s %s %s" % (pos[0],pos[1],pos[2],pos[3])
         det.append(line)
         if rot !=None:
-            line="/score/mesh/translate/rotateX %s %s" % (rot[0],rot[3]) 
+            line="/score/mesh/rotate/rotateX %s %s" % (rot[0],rot[3]) 
             det.append(line)
-            line="/score/mesh/translate/rotateY %s %s" % (rot[1],rot[3])
+            line="/score/mesh/rotate/rotateY %s %s" % (rot[1],rot[3])
             det.append(line)
-            line="/score/mesh/translate/rotateZ %s %s" % (rot[2],rot[3])
+            line="/score/mesh/rotate/rotateZ %s %s" % (rot[2],rot[3])
             det.append(line)
         self.mesh.append(det)
         line="/score/mesh/nBin %s %s %s" % (bins[0],bins[1],bins[2])
@@ -284,7 +284,7 @@ class MacFile:
         qname: quantity name
         args: quantity argument list
         """
-        line="/GP/scorer/addQuantity/%s %s" % (qtype,qname)
+        line="/GP/scorer/addQuantity %s %s" % (qtype,qname)
         for item in qargs:
             line="%s %s" % (line,item)
         det.append(line)
@@ -294,7 +294,7 @@ class MacFile:
         return det
         
     def AddDistFilter(self,det,ftype,fname,fargs):
-        line="/GP/scorer/addFilter/%s %s" % (ftype,fname)
+        line="/GP/scorer/addFilter %s %s" % (ftype,fname)
         for item in fargs:
             line="%s %s" % (line,item)
         det.append(line)
