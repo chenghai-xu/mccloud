@@ -812,7 +812,7 @@ class GPSSource:
 # In[470]:
 
 class ProjectJSON:    
-    def __init__(self,fname):
+    def __init__(self,fname,beamOn=37000000000):
         self.geometry=None
         self.primary=None
         self.physics=None
@@ -826,6 +826,7 @@ class ProjectJSON:
         self.nodes=None
         self.run_time=None
         self.physics_list=None
+        self.beamOn=beamOn
         #fname="config.json"
         project=import_json(fname)        
         for item in project:
@@ -885,7 +886,7 @@ class ProjectJSON:
         self.run_time=time
         mac.run.append("/GP/App/SetParameter app.run_time %s" % time)
         mac.run.append("/run/printProgress 10000")
-        mac.run.append("/run/beamOn 37000000000")
+        mac.run.append("/run/beamOn %s" % self.beamOn)
 
     def DecodePrimary(self,mac,primary):
         source=primary["children"][0]
