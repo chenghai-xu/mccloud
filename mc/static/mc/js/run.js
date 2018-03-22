@@ -135,9 +135,9 @@ RunForm.ExecuteJob=function(id)
     if(!RunForm.current.data.job)
         return;
 
-    //alert("Job is running, please wait!");
     var id=RunForm.current.data.job.id;
     OutputForm.New(RunForm.current.data.job);
+    SaveProject(cb=null);
     console.log('Execute job ',id);
     $.post({ 
         url: "/mc/job/execute/?id="+id, 
