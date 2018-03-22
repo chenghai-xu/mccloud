@@ -64,6 +64,7 @@ OutputForm.Init=function()
 {
     if(!this.current.data.job)
         return;
+    $('#myTab #profile-tab').tab('show');
 };
 OutputForm.Select=function(el)
 {

@@ -10,6 +10,7 @@ VolumeControl.NameChanged=function(form){
 } 
 VolumeControl.Init=function()
 {
+    $('#myTab #home-tab').tab('show');
     var current=this.current;
     var property=this.form;
     $(property).find('select[name=solid]').val(current.data.solid.type);
