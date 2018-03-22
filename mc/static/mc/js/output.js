@@ -121,7 +121,7 @@ OutputForm.InitJobListDlg=function()
     $( "#job-list" ).dialog({
         autoOpen: false,
         height: 480,
-        width: 480,
+        width: 720,
         modal: true,
         buttons: {
             "Open": function() {
@@ -145,10 +145,11 @@ OutputForm.OpenJobListDlg=function(data)
     for(var i=0; i< data.length; i++)
     {
         tbody.append('<tr id='+data[i].id+'>' +
-            '<td>' + data[i].create_time.substring(0,10)+'</td>' +
+            '<td>' + data[i].create_time.substring(0,16)+'</td>' +
             '<td>' + data[i].instance + '</td>' +
             '<td>' + data[i].nodes + '</td>' +
-            '<td>' + data[i].times*60 + '</td>' +
+            '<td>' + Math.round(data[i].times*60) + '</td>' +
+            '<td>' + data[i].status + '</td>' +
             '</tr>');
     }
     $('#job-tbody tr').click(function (event) {
