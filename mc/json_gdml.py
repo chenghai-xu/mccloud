@@ -249,8 +249,9 @@ class MacFile:
             line="%s %s" % (line,item)
         det.append(line)
         #/score/dumpQuantityToFile ct_body dose ct_body.dose.mesh 
-        line="/score/dumpQuantityToFile %s %s %s.%s.mesh" % (dname, qname, dname, qname)
-        self.output.append(line)
+        #comment since there are crash bug.
+        #line="/score/dumpQuantityToFile %s %s %s.%s.mesh" % (dname, qname, dname, qname)
+        #self.output.append(line)
         return det
         
     def AddMeshFilter(self,det,ftype,fname,fargs):
