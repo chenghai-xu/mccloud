@@ -1,5 +1,6 @@
 $(document).ready(function () {
     NodeWatch.Add('run','#property-run',RunForm);
+    RunForm.InitProgressBar();
 });
 
 var RunModel = {};
@@ -151,8 +152,11 @@ RunForm.ExecuteJob=function(id)
             else
             {
                 RunForm.current.data.job.status='DOING';
+                RunForm.InitProgressBar()
+                $("#job-progress").dialog('open');
+                RunForm.progress=0;
                 RunForm.LoopCheck();
-                alert('Your job is running fail, please wait!');
+
             }
         }
     });
@@ -160,16 +164,22 @@ RunForm.ExecuteJob=function(id)
 
 RunForm.LoopCheck=function()
 {
+    var interval=30000;
     if(RunForm.current.data.job.status==='DOING')
     {
+        //5 minute tolerance
+        var per=100*RunForm.progress/3600/(RunForm.current.data.job.times+0.08);
+        per=Math.round(per);
+        $('#job-progress #job-progress-bar').attr('style','width: '+per+'%;');
         console.log('check job status.');
         RunForm.CheckJob();
-        setTimeout(RunForm.LoopCheck,30000); 
+        setTimeout(RunForm.LoopCheck,interval); 
+        RunForm.progress+=interval/1000;
     }
     else
     {
-        alert('Your job is done!');
         OutputForm.New(RunForm.current.data.job);
+        $('#job-progress #job-progress-msg').text('Your job is done, please check the output!');
     }
 };
 
@@ -181,5 +191,22 @@ RunForm.CheckJob=function()
         {
             RunForm.current.data.job=data;
         },
+    });
+};
+
+RunForm.InitProgressBar=function()
+{
+    $("#job-progress").dialog({
+        autoOpen: false,
+        height: 320,
+        width: 320,
+        modal: true,
+        buttons: {
+            Close: function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+        }
     });
 };
