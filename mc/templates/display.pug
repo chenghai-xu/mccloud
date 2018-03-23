@@ -3,10 +3,6 @@
 <script type="text/javascript" src="/static/three.js/TrackballControls.js"></script>
 {% load static %}
 <script type="text/javascript" src="{% static "mc/js/display.js" %}"></script>
-//div
-//  div(id="3d_canvas")
-//  div(class='row')
-//    label(id='mouse_position')
 div
   ul(class="nav nav-tabs", id="myTab", role="tablist")
     li(class="nav-item")
@@ -15,11 +11,10 @@ div
       a(class="nav-link", id="profile-tab", data-toggle="tab", href="#2DView", role="tab", aria-controls="profile", aria-selected="false") 2DView
     li(class="nav-item")
       a(class="nav-link", id="contact-tab", data-toggle="tab", href="#Console", role="tab", aria-controls="contact", aria-selected="false") Console
-  div(class="tab-content", id="myTabContent")
+  div(class="pre-scrollable tab-content", id="myTabContent",style='max-height: 700px;')
     div(class="tab-pane active", id="3DView", role="tabpanel", aria-labelledby="home-tab")
       div(id="3d_canvas")
-      div(class='row')
-        label(id='mouse_position')
+      label(id='mouse_position')
     div(class="tab-pane", id="2DView", role="tabpanel", aria-labelledby="profile-tab")
       div(id="2d_canvas")
         img(id='2d_img')

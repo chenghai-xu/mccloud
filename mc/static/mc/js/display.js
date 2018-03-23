@@ -13,9 +13,9 @@ var show_in_parent=true;
 
 function InitDisplay3D() {
     if (!Detector.webgl) Detector.addGetWebGLMessage();
-    var bb = document.getElementById('3d_canvas').getBoundingClientRect();
-    width = bb.right - bb.left;
-    height=window.innerHeight-150;
+    var bb = document.getElementById('myTabContent').getBoundingClientRect();
+    width = bb.width-50;
+    height=window.innerHeight-250;
 
     InitRender();
     InitCamera();
