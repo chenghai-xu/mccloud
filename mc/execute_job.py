@@ -58,7 +58,7 @@ class Cluster:
         args="starcluster sshmaster -u %s %s %s" % (self.user,self.name,cmd)
         script.append(args)
     def StartCmd(self,script):
-        args="starcluster start -c %s -i %s -s %s %s" % (self.template, self.instance, self.nodes,self.name)
+        args="starcluster start -c %s -I %s -i %s -s %s %s" % (self.template, self.instance, self.instance, self.nodes,self.name)
         script.append(args)
 
     def PutCmd(self,script,local,remote):
