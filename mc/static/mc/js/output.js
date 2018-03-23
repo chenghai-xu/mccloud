@@ -65,7 +65,7 @@ OutputForm.Init=function()
 {
     if(!this.current.data.job)
         return;
-    $(this.form).find('#job-progress').text(this.current.data.job.status);
+    $(this.form).find('#job-status').text(this.current.data.job.status);
     $(this.form).find('#job-id').text(this.current.data.job.id);
 };
 OutputForm.Select=function(el)

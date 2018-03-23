@@ -152,7 +152,8 @@ RunForm.ExecuteJob=function(id)
             else
             {
                 RunForm.current.data.job.status='DOING';
-                RunForm.InitProgressBar()
+                $('#job-progress #job-progress-bar').attr('style','width: 0%;');
+                $('#job-progress #job-progress-msg').text('Your job is running!');
                 $("#job-progress").dialog('open');
                 RunForm.progress=0;
                 RunForm.LoopCheck();
@@ -170,7 +171,11 @@ RunForm.LoopCheck=function()
         //5 minute tolerance
         var per=100*RunForm.progress/3600/(RunForm.current.data.job.times+0.08);
         per=Math.round(per);
+        var left=RunForm.current.data.job.times*60-RunForm.progress/60+5;
+        if(left<0)
+            left=0;
         $('#job-progress #job-progress-bar').attr('style','width: '+per+'%;');
+        $('#job-progress #job-progress-msg').text('Your job is running, please wait about '+left+' minutes!');
         console.log('check job status.');
         RunForm.CheckJob();
         setTimeout(RunForm.LoopCheck,interval); 
@@ -199,7 +204,7 @@ RunForm.InitProgressBar=function()
     $("#job-progress").dialog({
         autoOpen: false,
         height: 320,
-        width: 320,
+        width: 480,
         modal: true,
         buttons: {
             Close: function() {
