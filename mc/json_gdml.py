@@ -903,6 +903,8 @@ class ProjectJSON:
         mac.run.append("/run/dumpCouples")
         mac.run.append("/control/echo  ===Print scores===")
         mac.run.append("/score/list")
+        mac.run.append("/control/echo  ===Print primary source===")
+        mac.run.append("/gps/source/list")
         mac.run.append("/control/echo  ===Run start===")
         mac.run.append("/run/beamOn %s" % self.beamOn)
 
