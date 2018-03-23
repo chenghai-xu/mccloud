@@ -62,6 +62,7 @@ VolumeControl.Add=function(){
     node.data.placement.position.z=Math.random()*5-2.5;
     var res = instance.create_node(this.current,node);
     console.log('create volume: ' + res);
+    DrawModel(this.current);
 } 
 
 VolumeControl.Delete=function(){
