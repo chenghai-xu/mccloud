@@ -885,7 +885,24 @@ class ProjectJSON:
             time=int(time)/60
         self.run_time=time
         mac.run.append("/GP/App/SetParameter app.run_time %s" % time)
-        mac.run.append("/run/printProgress 10000")
+        mac.run.append("/run/printProgress 100000")
+        mac.run.append("")
+        mac.run.append("#job valide and summary")
+        mac.run.append("/control/echo  ===Geometry test===")
+        mac.run.append("/geometry/test/run")
+        mac.run.append("/control/echo  ===Print materials===")
+        mac.run.append("/material/g4/printMaterial")
+        mac.run.append("/control/echo  ===Print particles===")
+        mac.run.append("/particle/list")
+        mac.run.append("/control/echo  ===Print processes===")
+        mac.run.append("/process/list")
+        mac.run.append("/control/echo  ===Print regions===")
+        mac.run.append("/run/dumpRegion")
+        mac.run.append("/control/echo  ===Print couples===")
+        mac.run.append("/run/dumpCouples")
+        mac.run.append("/control/echo  ===Print scores===")
+        mac.run.append("/score/list")
+        mac.run.append("/control/echo  ===Run start===")
         mac.run.append("/run/beamOn %s" % self.beamOn)
 
     def DecodePrimary(self,mac,primary):
