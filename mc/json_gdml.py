@@ -745,7 +745,7 @@ class GPSSource:
             mac.append(line)
 
         elif dtype=="Planar":
-            line="/gps/ang/direction %s %s %s" % (direction["direction"]["x"],direction["direction"]["y"],direction["direction"]["z"],)
+            line="/gps/direction %s %s %s" % (direction["direction"]["x"],direction["direction"]["y"],direction["direction"]["z"],)
             mac.append(line)
     def DecodeEnergy(self,mac,energy):
         etype=energy["type"]
