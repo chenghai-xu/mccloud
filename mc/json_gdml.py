@@ -218,7 +218,8 @@ class MacFile:
         det=[]
         line="/score/create/boxMesh %s" % name
         det.append(line)
-        line="/score/mesh/boxSize %s %s %s %s" %(size[0],size[1],size[2],size[3])
+        #Be attention that the size for cmd score is half of the box
+        line="/score/mesh/boxSize %s %s %s %s" %(size[0]/2,size[1]/2,size[2]/2,size[3])
         det.append(line)
         line="/score/mesh/translate/xyz %s %s %s %s" % (pos[0],pos[1],pos[2],pos[3])
         det.append(line)
