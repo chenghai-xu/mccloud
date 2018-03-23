@@ -66,17 +66,29 @@ class Mesh(View):
 
         if axis == 'x':
             index=min(index,mesh.Data.shape[2]-1)
-            a.imshow(mesh.Data[:,:,index],cmap=cm.jet)
+            bar=a.imshow(mesh.Data[:,:,index],origin='lower',cmap=cm.jet,
+                    extent=[-mesh.Size[1]/2,mesh.Size[1]/2,-mesh.Size[0]/2,mesh.Size[0]/2])
+            a.set_xlabel('y')
+            a.set_ylabel('z')
         elif axis == 'y':
             index=min(index,mesh.Data.shape[1]-1)
-            a.imshow(mesh.Data[:,index,:],cmap=cm.jet)
+            bar=a.imshow(mesh.Data[:,index,:],origin='lower',cmap=cm.jet,
+                    extent=[-mesh.Size[2]/2,mesh.Size[2]/2,-mesh.Size[0]/2,mesh.Size[0]/2])
+            a.set_xlabel('x')
+            a.set_ylabel('z')
         elif axis == 'z':
             index=min(index,mesh.Data.shape[0]-1)
-            a.imshow(mesh.Data[index],cmap=cm.jet)
+            bar=a.imshow(mesh.Data[index],origin='lower',cmap=cm.jet,
+                    extent=[-mesh.Size[2]/2,mesh.Size[2]/2,-mesh.Size[1]/2,mesh.Size[1]/2])
+            a.set_xlabel('x')
+            a.set_ylabel('y')
         else:
             index=min(index,mesh.Data.shape[0]-1)
-            a.imshow(mesh.Data[index],cmap=cm.jet)
+            bar=a.imshow(mesh.Data[index],origin='lower',cmap=cm.jet)
+            a.set_xlabel('x')
+            a.set_ylabel('y')
 
+        fig.colorbar(bar)
         buff=io.BytesIO()
         ca.print_figure(buff,format="png")
         #src='<img src="data:image/png;base64,%s"/>' % base64.b64encode(buff.getvalue()).decode('utf-8').replace('\n', '')
