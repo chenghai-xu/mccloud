@@ -57,6 +57,9 @@ VolumeControl.Init=function()
 VolumeControl.Add=function(){
     var instance = $('#project-view').jstree(true);
     var node = NewVolumeNode('volume');
+    node.data.placement.position.x=Math.random()*5-2.5;
+    node.data.placement.position.y=Math.random()*5-2.5;
+    node.data.placement.position.z=Math.random()*5-2.5;
     var res = instance.create_node(this.current,node);
     console.log('create volume: ' + res);
 } 
