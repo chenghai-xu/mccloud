@@ -198,8 +198,8 @@ class JobScript:
         
         cmd="pid=$(pidof mpiexec)"
         self.remote_script.append(cmd)
-        seconds=self.minutes*60
-        cmd="sleep %s && kill ${pid} &" % seconds+300
+        seconds=self.minutes*60+300
+        cmd="sleep %s && kill ${pid} &" % seconds
         self.remote_script.append(cmd)
         cmd="wait ${pid}"
         self.remote_script.append(cmd)
