@@ -126,14 +126,14 @@ class JobScript:
         cmd="sleep 60" 
         self.local_script.append(cmd)
         cmd=["let count=0",
-             "while [ ${count} -lt 3 ]",
+             "while [ ${count} -lt 2 ]",
              "do",
              "pid=$(starcluster sshmaster %s 'pidof mpiexec')" % self.cluster.name,
              'if [ "X$pid" == "X" ]',
              "then",
              "let count=$count+1",
              "fi",
-             "sleep 20",
+             "sleep 5",
              "done"
             ]
         self.local_script.append("\n".join(cmd))
@@ -199,7 +199,7 @@ class JobScript:
         cmd="pid=$(pidof mpiexec)"
         self.remote_script.append(cmd)
         seconds=self.minutes*60
-        cmd="sleep %s && kill -s 12 ${pid} && sleep 300 && kill ${pid} &" % seconds
+        cmd="sleep %s && kill ${pid} &" % seconds+300
         self.remote_script.append(cmd)
         cmd="wait ${pid}"
         self.remote_script.append(cmd)
