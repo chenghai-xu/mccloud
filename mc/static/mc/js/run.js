@@ -171,9 +171,8 @@ RunForm.LoopCheck=function()
         //5 minute tolerance
         var per=100*RunForm.progress/3600/(RunForm.current.data.job.times+0.08);
         per=Math.round(per);
-        var left=RunForm.current.data.job.times*60-RunForm.progress/60+5;
-        if(left<0)
-            left=0;
+        var left=(RunForm.current.data.job.times*60-RunForm.progress/60+5).toFixed(2);
+        left=left<0?0:left;
         $('#job-progress #job-progress-bar').attr('style','width: '+per+'%;');
         $('#job-progress #job-progress-msg').text('Your job is running, please wait about '+left+' minutes!');
         console.log('check job status.');
