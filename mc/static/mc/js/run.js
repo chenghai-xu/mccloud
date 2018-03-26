@@ -1,6 +1,17 @@
 $(document).ready(function () {
     NodeWatch.Add('run','#property-run',RunForm);
     RunForm.InitProgressBar();
+    RunForm.InitOrderBook();
+    /*
+    RunForm.OpenOrderBook({
+        job:
+        {instance:'c4.8xlarge',
+            nodes:5,
+            times:0.1},
+        order:
+        {charge:1001}
+    });
+    */
 });
 
 var RunModel = {};
@@ -97,7 +108,7 @@ RunForm.Run=function()
                     RunForm.current.data.job=data.job;
                     RunForm.current.data.order=data.order;
                     RunForm.current.data.cash=data.cash;
-                    RunForm.PayOrder();
+                    RunForm.OpenOrderBook(data);
                 }
             }
         });
@@ -108,10 +119,6 @@ RunForm.PayOrder=function()
 {
     if(!RunForm.current.data.order)
         return;
-    var x = confirm("You will consume "+this.current.data.order.charge+" RMB, do you want to charge?");
-    if(!x)
-        return;
-
     var id = RunForm.current.data.order.id;
     console.log('Pay order ',id);
     $.post({ 
@@ -213,4 +220,33 @@ RunForm.InitProgressBar=function()
         close: function() {
         }
     });
+};
+
+RunForm.InitOrderBook=function()
+{
+    $("#order-book").dialog({
+        autoOpen: false,
+        height: 320,
+        width: 480,
+        modal: true,
+        buttons: {
+            'Pay & Run' : function() {
+                $( this ).dialog( "close" );
+                RunForm.PayOrder();
+            },
+            Back : function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+        }
+    });
+};
+RunForm.OpenOrderBook=function(data)
+{
+    $("#order-table #order-instance").text(data.job.instance);
+    $("#order-table #order-node").text(data.job.nodes);
+    $("#order-table #order-time").text(Math.round(data.job.times*60));
+    $("#order-table #order-cost").text(data.order.charge);
+    $("#order-book").dialog('open');
 };
