@@ -109,7 +109,8 @@ class JobView(View):
             response.status_code = 404
             print('generate config file error')
             return response
-        charge= config.Instance_Price[prj_json.instance] * int(prj_json.nodes) * prj_json.run_time
+        charge=config.Instance_Price[prj_json.instance] * int(prj_json.nodes) * float(prj_json.run_time)
+        charge=round(charge,2)
         print('The charge of the new job: ', charge)
         try:
             cash=Cash.objects.get(user=user)
@@ -179,7 +180,7 @@ class JobVerifyView(View):
         if pk==-1:
             return handler404(request)
         fname=EncodeProjectConfig(pk)
-        prj_json=json_gdml.ProjectJSON(fname,100)
+        prj_json=json_gdml.ProjectJSON(fname,1000)
         #ret,out,err=execute_job.verify_project.delay(pk)
         ret,out=execute_job.verify_project(pk)
         return JsonResponse({'ret':ret,'out':out}, content_type='application/json',safe=False)
@@ -269,7 +270,7 @@ class JobListView(View):
         pk=request.GET.get('id',-1)
         user=request.user
         try:
-            job = Job.objects.filter(user=user,project=pk,status='DONE')
+            job = Job.objects.filter(user=user,project=pk).order_by('-create_time')
         except Job.DoesNotExist:
             return JsonResponse({}, content_type='application/json',safe=False)
         serializer = JobSerializer(job,many=True)
