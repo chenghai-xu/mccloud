@@ -107,7 +107,6 @@ RunForm.Run=function()
                 {
                     RunForm.current.data.job=data.job;
                     RunForm.current.data.order=data.order;
-                    RunForm.current.data.cash=data.cash;
                     RunForm.OpenOrderBook(data);
                 }
             }
@@ -122,7 +121,7 @@ RunForm.PayOrder=function()
     var id = RunForm.current.data.order.id;
     console.log('Pay order ',id);
     $.post({ 
-        url: "/mc/order/pay/?id="+id, 
+        url: "/home/order/pay/?id="+id, 
         data:{create:true},
         success: function(data){
             console.log(data);
@@ -158,7 +157,7 @@ RunForm.ExecuteJob=function(id)
             }
             else
             {
-                RunForm.current.data.job.status='DOING';
+                RunForm.current.data.job.status='UNDO';
                 $('#job-progress #job-progress-bar').attr('style','width: 0%;');
                 $('#job-progress #job-progress-msg').text('Your job is running!');
                 $("#job-progress").dialog('open');
@@ -173,7 +172,7 @@ RunForm.ExecuteJob=function(id)
 RunForm.LoopCheck=function()
 {
     var interval=30000;
-    if(RunForm.current.data.job.status==='DOING')
+    if(RunForm.current.data.job.status==='UNDO')
     {
         //5 minute tolerance
         var per=100*RunForm.progress/3600/(RunForm.current.data.job.times+0.08);
@@ -244,9 +243,22 @@ RunForm.InitOrderBook=function()
 };
 RunForm.OpenOrderBook=function(data)
 {
-    $("#order-table #order-instance").text(data.job.instance);
-    $("#order-table #order-node").text(data.job.nodes);
-    $("#order-table #order-time").text(Math.round(data.job.times*60));
     $("#order-table #order-cost").text(data.order.charge);
+    $("#order-book").dialog('open');
+
+    var order=data.order;
+    console.log('List of order: ',order);
+    var tbody=$('#order-tbody');
+    tbody.empty();
+    for(var i=0; i< order.item.length; i++)
+    {
+        tbody.append('<tr id='+order.item[i]+'>' +
+            '<td>' + order.item[i] + '</td>' +
+            '<td>' + order.count[i] + '</td>' +
+            '<td>' + order.price[i] + '</td>' +
+            '<td>' + Math.round(order.time[i]*60) + '</td>' +
+            '</tr>');
+    }
+    $("#order-book #order-cost").text(order.charge);
     $("#order-book").dialog('open');
 };

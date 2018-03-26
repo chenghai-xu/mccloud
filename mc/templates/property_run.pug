@@ -35,21 +35,18 @@ div(id='job-progress',class='ui-widget', title='Job Progress')
         div(id='job-progress-bar',class="progress-bar progress-bar-success",role="progressbar",aria-valuenow="60", aria-valuemin="0",aria-valuemax="100",style="width: 50%;")
   div(class='ui-dialog-buttonpane')
 
-div(id='order-book',class='ui-widget', title='Order')
-  div(id="order-table",class="ui-widget ui-widget-content")
-    form(class='form',role='form',action='javascript:void(0);')
-      div(class='form-group')
-        div(class='input-group input-group-sm inline')
-          span(class='input-group-addon') Instance:
-          span(class='input-group-addon',id='order-instance') 36core
-        div(class='input-group input-group-sm inline')
-          span(class='input-group-addon') Node Size:
-          span(class='input-group-addon',id='order-node') 100
-        div(class='input-group input-group-sm inline')
-          span(class='input-group-addon') Run Time(minute):
-          span(class='input-group-addon',id='order-time') 100
-        div(class='input-group input-group-sm inline')
-          span(class='input-group-addon') Total cost(RMB):
-          span(class='input-group-addon',id='order-cost') 100 
+div(id='order-book',class='table-responsive ui-widget', title='Order')
+  div(class="ui-widget ui-widget-content")
+    table(id="order-table",class="table table-hover")
+      thead
+        tr(class='ui-widget-header')
+          th Name
+          th Count
+          th Price(RMB)
+          th Time(minute)
+      tbody(id='order-tbody')
+    div(class='')
+      span(class='input-group-addon') Total cost(RMB):
+      span(class='input-group-addon',id='order-cost') 100
   div(class='ui-dialog-buttonpane')
 
