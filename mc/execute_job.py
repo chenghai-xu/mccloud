@@ -81,7 +81,7 @@ class JobScript:
         self.cluster=Cluster(name,instance,nodes)
         self.remote_dir= "%s/%s" % (config.cluster_jobs_root,name)
         self.local_dir= "%s/%s"  % (config.jobs_root,name)
-        self.minutes=minutes
+        self.minutes=float(minutes)
         self.name=name
 
         self.local_script=[]
