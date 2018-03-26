@@ -253,7 +253,7 @@ RunForm.OpenOrderBook=function(data)
     for(var i=0; i< order.item.length; i++)
     {
         tbody.append('<tr id='+order.item[i]+'>' +
-            '<td>' + order.item[i] + '</td>' +
+            '<td>' + order.names[i] + '</td>' +
             '<td>' + order.count[i] + '</td>' +
             '<td>' + order.price[i] + '</td>' +
             '<td>' + Math.round(order.time[i]*60) + '</td>' +

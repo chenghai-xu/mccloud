@@ -172,7 +172,10 @@ class JobView(View):
 
         job_serializer = JobSerializer(job)
         order_serializer = OrderSerializer(order)
-        data={'success':True,'job':job_serializer.data,'order':order_serializer.data}
+        order_data=order_serializer.data
+        names=[item.name]
+        order_data['names']=names
+        data={'success':True,'job':job_serializer.data,'order':order_data}
         return JsonResponse(data, content_type='application/json',safe=False)
 
 class JobVerifyView(View):
