@@ -223,7 +223,7 @@ class JobExecuteView(View):
             data={'success':False,'tips':'Your order is unpaied!'}
             return JsonResponse(data, content_type='application/json',safe=False)
 
-        #execute_job.run.delay(job.id)
+        execute_job.run.delay(job.id)
         data={'success':True,'tips':'Job is in executing'}
         return JsonResponse(data, content_type='application/json',safe=False)
 
