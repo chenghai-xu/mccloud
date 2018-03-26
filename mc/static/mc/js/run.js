@@ -2,6 +2,7 @@ $(document).ready(function () {
     NodeWatch.Add('run','#property-run',RunForm);
     RunForm.InitProgressBar();
     RunForm.InitOrderBook();
+    RunForm.InitChargeSuggest();
     /*
     RunForm.OpenOrderBook({
         job:
@@ -96,12 +97,7 @@ RunForm.Run=function()
                 console.log(data);
                 if(data.success==false)
                 {
-                    var x = confirm("Cash is not enough, do you want to charge?");
-                    if(x)
-                    {
-                        window.open('/home/charge');
-                    }
-
+                    alert(data.tips);
                 }
                 else
                 {
@@ -127,7 +123,7 @@ RunForm.PayOrder=function()
             console.log(data);
             if(data.success==false)
             {
-                alert(data.tips);
+                $('#charge-suggest').dialog('open');
             }
             else
             {
@@ -261,4 +257,20 @@ RunForm.OpenOrderBook=function(data)
     }
     $("#order-book #order-cost").text(order.charge);
     $("#order-book").dialog('open');
+};
+RunForm.InitChargeSuggest=function()
+{
+    $("#charge-suggest").dialog({
+        autoOpen: false,
+        height: 320,
+        width: 480,
+        modal: true,
+        buttons: {
+            Close : function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+        }
+    });
 };

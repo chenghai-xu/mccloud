@@ -50,3 +50,10 @@ div(id='order-book',class='table-responsive ui-widget', title='Order')
       span(class='input-group-addon',id='order-cost') 100
   div(class='ui-dialog-buttonpane')
 
+div(id='charge-suggest',class='table-responsive ui-widget', title='Error')
+  div(class="ui-widget ui-widget-content")
+    p(class='text-center') Your cash is not enough, please charge first!
+    div(class="text-center")
+      a(href='/home/charge',class="text-center btn btn-primary",target="_blank") Charge
+  div(class='ui-dialog-buttonpane')
+
