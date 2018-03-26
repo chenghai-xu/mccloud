@@ -27,6 +27,6 @@ execute.short_description="Execute job."
 
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'project', 'instance', 'nodes', 'times', 'status', 'create_time')
+    list_display = ('id', 'user', 'order', 'project', 'instance', 'nodes', 'times', 'status', 'create_time')
     actions = [execute]
     list_filter = ('status', 'user')

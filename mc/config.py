@@ -16,6 +16,7 @@ local_simpit_bin='%s/bin' % local_simpit
 cluster_key_file='/home/xuchd/.ssh/starcluster.cn-northwest-1.rsa'
 Instance_Price={'4Core':8,'8Core':16, '16Core':32, '36Core':72}
 
+Instance_Index = { '4Core': 1, '8Core': 2, '16Core': 3, '36Core': 4}
 INSTANCE_TYPE_CHOICES = (
     ('4Core', '4Core'),
     ('8Core', '8Core'),
@@ -39,7 +40,6 @@ AWS_INSTANCE_CORES= {
 
 
 JOB_STATUS_CHOICES=(
-    ('UNPAY', 'UNPAY'),
     ('UNDO', 'UNDO'),
     ('DOING', 'DOING'),
     ('DONE', 'DONE'),

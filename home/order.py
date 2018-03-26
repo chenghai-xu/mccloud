@@ -25,10 +25,6 @@ from datetime import *
 from .serializers import *
 from .models import *
 
-from . import json_gdml
-from home.models import Cash
-from home.serializers import *
-
 def handler404(request):
     response = HttpResponse('Error: 404')
     response.status_code = 404
@@ -47,17 +43,8 @@ class OrderPayView(View):
         except:
             return Http404(request)
 
-        try:
-            job=Job.objects.get(user=user,order=order)
-        except:
-            return Http404(request)
-
-
         if order.paied==True:
-            data={"success":True,"tips": "order is paied!"}
-            if job.status=='UNPAY':
-                job.status=='UNDO'
-                job.save()
+            data={"success":True,"tips": "Your order had been paied!"}
             return JsonResponse(data, content_type='application/json',safe=False)
 
         try:
@@ -66,15 +53,13 @@ class OrderPayView(View):
             return Http404(request)
 
         if cash.value < order.charge:
-            data={"success":False,"cash":0,"tips": "cash is not enough!"}
+            data={"success":False,"cash":0,"tips": "Your cash is not enough!"}
             return JsonResponse(data, content_type='application/json',safe=False)
 
         cash.value-=order.charge
         order.paied=True
-        job.status='UNDO'
         cash.save()
         order.save()
-        job.save()
 
         cash_serializer = CashSerializer(cash)
         order_serializer = OrderSerializer(order)

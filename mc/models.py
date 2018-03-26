@@ -5,6 +5,7 @@ from django.contrib.postgres.fields import JSONField
 import json
 
 from . import config
+from home.models import Order
 
 User = get_user_model()
 
@@ -78,20 +79,11 @@ class Job(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     user = models.ForeignKey(User, editable=False,on_delete=models.PROTECT)
     project = models.ForeignKey(Project, editable=False,on_delete=models.PROTECT)
+    order = models.ForeignKey(Order, editable=False,on_delete=models.PROTECT)
     instance = models.CharField(choices=config.INSTANCE_TYPE_CHOICES,max_length=24,default='Core8')
     nodes = models.IntegerField(default=0)
     times = models.FloatField(default=0.0)
-    status = models.CharField(choices=config.JOB_STATUS_CHOICES,max_length=24,default='UNPAY')
-    create_time = models.DateTimeField(u'create time', auto_now_add=True)
-    def __str__(self):
-        return str(self.id)
-
-class Order(models.Model):
-    id = models.AutoField(primary_key=True, editable=False)
-    user = models.ForeignKey(User, editable=False,on_delete=models.PROTECT)
-    job = models.OneToOneField(Job, editable=False,on_delete=models.PROTECT)
-    charge = models.FloatField(default=0.0)
-    paied = models.BooleanField(default=False)
+    status = models.CharField(choices=config.JOB_STATUS_CHOICES,max_length=24,default='UNDO')
     create_time = models.DateTimeField(u'create time', auto_now_add=True)
     def __str__(self):
         return str(self.id)

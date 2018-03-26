@@ -24,3 +24,28 @@ class Charge(models.Model):
     def __str__(self):
         return str(self.id)
 
+class Order(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    user = models.ForeignKey(User,on_delete=models.PROTECT)
+    item = ArrayField(models.IntegerField(),default=[])
+    count = ArrayField(models.FloatField(),default=[])
+    price = ArrayField(models.FloatField(),default=[])
+    time = ArrayField(models.FloatField(),default=[])
+    charge = models.FloatField(default=0.0)
+    paied = models.BooleanField(default=False)
+    create_time = models.DateTimeField(u'create time', auto_now_add=True)
+    def __str__(self):
+        return str(self.id)
+    def AddItem(self,item,price,count,time=1):
+        self.item.append(item)
+        self.price.append(price)
+        self.count.append(count)
+        self.time.append(time)
+        self.charge+=price*count*time
+    def ClearItem(self):
+        self.item=[]
+        self.price=[]
+        self.count=[]
+        self.time=[]
+        self.charge=0
+

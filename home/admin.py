@@ -1,6 +1,15 @@
 from django.contrib import admin
 from .models import *
 
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (None, {
+        	'fields' : ('user', 'item', 'price', 'count', 'time', 'charge', 'paied')
+        }),
+    )
+    list_display = ('id', 'user', 'item', 'price', 'count', 'time', 'charge', 'paied', 'create_time')
+
 def execute_charge(modeladmin, request, queryset):
     for item in queryset:
         if item.executed:

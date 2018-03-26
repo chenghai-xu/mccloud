@@ -27,8 +27,3 @@ class JobSerializer(serializers.ModelSerializer):
         model = Job
         fields = ('id', 'project', 'instance', 'nodes', 'times','status','create_time')
 
-class OrderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = ('id', 'job', 'charge', 'paied','create_time')
-

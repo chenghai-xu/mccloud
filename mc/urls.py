@@ -13,7 +13,6 @@ from . import views
 from . import project
 from . import job
 from . import material
-from . import order
 from . import visual 
 
 urlpatterns = [
@@ -29,7 +28,6 @@ urlpatterns = [
     url(r'^job/execute/', require_login(job.JobExecuteView.as_view()), name='JobExecuteView'),
     url(r'^job/download/', require_login(job.JobDownloadView.as_view()), name='JobDownloadView'),
     url(r'^material/', require_login(material.MaterialView.as_view()), name='MaterialView'),
-    url(r'^order/pay/', require_login(order.OrderPayView.as_view()), name='OrderPayView'),
     url(r'^api/mesh/', visual.Mesh.as_view(), name='MeshView'),
     url(r'^api/dist/', visual.Dist.as_view(), name='DistView'),
     url(r'^api/log/', visual.Log.as_view(), name='LogView'),

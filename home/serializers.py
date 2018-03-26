@@ -10,3 +10,8 @@ class CashSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cash
         fields = ('id','user','value','update_time')
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ('id', 'user', 'item', 'price', 'count', 'time', 'charge', 'paied','create_time')
+

@@ -25,7 +25,7 @@ import glob
 
 from .serializers import *
 from .models import *
-from home.models import Cash
+from home.models import Cash, Order
 from home.serializers import *
 
 from . import json_gdml
@@ -109,42 +109,41 @@ class JobView(View):
             response.status_code = 404
             print('generate config file error')
             return response
-        charge=config.Instance_Price[prj_json.instance] * int(prj_json.nodes) * float(prj_json.run_time)
-        charge=round(charge,2)
-        print('The charge of the new job: ', charge)
-        try:
-            cash=Cash.objects.get(user=user)
-        except:
-            cash=Cash.objects.create(user=user)
-
-        if cash.value < charge:
-            data={"success":False,"cash":0,"tips": "cash is not enough!"}
-            return JsonResponse(data, content_type='application/json',safe=False)
 
         job=None
         order=None
 
         #check if exist job which is not executed and the order is not paied
-        jobs=Job.objects.filter(user=user,project=project,status='UNPAY').order_by('-create_time')
-        print(jobs)
-        if len(jobs)>0:
+        jobs=Job.objects.filter(user=user,project=project,status='UNDO').order_by('-create_time')
+        if len(jobs) >0:
             job=jobs[0]
-            try:
-                order=Order.objects.get(user=user,job=job)
-                print('Use exist job and order: ',job,order)
-            except:
-                print('get order error: ',job)
-                order=None
-        else:
-            print('Create new job and order')
-
         if job is None:
             try:
-                job=Job.objects.create(user=user,project=project)
+                order=Order.objects.create(user=user)
+                job=Job.objects.create(user=user,project=project,order=order)
             except:
-                print('create job error')
+                print('create job and order error')
                 return handler404(request)
+        else:
+            orders=Order.objects.filter(pk=job.order.id,user=user,paied=False).order_by('-create_time')
+            if len(orders) >0:
+                order=orders[0]
+            #no availiable order, new order and job
+            if order is None:
+                try:
+                    order=Order.objects.create(user=user)
+                    job=Job.objects.create(user=user,project=project,order=order)
+                except:
+                    print('create job and order error')
+                    return handler404(request)
 
+        order.ClearItem()
+        order.AddItem(config.Instance_Index[prj_json.instance],config.Instance_Price[prj_json.instance], 
+                int(prj_json.nodes),
+                float(prj_json.run_time))
+        order.save()
+
+        job.order=order
         job.instance=prj_json.instance
         job.nodes=prj_json.nodes
         job.times=prj_json.run_time
@@ -160,15 +159,10 @@ class JobView(View):
             print('create job script error')
             return handler404(request)
 
-        if order is None:
-            order=Order.objects.create(user=user,job=job)
-        order.charge=charge
-        order.save()
 
-        cash_serializer = CashSerializer(cash)
         job_serializer = JobSerializer(job)
         order_serializer = OrderSerializer(order)
-        data={'success':True,'cash':cash_serializer.data,'job':job_serializer.data,'order':order_serializer.data}
+        data={'success':True,'job':job_serializer.data,'order':order_serializer.data}
         return JsonResponse(data, content_type='application/json',safe=False)
 
 class JobVerifyView(View):
@@ -206,11 +200,17 @@ class JobExecuteView(View):
             print('get job error')
             return handler404(request)
 
-        if job.status!='UNDO':
-            data={'success':False,'tips':'Job is unpaied!'}
+        try:
+            order=Order.objects.get(pk=job.order.id,user=user)
+        except:
+            print('get order error')
             return JsonResponse(data, content_type='application/json',safe=False)
 
-        execute_job.run.delay(job.id)
+        if order.paied==False:
+            data={'success':False,'tips':'Your order is unpaied!'}
+            return JsonResponse(data, content_type='application/json',safe=False)
+
+        #execute_job.run.delay(job.id)
         data={'success':True,'tips':'Job is in executing'}
         return JsonResponse(data, content_type='application/json',safe=False)
 
