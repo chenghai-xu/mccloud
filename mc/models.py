@@ -6,6 +6,7 @@ import json
 
 from . import config
 from home.models import Order
+from store.models import Item
 
 User = get_user_model()
 
@@ -75,12 +76,23 @@ class ProjectArchived(models.Model):
     def __str__(self):
         return str(self.id)
 
+
+class Instance(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    item = models.OneToOneField(Item,on_delete=models.PROTECT)
+    name = models.CharField(max_length=24,default='8Core')
+    type = models.CharField(max_length=24,default='c4.2xlarge')
+    core = models.IntegerField(default=8)
+    create_time = models.DateTimeField(u'create time', auto_now_add=True)
+    def __str__(self):
+        return str(self.id)
+
 class Job(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     user = models.ForeignKey(User, editable=False,on_delete=models.PROTECT)
     project = models.ForeignKey(Project, editable=False,on_delete=models.PROTECT)
     order = models.ForeignKey(Order, editable=False,on_delete=models.PROTECT)
-    instance = models.CharField(choices=config.INSTANCE_TYPE_CHOICES,max_length=24,default='Core8')
+    instance = models.ForeignKey(Instance,default=1)
     nodes = models.IntegerField(default=0)
     times = models.FloatField(default=0.0)
     status = models.CharField(choices=config.JOB_STATUS_CHOICES,max_length=24,default='UNDO')

@@ -30,3 +30,10 @@ class JobAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'order', 'project', 'instance', 'nodes', 'times', 'status', 'create_time')
     actions = [execute]
     list_filter = ('status', 'user')
+
+@admin.register(Instance)
+class InstanceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'item', 'name', 'type', 'core', 'create_time')
+    def __str__(self):
+        return str(self.id)
+

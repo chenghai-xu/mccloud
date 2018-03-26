@@ -46,7 +46,7 @@ def run(job_id,dry_run=False):
 
 class Cluster:
     def __init__(self,name,instance,nodes):
-        self.instance=config.AWS_INSTANCE_TYPES[instance]
+        self.instance=instance
         self.nodes=nodes
         self.name=name
         self.template=config.cluster_template
@@ -58,7 +58,8 @@ class Cluster:
         args="starcluster sshmaster -u %s %s %s" % (self.user,self.name,cmd)
         script.append(args)
     def StartCmd(self,script):
-        args="starcluster start -c %s -I %s -i %s -s %s %s" % (self.template, self.instance, self.instance, self.nodes,self.name)
+        typ=self.instance.type
+        args="starcluster start -c %s -I %s -i %s -s %s %s" % (self.template, typ, typ, self.nodes,self.name)
         script.append(args)
 
     def PutCmd(self,script,local,remote):
@@ -74,7 +75,7 @@ class Cluster:
         script.append(args)
     
     def GetCores(self):
-        return int(self.nodes) * int(config.AWS_INSTANCE_CORES[self.instance])
+        return int(self.nodes) * int(self.instance.core)
 
 class JobScript:
     def __init__(self,name,instance,nodes,minutes):

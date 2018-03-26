@@ -27,6 +27,7 @@ from .serializers import *
 from .models import *
 from home.models import Cash, Order
 from home.serializers import *
+from store.models import *
 
 from . import json_gdml
 from . import execute_job
@@ -110,6 +111,14 @@ class JobView(View):
             print('generate config file error')
             return response
 
+        #get config
+        try:
+            instance=Instance.objects.filter(name=prj_json.instance)[0]
+            item=Item.objects.filter(pk=instance.item.id)[0]
+        except:
+            print('get instance and item info error, config store item and instance please!')
+            return handler404(request)
+
         job=None
         order=None
 
@@ -138,23 +147,24 @@ class JobView(View):
                     return handler404(request)
 
         order.ClearItem()
-        order.AddItem(config.Instance_Index[prj_json.instance],config.Instance_Price[prj_json.instance], 
-                int(prj_json.nodes),
-                float(prj_json.run_time))
+        order.AddItem(item.id,item.price, int(prj_json.nodes), float(prj_json.run_time))
         order.save()
 
         job.order=order
-        job.instance=prj_json.instance
+        job.instance=instance
         job.nodes=prj_json.nodes
         job.times=prj_json.run_time
         job.save()
+
+        print('create job with instance %s, price %s, nodes %s, time %s' % 
+                (instance.type,item.price,job.nodes,job.times))
 
         if MakeJobConfig(project.id,job.id)!=True:
             print('make job config error')
             return handler404(request)
 
         try:
-            job_script=execute_job.JobScript(job.id,job.instance,job.nodes,job.times*60)
+            job_script=execute_job.JobScript(job.id,instance,job.nodes,job.times*60)
         except:
             print('create job script error')
             return handler404(request)
