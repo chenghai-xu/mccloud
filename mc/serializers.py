@@ -25,5 +25,5 @@ class SolidSerializer(serializers.ModelSerializer):
 class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
-        fields = ('id', 'project', 'instance', 'nodes', 'times','status','create_time')
+        fields = ('id', 'project', 'order', 'instance', 'nodes', 'times','status','create_time')
 
