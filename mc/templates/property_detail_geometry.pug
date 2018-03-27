@@ -101,6 +101,46 @@ div(id='property-solid-sphere', class='hidden')
               option rad
       //button(type='submit',class="btn btn-default") Save
 
+div(id='property-solid-cone', class='hidden')
+  div(class='row')
+    label Cone
+  div(class='row')
+    form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
+      div(class='form-group')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') z:
+          input(type='number',step='0.0001',class='form-control',name='z',onchange='SolidCone.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') rmin1:
+          input(type='number',step='0.0001',class='form-control',name='rmin1',onchange='SolidCone.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') rmax1:
+          input(type='number',step='0.0001',class='form-control',name='rmax1',onchange='SolidCone.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') rmin2:
+          input(type='number',step='0.0001',class='form-control',name='rmin2',onchange='SolidCone.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') rmax2:
+          input(type='number',step='0.0001',class='form-control',name='rmax2',onchange='SolidCone.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') start phi:
+          input(type='number',step='0.0001',class='form-control',name='startphi',onchange='SolidCone.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') delta phi:
+          input(type='number',step='0.0001',class='form-control',name='deltaphi',onchange='SolidCone.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') lunit:
+          select(class='form-control',name='lunit',onchange='SolidCone.UnitChanged(this)')
+              option m
+              option cm
+              option mm
+              option km
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') aunit:
+          select(class='form-control',name='aunit',onchange='SolidCone.UnitChanged(this)')
+              option deg
+              option rad
 
 div(id='property-placement-simple', class='hidden')
   div(class='row')

@@ -114,6 +114,17 @@ function CalcGeometry(node)
              parameter.startphi*UnitOf(parameter.aunit)/UnitOf(aunit),
              parameter.deltaphi*UnitOf(parameter.aunit)/UnitOf(aunit))
     }
+    else if(type=='cone')
+    {
+        geometry =  
+         ConeGeometry(parameter.z*UnitOf(parameter.lunit)/UnitOf(lunit),
+             parameter.rmin1*UnitOf(parameter.lunit)/UnitOf(lunit),
+             parameter.rmax1*UnitOf(parameter.lunit)/UnitOf(lunit),
+             parameter.rmin2*UnitOf(parameter.lunit)/UnitOf(lunit),
+             parameter.rmax2*UnitOf(parameter.lunit)/UnitOf(lunit),
+             parameter.startphi*UnitOf(parameter.aunit)/UnitOf(aunit),
+             parameter.deltaphi*UnitOf(parameter.aunit)/UnitOf(aunit))
+    }
     return geometry;
 }
 

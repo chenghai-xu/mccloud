@@ -103,6 +103,14 @@ VolumeControl.InitSolidForm=function(){
         SolidSphere.form=wigdet;
         SolidSphere.Init();
     }
+    else if(solid.type=='cone')
+    {
+        wigdet = $('#property-solid-cone').clone();
+        SolidCone.node=current;
+        SolidCone.data=solid;
+        SolidCone.form=wigdet;
+        SolidCone.Init();
+    }
     else 
         return;
 

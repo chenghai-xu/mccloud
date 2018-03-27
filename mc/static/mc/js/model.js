@@ -1,6 +1,57 @@
 $(document).ready(function () {
 });
 
+function ConeGeometry(z,rmin1,rmax1,rmin2,rmax2,start_phi=0,delta_phi=360)
+{
+    delta_phi=Math.min(delta_phi,360);
+    delta_phi=Math.PI*delta_phi/180;
+
+    start_phi=Math.min(start_phi,360);
+    start_phi=Math.PI*start_phi/180;
+
+    var step = Math.PI/10;
+
+    var segments=parseInt(delta_phi/step);
+    segments=Math.max(2,segments);
+
+    step = delta_phi/segments;
+    var z_arr= new Array();
+    var z_seg=10;
+    var z_step=z/z_seg;
+    for(var i=0;i <=z_seg; i++)
+    {
+        z_arr.push(-z/2.0+i*z_step);
+    }
+
+ 	var geometry = new THREE.Geometry();
+
+    var r_min_step=(rmin2-rmin1)/z_seg;
+    var r_max_step=(rmax2-rmax1)/z_seg;
+    for(var k=0;k<z_arr.length;k++)
+    {
+        var rmin=k*r_min_step+rmin1;
+        var rmax=k*r_max_step+rmax1;
+        for(var i=0; i<= segments; i++)
+        {
+            geometry.vertices.push( new THREE.Vector3( 
+                rmin*Math.cos(start_phi+i*step),
+                rmin*Math.sin(start_phi+i*step),
+                z_arr[k]) );
+
+            geometry.vertices.push( new THREE.Vector3( 
+                rmax*Math.cos(start_phi+i*step),
+                rmax*Math.sin(start_phi+i*step),
+                z_arr[k]) );
+
+        }
+    }
+
+    var is_close=false;
+    if(delta_phi == Math.PI*2)
+        is_close=true;
+    return CalcFaces(geometry, z_seg, segments, is_close);
+}
+
 function TubeGeometry(rmin,rmax,z,start_phi=0,delta_phi=360)
 {
     delta_phi=Math.min(delta_phi,360);

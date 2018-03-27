@@ -105,3 +105,41 @@ var SolidSphere = {
         DrawModel(this.node);
     },
 }
+
+var SolidCone = {
+    node: null,
+    data: null,
+    form: null,
+    Init: function()
+    {
+        var cone=this.data;
+        var form=this.form;
+        $(form).find('input[name=z]').val(cone.parameter.z);
+        $(form).find('input[name=rmin1]').val(cone.parameter.rmin1);
+        $(form).find('input[name=rmax1]').val(cone.parameter.rmax1);
+        $(form).find('input[name=rmin2]').val(cone.parameter.rmin2);
+        $(form).find('input[name=rmax2]').val(cone.parameter.rmax2);
+        $(form).find('input[name=startphi]').val(cone.parameter.startphi);
+        $(form).find('input[name=deltaphi]').val(cone.parameter.deltaphi);
+        $(form).find('select[name=lunit]').val(cone.parameter.lunit);
+        $(form).find('select[name=aunit]').val(cone.parameter.aunit);
+    },
+
+    UnitChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var p=$(elem).attr('name');
+        console.log('Change cone parameter '+p+' to '+ value);
+        this.data.parameter[p]=value;
+        DrawModel(this.node);
+    },
+
+    ValueChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var p=$(elem).attr('name');
+        console.log('Change cone parameter '+p+' to '+ value);
+        this.data.parameter[p]=parseFloat(value);
+        DrawModel(this.node);
+    },
+}

@@ -65,6 +65,23 @@ function NewSolid(type='box'){
                 aunit:'deg',
             },
         };
+    else if(type=='cone')
+        node=
+        {
+            type:'cone',
+            parameter: 
+            {
+                z:1.0,
+                rmin1:0.2,
+                rmax1:0.4,
+                rmin2:0.5,
+                rmax2:1.0,
+                startphi:0,
+                deltaphi:360,
+                lunit:'cm',
+                aunit:'deg',
+            },
+        };
     else 
         node=
         {
