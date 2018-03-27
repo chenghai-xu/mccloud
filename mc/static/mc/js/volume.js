@@ -51,6 +51,7 @@ VolumeControl.Init=function()
     }
 
     //$('#property-container').append(property);
+    this.InitSolidForm();
     DrawModel(current);
 }
 
