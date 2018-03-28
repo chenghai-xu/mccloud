@@ -14,9 +14,9 @@ from .models import *
 from celery import shared_task
 @shared_task  # Use this decorator to make this a asyncronous function
 def verify_project(pid):
-    cwd="%s/%s/" % (config.projects_root,pid)
-    cwd=os.path.abspath(cwd)
-    args="simpit -e=config.json.mac >verify.out 2>&1"
+    prefix = os.path.dirname(os.path.abspath(__file__))
+    cwd=os.path.abspath("%s/%s/" % (config.projects_root,pid))
+    args='%s/verify.sh' % prefix
     print("verify project %s" % pid)
     job_sh=subprocess.Popen(args=args,cwd=cwd,shell=True)
     ret=job_sh.wait()

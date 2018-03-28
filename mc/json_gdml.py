@@ -7,6 +7,7 @@ import xml.etree.cElementTree as ET
 import json
 import os
 from datetime import *
+from . import config
 
 
 # In[443]:
@@ -861,12 +862,12 @@ class ProjectJSON:
         self.mac.Write(fname+".mac")
         
     def AddDefaultMaterials(self,gdml):
-        with open("./data/mc/Elements.json") as f:
+        with open("%s/Elements.json" % config.data_root) as f:
             json_data=json.load(f)
             for item in json_data:
                 if item["name"] != "":
                     gdml.AddElement(item["name"],item["formula"],item["Z"],item["atom"])
-        with open("./data/mc/Materials.json") as f:
+        with open("%s/Materials.json" % config.data_root) as f:
             json_data=json.load(f)
             for item in json_data:
                 if item["name"] != "":

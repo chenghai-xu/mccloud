@@ -92,7 +92,7 @@ class Job(models.Model):
     user = models.ForeignKey(User, editable=False,on_delete=models.PROTECT)
     project = models.ForeignKey(Project, editable=False,on_delete=models.PROTECT)
     order = models.ForeignKey(Order, editable=False,on_delete=models.PROTECT)
-    instance = models.ForeignKey(Instance,default=1)
+    instance = models.ForeignKey(Instance,on_delete=models.PROTECT)
     nodes = models.IntegerField(default=0)
     times = models.FloatField(default=0.0)
     status = models.CharField(choices=config.JOB_STATUS_CHOICES,max_length=24,default='UNDO')

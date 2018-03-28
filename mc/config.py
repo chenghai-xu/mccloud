@@ -1,16 +1,21 @@
-projects_root='./data/mc/projects'
-jobs_root='./data/mc/jobs'
-data_root='./data/mc'
+import os
+prefix = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+projects_root='%s/data/mc/projects' % prefix
+jobs_root='%s/data/mc/jobs' % prefix
+data_root='%s/data/mc' % prefix
+protected_root='%s/data/protected' %prefix
+
 cluster_template='template.mcdc'
 cluster_user='scadmin'
 cluster_jobs_root='/home/%s/jobs' % cluster_user
 
-cluster_geant4_env= '/opt/geant4/10.2.p03/install/bin/geant4.sh'
+cluster_geant4_env='/opt/geant4/10.2.p03/install/bin/geant4.sh'
 
 cluster_simpit='/home/%s/opt/simpit' % cluster_user
 cluster_simpit_bin='%s/bin' % cluster_simpit
 local_simpit='/opt/tsimpit/0.9'
 local_simpit_bin='%s/bin' % local_simpit
+
 
 
 cluster_key_file='/home/xuchd/.ssh/starcluster.cn-northwest-1.rsa'

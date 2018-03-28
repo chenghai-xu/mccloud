@@ -10,6 +10,7 @@ User = get_user_model()
 
 
 import json
+import subprocess
 
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -289,6 +290,17 @@ class JobListView(View):
         serializer = JobSerializer(job,many=True)
         return JsonResponse(serializer.data, content_type='application/json',safe=False)
 
+def PackJob(job,dst):
+    dst_file='%s/%s.zip' % (dst,job)
+    subprocess.call(['mkdir', '-p', dst])
+    subprocess.call(['rm', dst_file])
+    proc=subprocess.Popen(['zip', '-r', dst_file, job],cwd=config.jobs_root)
+    proc.wait()
+    return dst_file
+
+
+from django.utils.encoding import smart_str
+
 class JobDownloadView(View):
     """
     function: download job
@@ -296,6 +308,10 @@ class JobDownloadView(View):
     id=1
     return:  
     job files.
+    """
+    """
+    http://www.cnblogs.com/linxiyue/p/4187484.html
+    https://stackoverflow.com/questions/1156246/having-django-serve-downloadable-files
     """
     def get(self, request, *args, **kwargs):
         pk=request.GET.get('id',-1)
@@ -305,10 +321,11 @@ class JobDownloadView(View):
         except Job.DoesNotExist:
             return JsonResponse({}, content_type='application/json',safe=False)
         
-        job_file='%s/%s/config.json.mac' % (config.jobs_root, pk)
-        response = HttpResponse()
-        response['Content-Type']='application/octet-stream'
-        response["Content-Disposition"] = "attachment; filename=%s" % job_file
-        response['Content-Length'] = os.path.getsize(job_file)
-        response['X-Accel-Redirect'] = "%s" % job_file
+        dst='%s/job' % config.protected_root
+        fpath=PackJob(pk,dst)
+        fname=os.path.basename(fpath)
+
+        response = HttpResponse(content_type='application/zip' )
+        response["Content-Disposition"] = 'attachment; filename="%s"' % smart_str(fname)
+        response['X-Sendfile'] = "%s/job/%s" % (config.protected_root,fname)
         return response

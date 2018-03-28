@@ -91,14 +91,7 @@ OutputForm.Update=function(el,id=null)
 };
 OutputForm.Download=function()
 {
-    $.get({ 
-        url: "/mc/job/download/?id="+this.current.data.job.id, 
-        data:{},
-        success: function(data)
-        {
-            console.log("download job:");
-        },
-    });
+    window.open("/mc/job/download/?id="+this.current.data.job.id);
 };
 
 OutputForm.Open=function()
