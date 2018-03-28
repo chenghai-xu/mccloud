@@ -130,9 +130,9 @@ class JobView(View):
         if job is None:
             try:
                 order=Order.objects.create(user=user)
-                job=Job.objects.create(user=user,project=project,order=order)
-            except:
-                print('create job and order error')
+                job=Job.objects.create(user=user,project=project,order=order,instance=instance)
+            except Exception as e:
+                print('create job and order error:', repr(e))
                 return handler404(request)
         else:
             orders=Order.objects.filter(pk=job.order.id,user=user,paied=False).order_by('-create_time')
@@ -142,9 +142,9 @@ class JobView(View):
             if order is None:
                 try:
                     order=Order.objects.create(user=user)
-                    job=Job.objects.create(user=user,project=project,order=order)
-                except:
-                    print('create job and order error')
+                    job=Job.objects.create(user=user,project=project,order=order,instance=instance)
+                except Exception as e:
+                    print('create job and order error:', repr(e))
                     return handler404(request)
 
         order.ClearItem()
@@ -172,6 +172,7 @@ class JobView(View):
 
 
         job_serializer = JobSerializer(job)
+        order.charge=round(order.charge,2)
         order_serializer = OrderSerializer(order)
         order_data=order_serializer.data
         names=[item.name]
