@@ -138,6 +138,7 @@ OutputForm.OpenJobListDlg=function(data)
     for(var i=0; i< data.length; i++)
     {
         tbody.append('<tr id='+data[i].id+'>' +
+            '<td>' + data[i].id+'</td>' +
             '<td>' + data[i].create_time.substring(0,16)+'</td>' +
             '<td>' + data[i].instance + '</td>' +
             '<td>' + data[i].nodes + '</td>' +
