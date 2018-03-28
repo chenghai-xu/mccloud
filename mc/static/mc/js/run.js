@@ -25,7 +25,7 @@ RunModel.New=function()
         instance: '8Core',
         nodes: '2',
         time: '60',
-        unit: 'second',
+        unit: 'minute',
     };
     return node;
 };
@@ -36,6 +36,20 @@ RunForm.Init=function()
     RunForm.form.find('input[name=nodes]').val(RunForm.current.data.nodes);
     RunForm.form.find('input[name=time]').val(RunForm.current.data.time);
     RunForm.form.find('select[name=unit]').val(RunForm.current.data.unit);
+    var min=10;
+    var step=1;
+    if(this.current.data.unit==='minute')
+    {
+        min=10;
+        step=1;
+    }
+    else
+    {
+        min=0.20;
+        step=0.1;
+    }
+    this.form.find('input[name=time]').attr('min',min);
+    this.form.find('input[name=time]').attr('step',step);
 };
 
 RunForm.TypeChanged=function(el)
@@ -56,11 +70,20 @@ RunForm.TimeChanged=function(el)
 RunForm.UnitChanged=function(el)
 {
     RunForm.current.data.unit=$(el).val();
-};
-
-RunForm.UnitChanged=function(el)
-{
-    RunForm.current.data.unit=$(el).val();
+    var min=10;
+    var step=1;
+    if(this.current.data.unit==='minute')
+    {
+        min=10;
+        step=1;
+    }
+    else
+    {
+        min=0.20;
+        step=0.1;
+    }
+    this.form.find('input[name=time]').attr('min',min);
+    this.form.find('input[name=time]').attr('step',step);
 };
 
 RunForm.Verify=function()

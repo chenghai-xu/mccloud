@@ -881,12 +881,12 @@ class ProjectJSON:
     def DecodeRun(self,mac,run):
         data=run["data"]
         self.instance=data["instance"]
-        self.nodes=data["nodes"]
+        self.nodes=max([1,int(data["nodes"])])
         time=data["time"]
         tunit=data["unit"]
         if tunit=="minute":
             time=int(time)/60
-        self.run_time=time
+        self.run_time=max([float(time),0.166667])
         mac.run.append("/GP/App/SetParameter app.run_time %s" % time)
         mac.run.append("/run/printProgress 100000")
         mac.run.append("")

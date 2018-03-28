@@ -1,12 +1,12 @@
 div(id='property-run', class='hidden')
   div(class='row')
-    label Run
+    label Cluster Setup
   div(class='row')
     form(class='form',role='form',action='javascript:void(0);')
       {% csrf_token %}
       div(class='form-group')
         div(class='input-group input-group-sm')
-          span(class='input-group-addon') Instance
+          span(class='input-group-addon') Node Type
           select(class='form-control',name='type',onchange='RunForm.TypeChanged(this)')
               option 4Core
               option 8Core
@@ -14,10 +14,10 @@ div(id='property-run', class='hidden')
               option 36Core
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Node Size
-          input(type='number',class='form-control',name='nodes',onchange='RunForm.NodesChanged(this)')
+          input(type='number',class='form-control',name='nodes',min='1',step='1',onchange='RunForm.NodesChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Run Time
-          input(type='number',class='form-control',name='time',onchange='RunForm.TimeChanged(this)')
+          input(type='number',class='form-control',name='time',min='10',step='1',onchange='RunForm.TimeChanged(this)')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Time Unit
           select(class='form-control',name='unit',onchange='RunForm.UnitChanged(this)')
@@ -40,10 +40,10 @@ div(id='order-book',class='table-responsive ui-widget', title='Order')
     table(id="order-table",class="table table-hover")
       thead
         tr(class='ui-widget-header')
-          th Name
-          th Count
-          th Price(RMB)
-          th Time(minute)
+          th Node Type
+          th Node Size
+          th Price/Node(RMB)
+          th Run Time(minute)
       tbody(id='order-tbody')
     div(class='')
       span(class='input-group-addon') Total cost(RMB):
