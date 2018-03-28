@@ -168,7 +168,7 @@ RunForm.ExecuteJob=function(id)
 RunForm.LoopCheck=function()
 {
     var interval=30000;
-    if(RunForm.current.data.job.status==='UNDO')
+    if(RunForm.current.data.job.status!='DONE')
     {
         //5 minute tolerance
         var per=100*RunForm.progress/3600/(RunForm.current.data.job.times+0.08);
