@@ -16,6 +16,7 @@ pip install pypugjs
 pip install celery
 pip install numpy
 pip install matplotlib
+pip install redis
 
 
 #install mod_wsgi module by pip
