@@ -164,7 +164,8 @@ class MacFile:
         self.run=[]
         self.output=[]
         self.primary=[]
-    def Init(self,xname):
+    def Init(self,xname,phy_list):
+        self.init.append("/GP/App/SetParameter app.phy_list %s" % phy_list)
         self.init.append("/persistency/gdml/read %s" % xname)
         self.init.append("/run/initialize")
     def Write(self,fname):
@@ -855,10 +856,11 @@ class ProjectJSON:
         #self.gdml.AddSetup("ParallelWorld",vname)
         gname=fname+".gdml"
         self.gdml.Write(gname)
-        self.mac.Init(os.path.basename(gname))
+
+        self.DecodePhysics(self.mac,self.physics)
+        self.mac.Init(os.path.basename(gname),self.physics_list)
         self.DecodePrimary(self.mac,self.primary)
         self.DecodeRun(self.mac,self.run)
-        self.DecodePhysics(self.mac,self.physics)
         self.mac.Write(fname+".mac")
         
     def AddDefaultMaterials(self,gdml):

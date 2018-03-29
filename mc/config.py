@@ -13,7 +13,7 @@ cluster_geant4_env='/opt/geant4/10.2.p03/install/bin/geant4.sh'
 
 cluster_simpit='/home/%s/opt/simpit' % cluster_user
 cluster_simpit_bin='%s/bin' % cluster_simpit
-local_simpit='/opt/tsimpit/0.9'
+local_simpit='/home/xuchd/opt/tsimpit/'
 local_simpit_bin='%s/bin' % local_simpit
 
 
