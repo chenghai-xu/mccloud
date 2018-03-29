@@ -881,7 +881,7 @@ class ProjectJSON:
     def DecodeRun(self,mac,run):
         data=run["data"]
         self.instance=data["instance"]
-        self.nodes=max([1,int(data["nodes"])])
+        self.nodes=min([20,max([1,int(data["nodes"])])])
         time=data["time"]
         tunit=data["unit"]
         if tunit=="minute":

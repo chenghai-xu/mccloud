@@ -244,8 +244,8 @@ RunForm.InitOrderBook=function()
 {
     $("#order-book").dialog({
         autoOpen: false,
-        height: 320,
-        width: 480,
+        height: 480,
+        width: 640,
         modal: true,
         buttons: {
             'Pay & Run' : function() {
