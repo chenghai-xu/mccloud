@@ -48,7 +48,7 @@ def ReadProjectConfig(pk):
     os.makedirs('%s/%s'%(config.projects_root,pk), exist_ok=True)
     fname = '%s/%s/config.json' % (config.projects_root,pk)
     data = '{}'
-    print('abspath',os.path.abspath(fname))
+    #print('abspath',os.path.abspath(fname))
     try:
         f=open(fname,'r')
         data=f.read()
