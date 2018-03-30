@@ -7,6 +7,7 @@ from __future__ import absolute_import
 import subprocess
 import os
 import stat
+import numpy as np
 
 from . import config
 from .models import *
@@ -23,7 +24,25 @@ def verify_project(pid):
     print('exit code: %s' % ret)
     with open("%s/verify.out" % cwd) as f:
         out=f.read()
-    return ret,out
+    trjs=[]
+    with open("%s/trajectory.trj" % cwd,'rb') as fh:
+        while True:
+            pdg=fh.read(4)
+            if len(pdg) <=0:
+                break
+            trj={}
+            trj['pdg']=str(np.fromstring(pdg,dtype=np.int32)[0])
+            trj['charge']=str(np.fromstring(fh.read(8),dtype=np.float64)[0])
+            trj['track_id']=str(np.fromstring(fh.read(4),dtype=np.int32)[0])
+            trj['parent_id']=str(np.fromstring(fh.read(4),dtype=np.int32)[0])
+            size=np.fromstring(fh.read(4),dtype=np.int32)[0]
+            points=[]
+            for i in range(size):        
+                p=np.fromstring(fh.read(8*3),dtype=np.float64)
+                points.append({'x':str(p[0]),'y':str(p[1]),'z':str(p[2])})
+            trj['points']=points
+            trjs.append(trj)
+    return ret,out,trjs
 
 @shared_task  # Use this decorator to make this a asyncronous function
 def run(job_id,dry_run=False):

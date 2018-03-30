@@ -191,8 +191,8 @@ class JobVerifyView(View):
         fname=EncodeProjectConfig(pk)
         prj_json=json_gdml.ProjectJSON(fname,1000)
         #ret,out,err=execute_job.verify_project.delay(pk)
-        ret,out=execute_job.verify_project(pk)
-        return JsonResponse({'ret':ret,'out':out}, content_type='application/json',safe=False)
+        ret,out,trj=execute_job.verify_project(pk)
+        return JsonResponse({'ret':ret,'out':out,'trj':trj}, content_type='application/json',safe=False)
 
 class JobExecuteView(View):
     def get(self, request, *args, **kwargs):
