@@ -29,6 +29,7 @@ from .models import *
 from home.models import Cash, Order
 from home.serializers import *
 from store.models import *
+from mccloud.celery_setting import app as celery_app
 
 from . import json_gdml
 from . import execute_job
@@ -182,17 +183,43 @@ class JobView(View):
 
 class JobVerifyView(View):
     def get(self, request, *args, **kwargs):
-        return JsonResponse(True)
+        user=request.user
+        pid=request.GET.get('id',-1)
+        tid=request.GET.get('task',-1)
+        try:
+            project = Project.objects.get(pk=pid,user=user)
+        except:
+            response = HttpResponse('Error: Invalid project')
+            response.status_code = 404
+            print('get project error')
+            return response
+
+        task={'id':tid,
+              'status':celery_app.AsyncResult(tid).state,
+              'result':celery_app.AsyncResult(tid).result,
+              'log':'',
+              'trj':{}}
+        if task['status'] == 'SUCCESS':
+            task['log'],task['trj'] = execute_job.get_verify_result(pid)
+
+        return JsonResponse(task, content_type='application/json',safe=False)
+
     def post(self, request, *args, **kwargs):
         user=request.user
-        pk=request.GET.get('id',-1)
-        if pk==-1:
-            return handler404(request)
-        fname=EncodeProjectConfig(pk)
+        pid=request.GET.get('id',-1)
+        try:
+            project = Project.objects.get(pk=pid,user=user)
+        except:
+            response = HttpResponse('Error: Invalid project')
+            response.status_code = 404
+            print('get project error')
+            return response
+
+        fname=EncodeProjectConfig(pid)
         prj_json=json_gdml.ProjectJSON(fname,1000)
-        #ret,out,err=execute_job.verify_project.delay(pk)
-        ret,out,trj=execute_job.verify_project(pk)
-        return JsonResponse({'ret':ret,'out':out,'trj':trj}, content_type='application/json',safe=False)
+        task=execute_job.verify_project.delay(pid)
+        print(task.id)
+        return JsonResponse({'id':task.id}, content_type='application/json',safe=False)
 
 class JobExecuteView(View):
     def get(self, request, *args, **kwargs):

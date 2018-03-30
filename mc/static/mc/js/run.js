@@ -86,25 +86,44 @@ RunForm.UnitChanged=function(el)
     this.form.find('input[name=time]').attr('step',step);
 };
 
+RunForm.CheckVerify=function()
+{
+    if(!RunForm.verify_task || !RunForm.verify_task.id)
+        return;
+    $.get({ 
+        url: "/mc/job/verify/?id="+id_current_project+'&task='+RunForm.verify_task.id, 
+        success: function(data){
+            if(data.status!='SUCCESS')
+            {
+                setTimeout(RunForm.CheckVerify,2000); 
+                return;
+            }
+            RunForm.verify_task=data;
+            $('#Console #output').text(data.log);
+            $('#myTab #contact-tab').tab('show');
+            if(data.result != 0)
+            {
+                alert('It looks that they are some problems. Please check the console log!')
+            }
+            else
+            {
+                alert('It looks that they are no problems. Please check the trajectory and console log!')
+            }
+            DrawTrajectory(data.trj);
+        }
+    });
+}
+
 RunForm.Verify=function()
 {
-    console.log('Verify setup');
+    console.log('Verify project ',id_current_project);
     SaveProject(function(){
         $.post({ 
             url: "/mc/job/verify/?id="+id_current_project, 
-            data:{verify:true},
             success: function(data){
-                $('#Console #output').text(data.out);
-                $('#myTab #contact-tab').tab('show');
-                if(data.ret != 0)
-                {
-                    alert('It looks that they are some problems. Please check the console log!')
-                }
-                else
-                {
-                    alert('It looks that they are no problems. Please check the trajectory and console log!')
-                }
-                DrawTrajectory(data.trj);
+                RunForm.verify_task=data;
+                console.log('success submit verify task ',data.id);
+                setTimeout(RunForm.CheckVerify,2000); 
             }
         });
     });
@@ -330,6 +349,8 @@ function DrawTrajectory(trjs)
 
 function DoDrawTrajectory(scn,trjs)
 {
+    //refs:
+    //https://stackoverflow.com/questions/31399856/drawing-a-line-with-three-js-dynamically
     for(var k=0; k<trjs.length;k++)
     {
         var trj = trjs[k];
