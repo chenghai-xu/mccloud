@@ -20,7 +20,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '67+4tzcvjrgqoj(@gvv5q!^9&1s^h$7c#4tieun@p^uc#^b4gd'
+with open('%s/deploy/secret_key.txt' % BASE_DIR) as f:
+        SECRET_KEY = f.read().strip()
+
+
+SECURE_HSTS_SECONDS = 3600
+SECURE_HSTS_INCLUDE_SUBDOMAINS=True
+SECURE_CONTENT_TYPE_NOSNIFF=True
+SECURE_SSL_REDIRECT=True
+SESSION_COOKIE_SECURE=True
+CSRF_COOKIE_SECURE=True
+X_FRAME_OPTIONS='DENY'
+SECURE_HSTS_PRELOAD=True
+SECURE_BROWSER_XSS_FILTER=True
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
@@ -88,16 +100,18 @@ WSGI_APPLICATION = 'mccloud.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
+with open('%s/deploy/db_password.txt' % BASE_DIR) as f:
+        DB_PASSWORD = f.read().strip()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mccloud',
         'USER': 'xuch',
-        'PASSWORD': 'x8hu7y4h',
+        'PASSWORD': DB_PASSWORD,
         "HOST": "localhost",
     },
 }
+DB_PASSWORD=None
 
 
 # Password validation
@@ -152,6 +166,8 @@ LOGIN_REDIRECT_URL = '/mc'
 #Celery Config
 #BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
