@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 with open('%s/deploy/secret_key.txt' % BASE_DIR) as f:
-        SECRET_KEY = f.read().strip()
+     SECRET_KEY = f.read().strip()
 
 
 SECURE_HSTS_SECONDS = 3600
@@ -33,6 +33,18 @@ CSRF_COOKIE_SECURE=True
 X_FRAME_OPTIONS='DENY'
 SECURE_HSTS_PRELOAD=True
 SECURE_BROWSER_XSS_FILTER=True
+
+#EMail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.163.com'                   
+EMAIL_PORT = 25                                 
+with open('%s/deploy/email_user.txt' % BASE_DIR) as f:
+     EMAIL_HOST_USER = f.read().strip()
+with open('%s/deploy/email_password.txt' % BASE_DIR) as f:
+     EMAIL_HOST_PASSWORD = f.read().strip()
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_SUBJECT_PREFIX = 'mccloud'            
+EMAIL_USE_TLS = False                             
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
@@ -101,7 +113,7 @@ WSGI_APPLICATION = 'mccloud.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 with open('%s/deploy/db_password.txt' % BASE_DIR) as f:
-        DB_PASSWORD = f.read().strip()
+    DB_PASSWORD = f.read().strip()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
