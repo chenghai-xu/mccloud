@@ -102,8 +102,9 @@ RunForm.Verify=function()
                 }
                 else
                 {
-                    alert('It looks that they are no problems. Please check the console log!')
+                    alert('It looks that they are no problems. Please check the trajectory and console log!')
                 }
+                DrawTrajectory(data.trj);
             }
         });
     });
@@ -297,3 +298,80 @@ RunForm.InitChargeSuggest=function()
         }
     });
 };
+
+function DrawTrajectory(trjs)
+{
+    var instance = $('#project-view').jstree(true);
+    var root=instance.get_node("#");
+    var project=instance.get_node(root.children[0]);
+    var geometry=null;
+    for(var id of project.children)
+    {
+        
+        geometry=instance.get_node(id);
+        if(geometry.type==="geometry")
+            break;
+    }
+    if(!geometry)
+        return;
+
+    var mass=null;
+    for(var id of geometry.children)
+    {
+        mass=instance.get_node(id);
+        if(mass.text==='world')
+            break;
+    }
+    if(!mass)
+        return;
+    DrawModel(mass);
+    DoDrawTrajectory(scene,trjs);
+}
+
+function DoDrawTrajectory(scn,trjs)
+{
+    for(var k=0; k<trjs.length;k++)
+    {
+        var trj = trjs[k];
+        var MAX_POINTS = trj.points.length;
+
+        // geometry
+        var geometry = new THREE.BufferGeometry();
+
+        // attributes
+        var positions = new Float32Array( MAX_POINTS * 3 ); // 3 vertices per point
+        geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+
+        // draw range
+        drawCount = MAX_POINTS; // draw the first 2 points, only
+        geometry.setDrawRange( 0, drawCount );
+
+        // material
+        var color = 0x00ff00;
+        if(trj.charge<0)
+            color=0x0000ff;
+        else if(trj.charge>0)
+            color=0xff0000;
+        else
+            color=0x00ff00;
+        var material = new THREE.LineBasicMaterial( { color: color } );
+
+        // line
+        line = new THREE.Line( geometry,  material );
+        scn.add( line );
+
+        var pos = line.geometry.attributes.position.array;
+
+        var x = y = z = index = 0;
+
+        for ( var i = 0; i< MAX_POINTS; i ++ ) 
+        {
+
+            pos[ index ++ ] = trj.points[i].x;
+            pos[ index ++ ] = trj.points[i].y;
+            pos[ index ++ ] = trj.points[i].z;
+
+        }
+    }
+}
+
