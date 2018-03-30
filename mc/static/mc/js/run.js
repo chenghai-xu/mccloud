@@ -183,7 +183,6 @@ RunForm.ExecuteJob=function(id)
 
     var id=RunForm.current.data.job.id;
     OutputForm.New(RunForm.current.data.job);
-    SaveProject(cb=null);
     console.log('Execute job ',id);
     $.post({ 
         url: "/mc/job/execute/?id="+id, 
@@ -196,12 +195,12 @@ RunForm.ExecuteJob=function(id)
             }
             else
             {
-                RunForm.current.data.job.status='UNDO';
+                RunForm.current.data.job.task=data.task;
                 $('#job-progress #job-progress-bar').attr('style','width: 0%;');
-                $('#job-progress #job-progress-msg').text('Your job is running!');
+                $('#job-progress #job-progress-msg').text('Your job is pending!');
                 $("#job-progress").dialog('open');
                 RunForm.progress=0;
-                RunForm.LoopCheck();
+                setTimeout(RunForm.LoopCheck,30000); 
 
             }
         }
@@ -210,36 +209,41 @@ RunForm.ExecuteJob=function(id)
 
 RunForm.LoopCheck=function()
 {
-    var interval=30000;
-    if(RunForm.current.data.job.status!='DONE')
-    {
-        //5 minute tolerance
-        var per=100*RunForm.progress/3600/(RunForm.current.data.job.times+0.08);
-        per=Math.round(per);
-        var left=(RunForm.current.data.job.times*60-RunForm.progress/60+5).toFixed(2);
-        left=left<0?0:left;
-        $('#job-progress #job-progress-bar').attr('style','width: '+per+'%;');
-        $('#job-progress #job-progress-msg').text('Your job is running, please wait about '+left+' minutes!');
-        console.log('check job status.');
-        RunForm.CheckJob();
-        setTimeout(RunForm.LoopCheck,interval); 
-        RunForm.progress+=interval/1000;
-    }
-    else
-    {
-        OutputForm.New(RunForm.current.data.job);
-        $('#job-progress #job-progress-msg').text('Your job is done, please check the output!');
-    }
-};
-
-RunForm.CheckJob=function()
-{
+    if(!RunForm.current.data.job.task || !RunForm.current.data.job.task.id)
+        return;
     $.get({ 
-        url: "/mc/job/create/?id="+RunForm.current.data.job.id, 
-        success: function(data)
-        {
+        url: "/mc/job/execute/?id="+RunForm.current.data.job.id+'&task='+RunForm.current.data.job.task.id, 
+        success: function(data){
             RunForm.current.data.job=data;
-        },
+            var interval = 30000;
+            if(data.task.status==='SUCCESS')
+            {
+                OutputForm.New(RunForm.current.data.job);
+                $('#job-progress #job-progress-bar').attr('style','width: 100%;');
+                $('#job-progress #job-progress-msg').text('Your job is done, please check the output!');
+                return;
+            }
+            else if(data.task.status==='STARTED')
+            {
+                //5 minute tolerance
+                var per=100*RunForm.progress/3600/(RunForm.current.data.job.times+0.08);
+                per=Math.round(per);
+                var left=(RunForm.current.data.job.times*60-RunForm.progress/60+5).toFixed(2);
+                left=left<0?0:left;
+                $('#job-progress #job-progress-bar').attr('style','width: '+per+'%;');
+                $('#job-progress #job-progress-msg').text('Your job is running, please wait about '+left+' minutes!');
+                console.log('check job status.');
+                RunForm.progress+=interval/1000;
+            }
+            else 
+            {
+                $('#job-progress #job-progress-bar').attr('style','width: 0%;');
+                $('#job-progress #job-progress-msg').text('Your job is pending, please wait!');
+                RunForm.progress=0;
+            }
+            setTimeout(RunForm.LoopCheck,interval); 
+
+        }
     });
 };
 

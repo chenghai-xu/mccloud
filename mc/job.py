@@ -194,15 +194,16 @@ class JobVerifyView(View):
             print('get project error')
             return response
 
-        task={'id':tid,
-              'status':celery_app.AsyncResult(tid).state,
-              'result':celery_app.AsyncResult(tid).result,
+        task=celery_app.AsyncResult(tid)
+        data={'id':tid,
+              'status':task.state,
+              'result':task.result,
               'log':'',
               'trj':{}}
-        if task['status'] == 'SUCCESS':
-            task['log'],task['trj'] = execute_job.get_verify_result(pid)
+        if task.state == 'SUCCESS':
+            data['log'],data['trj'] = execute_job.get_verify_result(pid)
 
-        return JsonResponse(task, content_type='application/json',safe=False)
+        return JsonResponse(data, content_type='application/json',safe=False)
 
     def post(self, request, *args, **kwargs):
         user=request.user
@@ -218,20 +219,23 @@ class JobVerifyView(View):
         fname=EncodeProjectConfig(pid)
         prj_json=json_gdml.ProjectJSON(fname,1000)
         task=execute_job.verify_project.delay(pid)
-        print(task.id)
         return JsonResponse({'id':task.id}, content_type='application/json',safe=False)
 
 class JobExecuteView(View):
     def get(self, request, *args, **kwargs):
         pk=request.GET.get('id',-1)
+        tid=request.GET.get('task',-1)
         user=request.user
         try:
             job = Job.objects.get(pk=pk,user=user)
         except:
             return handler404(request)
                                       
+        task=celery_app.AsyncResult(tid)
         serializer = JobSerializer(job)
-        return JsonResponse(serializer.data, content_type='application/json',safe=False)
+        data=serializer.data
+        data['task']={'id':tid,'status':task.state,'result':task.result}
+        return JsonResponse(data, content_type='application/json',safe=False)
 
     def post(self, request, *args, **kwargs):
         user=request.user
@@ -240,6 +244,9 @@ class JobExecuteView(View):
             job=Job.objects.get(pk=pk,user=user)
         except:
             print('get job error')
+            return handler404(request)
+
+        if job.status!='UNDO':
             return handler404(request)
 
         try:
@@ -252,8 +259,8 @@ class JobExecuteView(View):
             data={'success':False,'tips':'Your order is unpaied!'}
             return JsonResponse(data, content_type='application/json',safe=False)
 
-        execute_job.run.delay(job.id)
-        data={'success':True,'tips':'Job is in executing'}
+        task=execute_job.run.delay(job.id)
+        data={'success':True,'tips':'Job is in executing','task':{'id':task.id}}
         return JsonResponse(data, content_type='application/json',safe=False)
 
 class JobOutput(View):
