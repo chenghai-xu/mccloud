@@ -70,6 +70,11 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'users.User'
+USERS_VERIFY_EMAIL = True
+USERS_AUTO_LOGIN_ON_ACTIVATION = True
+USERS_EMAIL_CONFIRMATION_TIMEOUT_DAYS = 3
+USERS_SPAM_PROTECTION = True
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -112,13 +117,15 @@ WSGI_APPLICATION = 'mccloud.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+with open('%s/deploy/db_user.txt' % BASE_DIR) as f:
+    DB_USER = f.read().strip()
 with open('%s/deploy/db_password.txt' % BASE_DIR) as f:
     DB_PASSWORD = f.read().strip()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mccloud',
-        'USER': 'xuch',
+        'USER': DB_USER,
         'PASSWORD': DB_PASSWORD,
         "HOST": "localhost",
     },
