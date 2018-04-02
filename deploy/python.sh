@@ -5,20 +5,20 @@ sudo apt install python3-pip
 sudo apt install python3-virtualenv
 sudo apt install python3-tk
 
-virtualenv -p /usr/bin/python3 $HOME/.py3env_mccloud
-source $HOME/.py3env_mccloud/bin/activate
+sudo virtualenv -p /usr/bin/python3 /opt/mccloud_py3env
+source /opt/mccloud_py3env/bin/activate
 
 #install project deps package 
-pip install django
-pip install djangorestframework
-pip install psycopg2
-pip install pypugjs
-pip install celery
-pip install numpy
-pip install matplotlib
-pip install redis
+sudo pip install django
+sudo pip install djangorestframework
+sudo pip install psycopg2
+sudo pip install pypugjs
+sudo pip install celery
+sudo pip install numpy
+sudo pip install matplotlib
+sudo pip install redis
 
 
 #install mod_wsgi module by pip
-pip install mod_wsgi
-$HOME/.py3env_mccloud/bin/mod_wsgi-express module-config
+sudo pip install mod_wsgi
+/opt/mccloud_py3env/bin/mod_wsgi-express module-config
