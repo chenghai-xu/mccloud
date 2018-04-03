@@ -66,8 +66,25 @@ def register(request,
                     'subject_template': activation_email_subject_template_name,
                     'html_email_template': activation_email_html_template_name,
                 }
-                send_activation_email(**opts)
-                user_registered.send(sender=user.__class__, request=request, user=user)
+                try:
+                    send_activation_email(**opts)
+                    user_registered.send(sender=user.__class__, request=request, user=user)
+                except Exception as e:
+                    context = {
+                        'login_url': resolve_url(settings.LOGIN_URL),
+                        'title': _('Registration complete'),
+                        'client_mail': settings.DEFAULT_FROM_EMAIL,
+                        'user_mail': user.email,
+                    }
+                    template_name='users/send_activation_fail.html',
+                    return TemplateResponse(request, template_name, context)
+                context = {
+                    'login_url': resolve_url(settings.LOGIN_URL),
+                    'title': _('Registration complete'),
+                    'client_mail': settings.DEFAULT_FROM_EMAIL,
+                }
+                template_name='users/registration_complete.html',
+                return TemplateResponse(request, template_name, context)
             return redirect(post_registration_redirect)
     else:
         form = registration_form()

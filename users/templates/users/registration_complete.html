@@ -2,5 +2,5 @@
 {% load i18n %}
 
 {% block content %}
-<p>{% trans "You are now registered. The Activation link is sent to your email address. To activate your account, please open the activation email and follow its operation. " %}</p>
+<p>{% trans "You are now registered. The activation link is sent to the address: " %}<strong>{{user_mail}}</strong> {% trans ". To activate your account, please open the email and follow its operation. " %}</p>
 {% endblock %}
