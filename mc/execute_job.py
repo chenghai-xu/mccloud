@@ -18,7 +18,7 @@ from celery import shared_task
 def verify_project(pid):
     prefix = os.path.dirname(os.path.abspath(__file__))
     cwd=os.path.abspath("%s/%s/" % (config.projects_root,pid))
-    args='%s/verify.sh' % prefix
+    args="%s/verify.sh %s '%s/simpit -e=config.json.mac'" % (prefix,config.local_geant4_env,config.local_simpit_bin)
     print("verify project %s" % pid)
     job_sh=subprocess.Popen(args=args,cwd=cwd,shell=True)
     ret=job_sh.wait()

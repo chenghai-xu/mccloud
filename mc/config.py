@@ -9,11 +9,12 @@ cluster_template='template.mcdc'
 cluster_user='scadmin'
 cluster_jobs_root='/home/%s/jobs' % cluster_user
 
-cluster_geant4_env='/opt/geant4/10.2.p03/install/bin/geant4.sh'
+cluster_geant4_env='/opt/geant4.10.02.p03/bin/geant4.sh'
+local_geant4_env='/opt/geant4.10.02.p03/bin/geant4.sh'
 
-cluster_simpit='/home/%s/opt/simpit' % cluster_user
+cluster_simpit='/home/%s/opt/tsimpit' % cluster_user
 cluster_simpit_bin='%s/bin' % cluster_simpit
-local_simpit='/home/xuchd/opt/tsimpit/'
+local_simpit='/opt/tsimpit/'
 local_simpit_bin='%s/bin' % local_simpit
 
 
