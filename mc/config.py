@@ -1,11 +1,12 @@
 import os
 prefix = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-projects_root='%s/data/mc/projects' % prefix
-jobs_root='%s/data/mc/jobs' % prefix
-data_root='%s/data/mc' % prefix
-protected_root='%s/data/protected' %prefix
+prefix =  '%s/data.mccloud' % os.path.dirname(prefix)
+data_root='%s/mc' % prefix
+projects_root='%s/mc/projects' % prefix
+jobs_root='%s/mc/jobs' % prefix
+protected_root='%s/protected' %prefix
 
-cluster_template='template.mcdc'
+cluster_template='template.tsimpit'
 cluster_user='scadmin'
 cluster_jobs_root='/home/%s/jobs' % cluster_user
 
