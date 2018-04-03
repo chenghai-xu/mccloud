@@ -62,6 +62,24 @@ ComponentControl.Init=function()
     var current=this.current;
     $(property).find('input[name=name]').val(current.data.name);
     $(property).find('input[name=weight]').val(current.data.weight);
+
+    var instance = $('#project-view').jstree(true);
+    var par=instance.get_node(current.parent);
+    if(!par)
+        return;
+    var type = par.data.weight;
+    if(type ==='fraction')
+    {
+        $(property).find('input[name=weight]').attr('max',1.0);
+        $(property).find('input[name=weight]').attr('min',0.0);
+        $(property).find('input[name=weight]').attr('step',0.001);
+    }
+    else if(type ==='composite')
+    {
+        $(property).find('input[name=weight]').attr('max',1000);
+        $(property).find('input[name=weight]').attr('min',1);
+        $(property).find('input[name=weight]').attr('step',1);
+    }
 };
 
 MaterialControl.Init=function()
@@ -148,6 +166,7 @@ function PackDefaultMaterial(node)
     child=NewMaterialNode('Air',0.000129);
     child.children.push(new NewComponentNode('e_Oxygen',0.21));
     child.children.push(new NewComponentNode('e_Nitrogen',0.79));
+    child.data.weight='mixture';
     node.children.push(child);
 }
 
@@ -287,6 +306,12 @@ MaterialControl.TypeChanged=function(el)
         var res = instance.delete_node(id);
     }
     console.log('delete all components: ' + current.data.name);
+};
+
+MaterialControl.WeightChanged=function(el)
+{
+    var name=$(el).val();
+    this.current.data.weight=name;
 };
 
 ComponentControl.WeightChanged=function(el)
