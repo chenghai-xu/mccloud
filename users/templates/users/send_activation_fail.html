@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<p> 
+{% trans "You are successfully registered with the account " %} <strong> {{user_mail}} </strong>. {% trans "But the activation link sent failure. To activate your account, please write a email to our client address: "%} <a href="mailto:"{{ client_mail}}>{{ client_mail}}</a>
+</p>
+{% endblock %}
+
