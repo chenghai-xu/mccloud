@@ -20,7 +20,7 @@ local_simpit_bin='%s/bin' % local_simpit
 
 
 
-cluster_key_file='/home/xuchd/.ssh/starcluster.cn-northwest-1.rsa'
+cluster_key_file='/home/ubuntu/.ssh/starcluster.ap-northeast-1.rsa'
 Instance_Price={'4Core':8,'8Core':16, '16Core':32, '36Core':72}
 
 Instance_Index = { '4Core': 1, '8Core': 2, '16Core': 3, '36Core': 4}
