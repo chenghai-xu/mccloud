@@ -744,7 +744,7 @@ class GPSSource:
             mac.append(line)
 
         elif dtype=="Focused":
-            line="/gps/ang/focuspoint %s %s %s %s" % (direction["focuspoint"]["x"],direction["focuspoint"]["z"],direction["focuspoint"]["y"],direction["lunit"])
+            line="/gps/ang/focuspoint %s %s %s %s" % (direction["focuspoint"]["x"],direction["focuspoint"]["y"],direction["focuspoint"]["z"],direction["lunit"])
             mac.append(line)
 
         elif dtype=="Planar":
