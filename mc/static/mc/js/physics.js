@@ -35,7 +35,7 @@ var PPhysics = {
 
     ]), 
     EmMap: new Map([
-        ['STD','_STD'],
+        ['STD',''],
         ['EMV','_EMV'],
         ['EMX','_EMX'],
         ['EMY','_EMY'],
@@ -45,7 +45,7 @@ var PPhysics = {
         ['GS' ,'__GS'],
     ]),
     New: function(){
-        var node={type:'Factory',list:'FTFP_BERT',em:'_STD'};
+        var node={type:'Factory',list:'FTFP_BERT',em:''};
         return node;
     },
 
