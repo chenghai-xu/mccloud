@@ -8,11 +8,20 @@ import subprocess
 import os
 import stat
 import numpy as np
+import time
 
 from . import config
 from .models import *
 
 from celery import shared_task
+
+@shared_task  # Use this decorator to make this a asyncronous function
+def Sleep(t):
+    """
+    sleep t seconds
+    """
+    time.sleep(t)
+    return True
 
 @shared_task  # Use this decorator to make this a asyncronous function
 def verify_project(pid):
