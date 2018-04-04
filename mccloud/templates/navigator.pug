@@ -1,13 +1,9 @@
-nav(class='navbar navbar-default navbar-static-top',role='navigation')
-  div.navbar-header
-    div(class='col-sm-1')
-    img(src='/static/img/favicon.ico',style='height:32px; width:32px;',href='/')
-    //a(class='navbar-band',href='#') Express
-  div
+nav(class='navbar navbar-expand-md navbar-default fixed-top',role='navigation')
+  div(class='collapse navbar-collapse')
     block custom_navigator
       ul(class='nav navbar-nav navbar-left nav-pills')
         li
-          a(href='/') Home
+          a(href='/') Main
         li
           a(href='/mc') MCCloud
     ul(class='nav navbar-nav navbar-right nav-pills')
@@ -23,4 +19,3 @@ nav(class='navbar navbar-default navbar-static-top',role='navigation')
         li
           a(href='/accounts/register') Register
           //a(href='/join',onclick='$("#sign-up").modal("show");return false;') 注册
-      div(class='col-sm-1')
