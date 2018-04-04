@@ -1,4 +1,5 @@
 #!/bin/bash
+git pull
 python manage.py collectstatic --noinput
 sudo systemctl restart postgresql
 sudo systemctl restart supervisor
