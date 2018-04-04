@@ -166,7 +166,7 @@ function PackDefaultMaterial(node)
     child=NewMaterialNode('Air',0.000129);
     child.children.push(new NewComponentNode('e_Oxygen',0.21));
     child.children.push(new NewComponentNode('e_Nitrogen',0.79));
-    child.data.weight='mixture';
+    child.data.weight='fraction';
     node.children.push(child);
 }
 
