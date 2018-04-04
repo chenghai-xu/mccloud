@@ -53,6 +53,13 @@ VolumeControl.Init=function()
     //$('#property-container').append(property);
     this.InitSolidForm();
     DrawModel(current);
+
+    if(current.text==='world' && 
+            RunForm.verify_task &&
+            RunForm.verify_task.trj)
+    {
+        DoDrawTrajectory(scene,RunForm.verify_task.trj);
+    }
 }
 
 VolumeControl.Add=function(){
