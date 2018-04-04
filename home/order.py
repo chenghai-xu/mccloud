@@ -50,7 +50,7 @@ class OrderPayView(View):
         try:
             cash=Cash.objects.get(user=user)
         except:
-            return Http404(request)
+            cash=Cash.objects.create(user=user)
 
         if cash.value < order.charge:
             data={"success":False,"cash":0,"tips": "Your cash is not enough!"}
