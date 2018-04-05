@@ -4,7 +4,6 @@ from .models import *
 from . import execute_job
  
  
-admin.site.register(Project)
 admin.site.register(Material)
 admin.site.register(Element)
 admin.site.register(Logical)
@@ -37,3 +36,8 @@ class InstanceAdmin(admin.ModelAdmin):
     def __str__(self):
         return str(self.id)
 
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'name', 'update_time','create_time')
+    def __str__(self):
+        return str(self.id)
