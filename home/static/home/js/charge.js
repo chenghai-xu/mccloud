@@ -26,6 +26,9 @@ ChargeForm.ValueChanged=function(el)
 }
 ChargeForm.Next=function(el)
 {
+    var value = parseFloat(this.charge.value);
+    if(value <1 || isNaN(value))
+        return;
     console.log('post charge:',this.charge);
     $.post({ 
         url: "/home/charge/", 
@@ -56,8 +59,8 @@ function ChargePayInit()
 {
     $("#charge-pay").dialog({
         autoOpen: false,
-        height: 580,
-        width: 580,
+        height: 720,
+        width: 720,
         modal: true,
         buttons: {
             "Weixin": function() {

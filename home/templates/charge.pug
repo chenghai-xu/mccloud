@@ -14,7 +14,7 @@ block content
       form(class='form',role='form',action='javascript:void(0);')
         div(class='input-group input-group-sm')
           span(class='input-group-addon') Value:
-          input(class='form-control',name='value',onchange='ChargeForm.ValueChanged(this)')
+          input(class='form-control',name='value',type='number',min='1',onchange='ChargeForm.ValueChanged(this)')
 
         div(class='input-group input-group-sm')
           button(class="btn btn-primary",onclick='ChargeForm.Next(this)') Next
@@ -25,11 +25,13 @@ block content
       div(class='row',class="text-center")
         p(id='tips')
       div(class='row')
-        img(src='/static/weixin.jpg',class="img-responsive center-block")
+        img(src='/static/alipay.jpg',class="img-responsive center-block")
       div(class='row',class="text-center")
         p Please transfer in 30 minuters.
         p Please wait a moment after transfer sucessed.
-        p If any problem please contact the phone number: +8613811992129
+        p If any problem please contact the customer service: 
+        p
+          a(href="mailto:xuchenghai1984@163.com") xuchenghai1984@163.com
     div(class='row')
       div(class='ui-dialog-buttonpane')
   div(id='charge-list',class='table-responsive ui-widget', title='Charge History')
