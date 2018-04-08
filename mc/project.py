@@ -110,4 +110,8 @@ class ProjectView(View):
             return handler404(request)
 
         #https://stackoverflow.com/questions/1576664/how-to-update-multiple-fields-of-a-django-model-instance
-        return JsonResponse(WriteProjectConfig(pk,request.body.decode("utf-8")), content_type='application/json',safe=False)
+        data=request.body.decode("utf-8")
+        js_data=json.loads(data)
+        project.name=js_data['text']
+        project.save()
+        return JsonResponse(WriteProjectConfig(pk,data), content_type='application/json',safe=False)
