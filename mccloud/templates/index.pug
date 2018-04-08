@@ -1,11 +1,28 @@
 extends layout
-  h1 MCClouds - an online tool for the MONTE CARLO PARTICLE TRANSPORT through matter. 
-  p MCClouds provides an interactive GUI to design the geometry mode. You can change the geometry parameter and view the result immediately.
-  p MCClouds runs the simulations online by using HPC cluster. You can run the simulation by thouthands of CPU cores.
-  p MCClouds shows the simulation results online. 
-  p MCClouds dose not install program on your computer. It avoid doing lots of tedious works about the install of MC tool and the coding.
-  p One word, MCClouds lets you focus on the physics, but not the coding.
-  p MCClouds is based on the Geant4 and cloud computer technology. 
-  p Its areas of application include high energy, nuclear and accelerator physics, as well as studies in medical and space science.
-  p Links:
-    a(href='http://geant4.web.cern.ch/') Geant4
+block content
+  div(class='container-fluid')
+    div(class="row")
+      div(class="col-lg-1")
+      div(class="col-lg-7")   
+        h3(class="text-center") MCClouds - an online geant4 tool for the MONTE CARLO PARTICLE TRANSPORT through matter
+        hr
+        p MCClouds provides an interactive GUI to design the geometry mode. You can change the geometry parameter and view the result immediately.
+        p MCClouds runs the simulations online by using HPC cluster. You can run the simulation by thouthands of CPU cores.
+        p MCClouds dose not install program on your computer. It avoid doing lots of tedious works about the install of MC tool and the coding.
+        p One word, MCClouds lets you focus on the physics, but not the coding.
+        p MCClouds is based on the Geant4 and cloud computer technology. 
+        p Its areas of application include high energy, nuclear and accelerator physics, as well as studies in medical and space science.
+        hr
+        ul(class="nav nav-pills")
+          li(class="active")
+            a(href='/mc') Try it
+          li(class="active")
+            a(href='/document') Read document
+        hr
+        ul Links:
+          li
+            a(href='http://geant4.web.cern.ch/') Geant4
+      div(class="col-lg-4")   
+        div(class='row')
+          img(src='/static/sample.png',class="img-responsive center-block")
+        
