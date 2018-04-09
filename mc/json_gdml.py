@@ -864,12 +864,13 @@ class ProjectJSON:
         self.mac.Write(fname+".mac")
         
     def AddDefaultMaterials(self,gdml):
-        with open("%s/Elements.json" % config.data_root) as f:
+        prefix = os.path.dirname(os.path.abspath(__file__))
+        with open("%s/Elements.json" % prefix) as f:
             json_data=json.load(f)
             for item in json_data:
                 if item["name"] != "":
                     gdml.AddElement(item["name"],item["formula"],item["Z"],item["atom"])
-        with open("%s/Materials.json" % config.data_root) as f:
+        with open("%s/Materials.json" % prefix) as f:
             json_data=json.load(f)
             for item in json_data:
                 if item["name"] != "":

@@ -34,7 +34,8 @@ def handler404(request):
     return response
 
 def ReadDefaultMaterial():
-    fname = '%s/Elements.json' % (config.data_root)
+    prefix = os.path.dirname(os.path.abspath(__file__))
+    fname = '%s/Elements.json' % prefix
     elements = '[]'
     try:
         f=open(fname,'r')
@@ -42,7 +43,7 @@ def ReadDefaultMaterial():
         f.close()
     except IOError as e:
         elements='[]'
-    fname = '%s/Materials.json' % (config.data_root)
+    fname = '%s/Materials.json' % prefix
     materials = '[]'
     try:
         f=open(fname,'r')
