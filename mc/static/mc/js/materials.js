@@ -6,6 +6,8 @@ $(document).ready(function () {
     NodeWatch.Add('materials','#property-materials',MaterialsControl);
     NodeWatch.Add('material','#property-material',MaterialControl);
     NodeWatch.Add('component','#property-component',ComponentControl);
+    MaterialsControl.InitSystemMaterialsListDlg();
+    MaterialsControl.InitSystemElementsListDlg();
 });
 
 var MaterialsModel={};
@@ -15,12 +17,6 @@ var ComponentControl={};
 var MaterialControl={};
 
 var InputCBObject=null;
-MaterialsModel.Elements=[
-    'a',
-    'b',
-    'c',
-];
-
 MaterialsControl.GetDefaultMaterial=function()
 {
     $.get({ 
@@ -355,3 +351,81 @@ MaterialControl.AddComponent=function(){
     InputCBObject=MaterialControl;
     $('#dialog-select-name').dialog('open');
 }; 
+
+MaterialsControl.InitSystemMaterialsListDlg=function()
+{
+    $( "#system-materials-tbody" ).selectable();
+
+    $( "#system-materials-list" ).dialog({
+        autoOpen: false,
+        height: 640,
+        width: 480,
+        modal: false,
+        buttons: {
+            Close: function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+        }
+    });
+}
+MaterialsControl.InitSystemElementsListDlg=function()
+{
+    $( "#system-elements-tbody" ).selectable();
+
+    $( "#system-elements-list" ).dialog({
+        autoOpen: false,
+        height: 640,
+        width: 480,
+        modal: false,
+        buttons: {
+            Close: function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+        }
+    });
+}
+
+MaterialsControl.OpenSystemMaterialsListDlg=function()
+{
+    if(!MaterialsModel.Materials)
+        return;
+    var data=MaterialsModel.Materials
+    var tbody=$('#system-materials-tbody');
+    tbody.empty();
+    var that=this;
+    for(var i=0; i< data.length; i++)
+    {
+        tbody.append('<tr >' +
+            '<td>' + data[i].name+'</td>' +
+            '<td>' + data[i].density+'</td>' +
+            '<td>' + data[i].Z + '</td>' +
+            '<td>' + data[i].atom + '</td>' +
+            '</tr>');
+    }
+    $( "#system-materials-list" ).dialog("open");
+};
+
+MaterialsControl.OpenSystemElementsListDlg=function()
+{
+    if(!MaterialsModel.Elements)
+        return;
+    var data=MaterialsModel.Elements;
+    var tbody=$('#system-elements-tbody');
+    tbody.empty();
+    var that=this;
+    for(var i=0; i< data.length; i++)
+    {
+        tbody.append('<tr >' +
+            '<td>' + data[i].name+'</td>' +
+            '<td>' + data[i].formula+'</td>' +
+            '<td>' + data[i].Z + '</td>' +
+            '<td>' + data[i].atom + '</td>' +
+            '</tr>');
+    }
+    $( "#system-elements-list" ).dialog("open");
+};
+
