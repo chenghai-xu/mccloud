@@ -59,8 +59,8 @@ function ChargePayInit()
 {
     $("#charge-pay").dialog({
         autoOpen: false,
-        height: 720,
-        width: 720,
+        height: 640,
+        width: 640,
         modal: true,
         buttons: {
             "Weixin": function() {
