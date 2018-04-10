@@ -73,7 +73,7 @@ def register(request,
                     context = {
                         'login_url': resolve_url(settings.LOGIN_URL),
                         'title': _('Registration complete'),
-                        'client_mail': settings.DEFAULT_FROM_EMAIL,
+                        'client_mail': settings.CS_EMAIL,
                         'user_mail': user.email,
                     }
                     template_name='users/send_activation_fail.html',

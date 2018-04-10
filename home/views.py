@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse
+from django.conf import settings
 
 from .models import *
 from .serializers import *
@@ -15,7 +16,8 @@ def home(request):
 
 class ChargeView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'charge.pug')
+        ctx={'client_mail':settings.CS_EMAIL}
+        return render(request, 'charge.pug',ctx)
 
     def post(self, request, *args, **kwargs):
         user=request.user

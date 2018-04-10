@@ -58,8 +58,10 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_SUBJECT_PREFIX = 'mccloud'            
 EMAIL_USE_TLS = True                             
 
+CS_EMAIL='cs_mcclouds@163.com'
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+#DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver', '*']
 
