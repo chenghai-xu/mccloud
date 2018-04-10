@@ -34,20 +34,32 @@ with open('%s/deploy/secret_key.txt' % BASE_DIR) as f:
 #SECURE_HSTS_PRELOAD=True
 #SECURE_BROWSER_XSS_FILTER=True
 
-#EMail
+#EMail 163
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_HOST = 'smtp.163.com'                   
+#EMAIL_PORT = 25                                 
+#with open('%s/deploy/163_user.txt' % BASE_DIR) as f:
+#     EMAIL_HOST_USER = f.read().strip()
+#with open('%s/deploy/163_password.txt' % BASE_DIR) as f:
+#     EMAIL_HOST_PASSWORD = f.read().strip()
+#DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+#EMAIL_SUBJECT_PREFIX = 'mccloud'            
+#EMAIL_USE_TLS = False                             
+
+#EMail gmail
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.163.com'                   
-EMAIL_PORT = 25                                 
-with open('%s/deploy/email_user.txt' % BASE_DIR) as f:
+EMAIL_HOST = 'smtp.gmail.com'                   
+EMAIL_PORT = 587                                 
+with open('%s/deploy/gmail_user.txt' % BASE_DIR) as f:
      EMAIL_HOST_USER = f.read().strip()
-with open('%s/deploy/email_password.txt' % BASE_DIR) as f:
+with open('%s/deploy/gmail_password.txt' % BASE_DIR) as f:
      EMAIL_HOST_PASSWORD = f.read().strip()
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_SUBJECT_PREFIX = 'mccloud'            
-EMAIL_USE_TLS = False                             
+EMAIL_USE_TLS = True                             
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver', '*']
 
