@@ -329,7 +329,9 @@ def PackJob(job,dst):
     dst_file='%s/%s.zip' % (dst,job)
     subprocess.call(['mkdir', '-p', dst])
     subprocess.call(['rm', dst_file])
-    proc=subprocess.Popen(['zip', '-r', dst_file, job],cwd=config.jobs_root)
+    proc=subprocess.Popen(['zip', '-i', 
+        '*.mac', '*.gdml', '*.dist', '*.mesh', '*.phase', '*.log.1.*', '*.trj',
+        '-r', dst_file, job],cwd=config.jobs_root)
     proc.wait()
     #prefix = os.path.dirname(os.path.abspath(__file__))
     #subprocess.call(['%s/pack_job.sh'% prefix, job, config.jobs_root,dst_file])
