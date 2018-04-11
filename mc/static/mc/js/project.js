@@ -170,15 +170,14 @@ function NewProject() {
     $.post({ 
         url: "/mc/api/project/", 
         data:'',
-        success: PostProject
+        success: function(data)
+        {
+            project=data;
+            project_records.set(data.id,project);
+            id_current_project=data.id;
+            SaveProject();
+        }
     });
-}
-function PostProject(data)
-{
-    //project=JSON.parse(data);
-    project=data;
-    project_records.set(data.id,project);
-    id_current_project=data.id;
 }
 
 function RenameNode(data) {
