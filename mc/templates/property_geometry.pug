@@ -24,8 +24,8 @@ div(id='property-volume', class='hidden')
           span(class='input-group-addon') Name:
           input(class='form-control',name='name',onchange='VolumeControl.NameChanged(this)')
         div(class='input-group input-group-sm')
-          span(class='input-group-addon') Solid:
-          select(class='form-control',name='solid',onclick='VolumeControl.InitSolidForm()',onchange='VolumeControl.SolidTypeChanged(this)')
+          a(class='input-group-addon', href='#', onclick='VolumeControl.InitSolidForm()') Solid:
+          select(class='form-control',name='solid',onchange='VolumeControl.SolidTypeChanged(this)')
               option box
               option tube
               option sphere
@@ -36,7 +36,7 @@ div(id='property-volume', class='hidden')
           select(class='form-control',name='material',onchange='VolumeControl.OnMaterialChanged(this)')
             option --
         div(class='input-group input-group-sm')
-          span(class='input-group-addon') Placement:
-          select(class='form-control',name='placement',onclick='VolumeControl.InitPlacementForm()',onchange='VolumeControl.ChangePlacementType(this)')
+          a(class='input-group-addon', href='#', onclick='VolumeControl.InitPlacementForm()') Placement:
+          select(class='form-control',name='placement',onchange='VolumeControl.ChangePlacementType(this)')
               option simple
 
