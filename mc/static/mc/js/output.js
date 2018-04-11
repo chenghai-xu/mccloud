@@ -215,7 +215,7 @@ DistForm.Update=function()
         data:{},
         success: function(data)
         {
-            console.log("mesh data:");
+            console.log("dist data:");
             console.log(data);
             var img=$( "#2d_canvas").find('img[id=2d_img]');
             img.attr("src",data.src);
