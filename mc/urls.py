@@ -14,6 +14,7 @@ from . import project
 from . import job
 from . import material
 from . import visual 
+from . import doc_view 
 
 urlpatterns = [
     url(r'^$', require_login(views.index), name='index'),
@@ -32,5 +33,6 @@ urlpatterns = [
     url(r'^api/dist/', visual.Dist.as_view(), name='DistView'),
     url(r'^api/log/', visual.Log.as_view(), name='LogView'),
     url(r'^api/output/', job.JobOutput.as_view(), name='JobOutputView'),
+    url(r'^document/', doc_view.document, name='doc_view'),
 
 ]
