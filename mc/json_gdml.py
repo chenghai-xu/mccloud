@@ -292,9 +292,10 @@ class MacFile:
         for item in qargs:
             line="%s %s" % (line,item)
         det.append(line)
-        #/GP/scorer/save ct_in gammaErgDist ct_in.gamma.energy.dist
-        line="/GP/scorer/save %s %s %s.%s.dist" % (dname,qname,dname,qname)
-        self.output.append(line)
+        if qtype != "GPPhaseScorer":
+            #/GP/scorer/save ct_in gammaErgDist ct_in.gamma.energy.dist
+            line="/GP/scorer/save %s %s %s.%s.dist" % (dname,qname,dname,qname)
+            self.output.append(line)
         return det
         
     def AddDistFilter(self,det,ftype,fname,fargs):
