@@ -217,7 +217,7 @@ class JobVerifyView(View):
             return response
 
         fname=EncodeProjectConfig(pid)
-        prj_json=json_gdml.ProjectJSON(fname,1000)
+        prj_json=json_gdml.ProjectJSON(fname,100)
         task=execute_job.verify_project.delay(pid)
         return JsonResponse({'id':task.id}, content_type='application/json',safe=False)
 
