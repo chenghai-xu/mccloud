@@ -373,9 +373,9 @@ function DoDrawTrajectory(scn,trjs)
 
         // material
         var color = 0x00ff00;
-        if(trj.charge<0)
+        if(trj.charge>0)
             color=0x0000ff;
-        else if(trj.charge>0)
+        else if(trj.charge<0)
             color=0xff0000;
         else
             color=0x00ff00;
