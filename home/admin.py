@@ -42,6 +42,11 @@ undo_execute_charge.short_description="Decrease charge value from cash"
 # Register your models here.
 @admin.register(Cash)
 class CashAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (None, {
+        	'fields' : ('user', 'value')
+        }),
+    )
     list_display = ('id', 'user', 'value')
 
 @admin.register(Charge)

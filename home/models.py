@@ -7,7 +7,7 @@ User = get_user_model()
 
 class Cash(models.Model):
     id = models.AutoField(primary_key=True,editable=False)
-    user = models.OneToOneField(User, editable=False,on_delete=models.PROTECT)
+    user = models.OneToOneField(User, on_delete=models.PROTECT)
     value = models.FloatField(default=0.0)
     create_time = models.DateTimeField(u'create time',auto_now_add=True)
     update_time = models.DateTimeField(u'update time',auto_now=True, null=True)
