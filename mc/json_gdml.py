@@ -400,6 +400,8 @@ def GPEnergyDistribution_parameter(par):
     try:
         res.append(par["direction"])
         res.append(par["bin_width"])
+        res.append(par["min"])
+        res.append(par["max"])
         res.append(par["unit"])
         
     except:
