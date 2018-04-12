@@ -176,7 +176,7 @@ MeshForm.Update=function()
     var id=OutputForm.current.data.job.id
 
     $.get({ 
-        url: "/mc/api/mesh/?id="+id+"&fname="+file+"&axis="+axis+"&index="+index, 
+        url: encodeURI("/mc/api/mesh/?id="+id+"&fname="+file+"&axis="+axis+"&index="+index), 
         data:{},
         success: function(data)
         {
@@ -211,7 +211,7 @@ DistForm.Update=function()
     var id=OutputForm.current.data.job.id;
 
     $.get({ 
-        url: "/mc/api/dist/?id="+id+"&fname="+file+"&ls="+ls+"&color="+color, 
+        url: encodeURI("/mc/api/dist/?id="+id+"&fname="+file+"&ls="+ls+"&color="+color), 
         data:{},
         success: function(data)
         {
@@ -257,7 +257,7 @@ LogForm.Update=function()
 {
     var file=$(this.form).find('select[name=file]').val();
     $.get({ 
-        url: "/mc/api/log/?id="+OutputForm.current.data.job.id + "&fname="+file, 
+        url: encodeURI("/mc/api/log/?id="+OutputForm.current.data.job.id + "&fname="+file), 
         success: function(data)
         {
             console.log("job log.");
