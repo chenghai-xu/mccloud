@@ -26,8 +26,8 @@ def import_json(fname):
         print('Invalid setup!')
         return None
     config=json_data['children']
-    for item in config:
-        print(item['type'])
+    #for item in config:
+    #    print(item['type'])
     return config
 
 
@@ -882,7 +882,7 @@ class ProjectJSON:
     def DecodePhysics(self,mac,physics):
         data=physics["data"]
         self.physics_list="%s%s" % (data["list"],data["em"])
-        print(self.physics_list)
+        #print(self.physics_list)
 
     def DecodeRun(self,mac,run):
         data=run["data"]
