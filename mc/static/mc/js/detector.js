@@ -195,6 +195,10 @@ var DetectorModel = {
             if(q.type===undefined)
                 q.type=this.QuantitiesMesh.energyDeposit;
         }
+        var fn=this.InitQuantityParameter[q.type];
+        if(fn!=undefined)
+            fn(q);
+
         q.name='quantity.'+Math.round(1000+Math.random()*1000);
         return q;
     },
