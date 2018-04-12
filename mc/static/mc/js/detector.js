@@ -60,6 +60,8 @@ var DetectorModel = {
         {
             quantity.parameter.direction=1;
             quantity.parameter.bin_width=0.01;
+            quantity.parameter.min=0;
+            quantity.parameter.max=100;
             quantity.parameter.unit="MeV";
         },
         GPPhaseScorer: function(quantity)
