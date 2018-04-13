@@ -81,14 +81,12 @@ function Animate() {
 	render.render(scene, camera);
 }
 
-function CalcGeometry(node)
+function CalcGeometry(node,lunit='mm',aunit='deg')
 {
     var solid=node.data.solid;
     var parameter=solid.parameter;
     var type=solid.type;
     var geometry = null;
-    var lunit='mm';
-    var aunit='deg';
     if(type=='box')
     {
         geometry = new THREE.BoxGeometry(parameter.x*UnitOf(parameter.lunit)/UnitOf(lunit), 
@@ -142,7 +140,9 @@ function DrawModel(node)
     }
 
     var solid=node.data.solid;
-    var geometry = CalcGeometry(node);
+    var lunit_d=solid.parameter.lunit;
+    var aunit_d='deg';
+    var geometry = CalcGeometry(node,lunit_d,aunit_d);
     if(geometry==null)
         return;
     var color=0x2194ce;
@@ -169,7 +169,7 @@ function DrawModel(node)
         var child = instance.get_node(instance.get_node(node.children[i]));
         if(child == null || child.type != 'volume')
             continue;
-        var geo=CalcGeometry(child);
+        var geo=CalcGeometry(child,lunit_d,aunit_d);
         if(geo != null )
         {
             var pos=child.data.placement.position;
@@ -182,8 +182,8 @@ function DrawModel(node)
             else
                 mat.emissive.setHex(color);
             var obj = new THREE.Mesh(geo, mat);
-            var lunit=UnitOf(pos.lunit)/UnitOf('mm');
-            var aunit=UnitOf(rot.aunit)/UnitOf('deg');
+            var lunit=UnitOf(pos.lunit)/UnitOf(lunit_d);
+            var aunit=UnitOf(rot.aunit)/UnitOf(aunit_d);
             obj.position.x=pos.x*lunit;
             obj.position.y=pos.y*lunit;
             obj.position.z=pos.z*lunit;
@@ -205,7 +205,7 @@ function DrawModel(node)
     InitLight();
     scene.add(root);
     var bbox = new THREE.Box3().setFromObject(root);
-    DrawAxis(bbox);
+    DrawAxis(bbox,lunit_d,aunit);
     render.clear(); 
     //Animate();
 }
@@ -240,11 +240,12 @@ function PickObject()
 
 var default_font = {
     font:font, 
-    size: 5,
-    height: 1};
-function DrawAxis(bbox)
+    size: 0.5,
+    height: 0.2};
+function DrawAxis(bbox,lunit='cm',aunit='deg')
 {
-    var offset=20;
+    var offset=0;
+    var text_off=1;
     var geo_x = new THREE.Geometry();
     geo_x.vertices.push( new THREE.Vector3( bbox.min.x-offset, 0, 0 ));
     geo_x.vertices.push( new THREE.Vector3( bbox.max.x+offset, 0, 0 ) );
@@ -252,15 +253,15 @@ function DrawAxis(bbox)
     var axis_x = new THREE.Line( geo_x, mat_x);
     var group_x = new THREE.Group();
 
-    var labe_x = new THREE.TextGeometry(bbox.max.x/10+'cm(X)',default_font);
+    var labe_x = new THREE.TextGeometry(bbox.max.x+lunit+'(X)',default_font);
     var mesh_x = new THREE.Mesh(labe_x,mat_x);
-    mesh_x.position.x = bbox.max.x+offset+5;
-    mesh_x.position.y = -2.5;
+    mesh_x.position.x = bbox.max.x+offset+text_off;
+    mesh_x.position.y = -text_off/4;
 
-    var labe_x1 = new THREE.TextGeometry(bbox.min.x/10,default_font);
+    var labe_x1 = new THREE.TextGeometry(bbox.min.x,default_font);
     var mesh_x1 = new THREE.Mesh(labe_x1,mat_x);
-    mesh_x1.position.x = bbox.min.x-offset-5;
-    mesh_x1.position.y = -2.5;
+    mesh_x1.position.x = bbox.min.x-offset-text_off;
+    mesh_x1.position.y = -text_off/4;
 
     group_x.add(axis_x);
     group_x.add(mesh_x);
@@ -274,15 +275,15 @@ function DrawAxis(bbox)
     var axis_y = new THREE.Line( geo_y, mat_y);
     var group_y = new THREE.Group();
 
-    var labe_y = new THREE.TextGeometry(bbox.max.y/10+'cm(Y)',default_font);
+    var labe_y = new THREE.TextGeometry(bbox.max.y+lunit+'(Y)',default_font);
     var mesh_y = new THREE.Mesh(labe_y,mat_y);
-    mesh_y.position.y = bbox.max.y+offset+5;
-    mesh_y.position.x = -10;
+    mesh_y.position.y = bbox.max.y+offset+text_off;
+    mesh_y.position.x = -text_off/1.5;
 
-    var labe_y1 = new THREE.TextGeometry(bbox.min.y/10,default_font);
+    var labe_y1 = new THREE.TextGeometry(bbox.min.y,default_font);
     var mesh_y1 = new THREE.Mesh(labe_y1,mat_y);
-    mesh_y1.position.y = bbox.min.y-offset-5;
-    mesh_y1.position.x = -2.5;
+    mesh_y1.position.y = bbox.min.y-offset-text_off;
+    mesh_y1.position.x = -text_off/4;
 
     group_y.add(axis_y);
     group_y.add(mesh_y);
@@ -296,15 +297,15 @@ function DrawAxis(bbox)
     var axis_z = new THREE.Line( geo_z, mat_z);
     var group_z = new THREE.Group();
 
-    var labe_z = new THREE.TextGeometry(bbox.max.z/10+'cm(Z)',default_font);
+    var labe_z = new THREE.TextGeometry(bbox.max.z+lunit+'(Z)',default_font);
     var mesh_z = new THREE.Mesh(labe_z,mat_z);
-    mesh_z.position.z = bbox.max.z+offset+5;
-    mesh_z.position.x = -10;
+    mesh_z.position.z = bbox.max.z+offset+text_off;
+    mesh_z.position.x = -text_off/1.5;
 
-    var labe_z1 = new THREE.TextGeometry(bbox.min.z/10,default_font);
+    var labe_z1 = new THREE.TextGeometry(bbox.min.z,default_font);
     var mesh_z1 = new THREE.Mesh(labe_z1,mat_z);
-    mesh_z1.position.z = bbox.min.z-offset-5;
-    mesh_z1.position.x = -2.5;
+    mesh_z1.position.z = bbox.min.z-offset-text_off;
+    mesh_z1.position.x = -text_off/2;
     group_z.add(axis_z);
     group_z.add(mesh_z);
     group_z.add(mesh_z1);
