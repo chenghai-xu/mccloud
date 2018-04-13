@@ -241,7 +241,7 @@ var PlacementSimple = {
         var value=$(elem).val();
         var p=$(elem).attr('name');
         console.log('Change placement simple parameter '+p+' to '+ value);
-        this.position.lunit=value;
+        this.data.position.lunit=value;
         DrawModel(this.node);
     },
 
