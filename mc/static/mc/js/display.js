@@ -52,7 +52,7 @@ function InitControls() {
 }
 
 function InitCamera() { 
-    camera = new THREE.PerspectiveCamera( 70, width / height , 1 , 5000 );
+    camera = new THREE.PerspectiveCamera( 70, width / height , 1 , 50000 );
     camera.position.x = -100;
     camera.position.y = -100;
     camera.position.z = -100;
@@ -241,8 +241,8 @@ function PickObject()
 function DrawAxis(bbox,lunit='cm',aunit='deg')
 {
     var txt_size=(bbox.max.x-bbox.min.x)/10;
-    txt_size=Math.max(txt_size,(bbox.max.y-bbox.min.y)/10);
-    txt_size=Math.max(txt_size,(bbox.max.z-bbox.min.z)/10);
+    txt_size=Math.min(txt_size,(bbox.max.y-bbox.min.y)/10);
+    txt_size=Math.min(txt_size,(bbox.max.z-bbox.min.z)/10);
 
     var txt_height=txt_size/3;
     var txt_font = {
