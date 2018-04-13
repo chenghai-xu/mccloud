@@ -8,7 +8,7 @@ var width=600;
 var height=480;
 var light;
 var controls;
-var font;
+var default_font;
 var show_in_parent=true;
 var daxis={
     x:20,
@@ -238,74 +238,83 @@ function PickObject()
     }
 }
 
-var default_font = {
-    font:font, 
-    size: 0.5,
-    height: 0.2};
 function DrawAxis(bbox,lunit='cm',aunit='deg')
 {
-    var offset=0;
-    var text_off=1;
+    var txt_size=(bbox.max.x-bbox.min.x)/10;
+    txt_size=Math.max(txt_size,(bbox.max.y-bbox.min.y)/10);
+    txt_size=Math.max(txt_size,(bbox.max.z-bbox.min.z)/10);
+
+    var txt_height=txt_size/3;
+    var txt_font = {
+        font:default_font, 
+        size:txt_size,
+        height: txt_height};
     var geo_x = new THREE.Geometry();
-    geo_x.vertices.push( new THREE.Vector3( bbox.min.x-offset, 0, 0 ));
-    geo_x.vertices.push( new THREE.Vector3( bbox.max.x+offset, 0, 0 ) );
+    geo_x.vertices.push( new THREE.Vector3( bbox.min.x, 0, 0 ));
+    geo_x.vertices.push( new THREE.Vector3( bbox.max.x, 0, 0 ) );
     var mat_x =  new THREE.LineBasicMaterial( { color: 0xff0000} );
     var axis_x = new THREE.Line( geo_x, mat_x);
     var group_x = new THREE.Group();
 
-    var labe_x = new THREE.TextGeometry(bbox.max.x+lunit+'(X)',default_font);
+    var text=bbox.max.x.toFixed(2)+lunit+'(X)';
+    var labe_x = new THREE.TextGeometry(text,txt_font);
     var mesh_x = new THREE.Mesh(labe_x,mat_x);
-    mesh_x.position.x = bbox.max.x+offset+text_off;
-    mesh_x.position.y = -text_off/4;
+    mesh_x.position.x = bbox.max.x+txt_size*2;
+    mesh_x.position.y = -txt_height/2;
 
-    var labe_x1 = new THREE.TextGeometry(bbox.min.x,default_font);
+    text=bbox.min.x.toFixed(2);
+    var labe_x1 = new THREE.TextGeometry(text,txt_font);
     var mesh_x1 = new THREE.Mesh(labe_x1,mat_x);
-    mesh_x1.position.x = bbox.min.x-offset-text_off;
-    mesh_x1.position.y = -text_off/4;
+    mesh_x1.position.x = bbox.min.x-txt_size*4;
+    mesh_x1.position.y = -txt_height/2;
 
     group_x.add(axis_x);
     group_x.add(mesh_x);
     group_x.add(mesh_x1);
 
     var geo_y = new THREE.Geometry();
-    geo_y.vertices.push( new THREE.Vector3( 0, bbox.min.y-offset, 0 ));
-    geo_y.vertices.push( new THREE.Vector3( 0, bbox.max.y+offset, 0 ) );
+    geo_y.vertices.push( new THREE.Vector3( 0, bbox.min.y, 0 ));
+    geo_y.vertices.push( new THREE.Vector3( 0, bbox.max.y, 0 ) );
     var mat_y = new THREE.LineBasicMaterial( { color: 0x00ff00} );
     //mat_y.emissive.setHex(0x00ff00);
     var axis_y = new THREE.Line( geo_y, mat_y);
     var group_y = new THREE.Group();
 
-    var labe_y = new THREE.TextGeometry(bbox.max.y+lunit+'(Y)',default_font);
+    text=bbox.max.y.toFixed(2)+lunit+'(Y)';
+    var labe_y = new THREE.TextGeometry(text,txt_font);
     var mesh_y = new THREE.Mesh(labe_y,mat_y);
-    mesh_y.position.y = bbox.max.y+offset+text_off;
-    mesh_y.position.x = -text_off/1.5;
+    mesh_y.position.y = bbox.max.y+txt_size;
+    mesh_y.position.x = -text.length*txt_size/4;
 
-    var labe_y1 = new THREE.TextGeometry(bbox.min.y,default_font);
+    text=bbox.min.y.toFixed(2);
+    var labe_y1 = new THREE.TextGeometry(text,txt_font);
     var mesh_y1 = new THREE.Mesh(labe_y1,mat_y);
-    mesh_y1.position.y = bbox.min.y-offset-text_off;
-    mesh_y1.position.x = -text_off/4;
+    mesh_y1.position.y = bbox.min.y-txt_size;
+    mesh_y1.position.x = -text.length*txt_size/4;
 
     group_y.add(axis_y);
     group_y.add(mesh_y);
     group_y.add(mesh_y1);
 
     var geo_z = new THREE.Geometry();
-    geo_z.vertices.push( new THREE.Vector3( 0, 0, bbox.min.z-offset));
-    geo_z.vertices.push( new THREE.Vector3( 0, 0, bbox.max.z+offset) );
+    geo_z.vertices.push( new THREE.Vector3( 0, 0, bbox.min.z));
+    geo_z.vertices.push( new THREE.Vector3( 0, 0, bbox.max.z) );
     var mat_z = new THREE.LineBasicMaterial( { color: 0x0000ff} );
     //mat_z.emissive.setHex(0x0000ff);
     var axis_z = new THREE.Line( geo_z, mat_z);
     var group_z = new THREE.Group();
 
-    var labe_z = new THREE.TextGeometry(bbox.max.z+lunit+'(Z)',default_font);
+    text=bbox.max.z.toFixed(2)+lunit+'(Z)';
+    var labe_z = new THREE.TextGeometry(text,txt_font);
     var mesh_z = new THREE.Mesh(labe_z,mat_z);
-    mesh_z.position.z = bbox.max.z+offset+text_off;
-    mesh_z.position.x = -text_off/1.5;
+    mesh_z.position.z = bbox.max.z+txt_size;
+    mesh_z.position.x = -text.length*txt_size/4;
 
-    var labe_z1 = new THREE.TextGeometry(bbox.min.z,default_font);
+    text=bbox.min.z.toFixed(2);
+    var labe_z1 = new THREE.TextGeometry(text,txt_font);
     var mesh_z1 = new THREE.Mesh(labe_z1,mat_z);
-    mesh_z1.position.z = bbox.min.z-offset-text_off;
-    mesh_z1.position.x = -text_off/2;
+    mesh_z1.position.z = bbox.min.z-txt_size;
+    mesh_z1.position.x = -text.length*txt_size/4;
     group_z.add(axis_z);
     group_z.add(mesh_z);
     group_z.add(mesh_z1);
@@ -320,8 +329,7 @@ function LoadFont()
 {
     var loader = new THREE.FontLoader();
     loader.load('/static/three.js/helvetiker_regular.typeface.json', function(f) {
-        font=f;
-        default_font.font=f;
+        default_font=f;
     });
 }
 
