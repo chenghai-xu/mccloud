@@ -85,7 +85,14 @@ MaterialControl.Init=function()
     $(property).find('input[name=name]').val(current.data.name);
     $(property).find('input[name=density]').val(current.data.density);
     $(property).find('select[name=type]').val(current.data.type);
-    $(property).find('select[name=weight]').val(current.data.weight);
+    var select=$(property).find('select[name=weight]');
+    select.empty();
+    select.append('<option> fraction </option>');
+    if(current.data.type === 'element')
+    {
+         select.append('<option> composite </option>');
+    }
+    select.val(current.data.weight);
 }
 
 MaterialsControl.Add=function(){
@@ -302,6 +309,15 @@ MaterialControl.TypeChanged=function(el)
         var res = instance.delete_node(id);
     }
     console.log('delete all components: ' + current.data.name);
+
+    var property=this.form;
+    var select=$(property).find('select[name=weight]');
+    select.empty();
+    select.append('<option> fraction </option>');
+    if(current.data.type === 'element')
+    {
+         select.append('<option> composite </option>');
+    }
 };
 
 MaterialControl.WeightChanged=function(el)
