@@ -208,6 +208,7 @@ function DrawModel(node)
     DrawAxis(bbox,lunit_d,aunit);
     render.clear(); 
     //Animate();
+    return {lunit:lunit_d,aunit:aunit_d}
 }
 
 var mouse = new THREE.Vector2();

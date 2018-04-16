@@ -347,12 +347,13 @@ function DrawTrajectory(trjs)
     }
     if(!mass)
         return;
-    DrawModel(mass);
-    DoDrawTrajectory(scene,trjs);
+    var scale=DrawModel(mass);
+    DoDrawTrajectory(scene,trjs,scale);
 }
 
-function DoDrawTrajectory(scn,trjs)
+function DoDrawTrajectory(scn,trjs,scale)
 {
+    var coef=UnitOf('mm')/UnitOf(scale.lunit);
     //refs:
     //https://stackoverflow.com/questions/31399856/drawing-a-line-with-three-js-dynamically
     for(var k=0; k<trjs.length;k++)
@@ -392,9 +393,9 @@ function DoDrawTrajectory(scn,trjs)
         for ( var i = 0; i< MAX_POINTS; i ++ ) 
         {
 
-            pos[ index ++ ] = trj.points[i].x;
-            pos[ index ++ ] = trj.points[i].y;
-            pos[ index ++ ] = trj.points[i].z;
+            pos[ index ++ ] = trj.points[i].x*coef;
+            pos[ index ++ ] = trj.points[i].y*coef;
+            pos[ index ++ ] = trj.points[i].z*coef;
 
         }
     }
