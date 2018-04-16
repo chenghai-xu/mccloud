@@ -546,10 +546,11 @@ class GPSSource:
     def DecodeParticle(self,mac,particle):
         ptype=particle["type"]
         line="/gps/particle %s" % ptype
-        if ptype=="ion":
-            line = "%s %s %s %s %s" % (line,particle["z"],particle["a"],particle["q"],particle["e"])
-            #line = "%s %s %s %s %s %s" % (line,particle["z"],particle["a"],particle["q"],particle["e"],particle["v"])
         mac.append(line)
+        if ptype=="ion":
+            line = "/gps/ion %s %s %s %s" % (particle["z"],particle["a"],particle["q"],particle["e"])
+            mac.append(line)
+            #line = "%s %s %s %s %s %s" % (line,particle["z"],particle["a"],particle["q"],particle["e"],particle["v"])
     def DecodePosition(self,mac,position):
         #print(position)
         ptype=position["type"]
