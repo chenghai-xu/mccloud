@@ -52,7 +52,17 @@ class GDML:
         self.structure=ET.SubElement(self.gdml, "structure")
         self.userinfo=ET.SubElement(self.gdml, "userinfo")
         #self.setup=ET.SubElement(self.gdml, "setup")
+        #Just add refered materials
+        #Materials order is important
+        self.candidate_materials={}
+        self.candidate_elements={}
+        self.selected_elements={}
+        self.selected_materials_node=[]
+        self.selected_materials_name=[]
+
     def Write(self,fname):
+        self.materials.extend(self.selected_elements.values())
+        self.materials.extend(self.selected_materials_node)
         tree = ET.ElementTree(self.gdml)
         tree.write(fname)
     def AddVariable(self,name,value):
@@ -77,21 +87,40 @@ class GDML:
         child.set("unit",unit)
         return child
     def AddElement(self,name,formula,Z,atom):
-        child=ET.SubElement(self.materials, "element")
+        child=ET.Element("element")
         child.set("name",name)
         child.set("formula",formula)
         child.set("Z",str(Z))
         a=ET.SubElement(child, "atom")
         a.set("value",str(atom))
+        self.candidate_elements[name]=child
         return child
     
     def AddMaterialComposite(self,name,density,unit,cmps):
         return self.AddMaterial(name,density,unit,"composite",cmps)
     def AddMaterialFraction(self,name,density,unit,cmps):
         return self.AddMaterial(name,density,unit,"fraction",cmps)
-    
+
+    def SelectComponent(self,name):
+        if name in self.candidate_elements:
+            self.selected_elements[name]=self.candidate_elements[name]
+            return
+        if name not in self.candidate_materials:
+            return
+        mat=self.candidate_materials[name]
+        cmps=mat.findall('composite')
+        if len(cmps) < 1:
+            cmps=mat.findall('fraction')
+        for item in cmps:
+            if item.get('ref') == name:
+                continue
+            self.SelectComponent(item.get('ref'))
+        if name not in self.selected_materials_name:
+            self.selected_materials_node.append(self.candidate_materials[name])
+            self.selected_materials_name.append(name)
+        
     def AddMaterial(self,name,density,unit,cmp_type,cmps):
-        child=ET.SubElement(self.materials, "material")
+        child=ET.Element("material")
         child.set("name",name)
         d=ET.SubElement(child, "D")
         d.set("value",str(density))
@@ -100,10 +129,11 @@ class GDML:
             cmp=ET.SubElement(child, cmp_type)
             cmp.set("ref",str(item[0]))
             cmp.set("n",str(item[1]))
+        self.candidate_materials[name]=child
         return child
 
     def AddMaterialZ(self,name,Z,density,atom,unit="g/cm3"):
-        child=ET.SubElement(self.materials, "material")
+        child=ET.Element("material")
         child.set("name",name)
         child.set("Z",str(Z))
         d=ET.SubElement(child, "D")
@@ -111,6 +141,7 @@ class GDML:
         d.set("unit",unit)
         a=ET.SubElement(child, "atom")
         a.set("value",atom)
+        self.candidate_materials[name]=child
         return child
     
     def AddSolid(self,sld_type,name,args):
@@ -127,6 +158,7 @@ class GDML:
         mat.set("ref",material)
         sld=ET.SubElement(child, "solidref")
         sld.set("ref",solid)
+        self.SelectComponent(material)
         return child
         
     def AddPhysical(self,mother,volume,position,rotation=None):
