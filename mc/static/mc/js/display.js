@@ -53,9 +53,9 @@ function InitControls() {
 
 function InitCamera() { 
     camera = new THREE.PerspectiveCamera( 70, width / height , 1 , 50000 );
-    camera.position.x = -100;
-    camera.position.y = -100;
-    camera.position.z = -100;
+    camera.position.x = -50;
+    camera.position.y = -50;
+    camera.position.z = -50;
     camera.up.x = 0;
     camera.up.y = 1;
     camera.up.z = 0;
