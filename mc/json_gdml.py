@@ -203,8 +203,8 @@ class MacFile:
     def Write(self,fname):
         fp=open(fname,'w')
         fp.write("#auto generate mac file. Do not modify it!!\n")
-        fp.write("#Copyright: XU Chenghai!!\n")
-        fp.write("#EMail: xuchenghai1984@163.com!!\n")
+        fp.write("#Copyright: 2017-2018 MCCLOUDS.COM ALL RIGHTS RESERVED!!\n")
+        fp.write("#EMail: cs.mcclouds@gmail.com\n")
         fp.write("#Time: %s \n" % datetime.now())
         fp.write("\n")
         
