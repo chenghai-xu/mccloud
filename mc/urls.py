@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^api/solid/', require_login(views.SolidView.as_view()), name='SolidView'),
     url(r'^api/job/list/', require_login(job.JobListView.as_view()), name='JobListView'),
     url(r'^project-tree/', require_login(project.ProjectView.as_view()), name='Project-Tree'),
+    url(r'^project/download/', require_login(project.ProjectDownload.as_view()), name='ProjectDownload'),
     url(r'^job/create/', require_login(job.JobView.as_view()), name='JobView'),
     url(r'^job/verify/', require_login(job.JobVerifyView.as_view()), name='JobVerifyView'),
     url(r'^job/execute/', require_login(job.JobExecuteView.as_view()), name='JobExecuteView'),

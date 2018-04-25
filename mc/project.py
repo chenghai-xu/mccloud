@@ -12,6 +12,7 @@ User = get_user_model()
 
 
 import json
+import subprocess
 
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -115,3 +116,38 @@ class ProjectView(View):
         project.name=js_data['text']
         project.save()
         return JsonResponse(WriteProjectConfig(pk,data), content_type='application/json',safe=False)
+
+def PackProject(project,dst):
+    dst_file='%s/%s.zip' % (dst,project)
+    subprocess.call(['mkdir', '-p', dst])
+    subprocess.call(['rm', dst_file])
+    proc=subprocess.Popen(['zip', '-i', 
+        '*.mac', '*.gdml',
+        '-r', dst_file, project],cwd=config.projects_root)
+    proc.wait()
+    #prefix = os.path.dirname(os.path.abspath(__file__))
+    #subprocess.call(['%s/pack_project.sh'% prefix, project, config.projects_root,dst_file])
+    return dst_file
+
+from django.utils.encoding import smart_str
+class ProjectDownload(View):
+    def get(self, request, *args, **kwargs):
+        pk=request.GET.get('id',-1)
+        pk=int(pk)
+        user=request.user
+        try:
+            project = Project.objects.get(pk=pk,user=user)
+            print("get project success: ", project.id)
+        except Project.DoesNotExist:
+            print("get project fail:",pk)
+            return handler404(request)
+
+        dst='%s/project' % config.protected_root
+        fpath=PackProject(str(pk),dst)
+        fname=os.path.basename(fpath)
+
+        response = HttpResponse(content_type='application/zip' )
+        response["Content-Disposition"] = 'attachment; filename="%s"' % smart_str(fname)
+        response['X-Sendfile'] = "%s/project/%s" % (config.protected_root,fname)
+        return response
+

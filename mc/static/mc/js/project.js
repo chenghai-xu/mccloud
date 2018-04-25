@@ -36,6 +36,7 @@ function InitProject(){
     $('#open-project').click(OpenProject);
     $('#save-project').click(SaveProject);
     $('#close-project').click(CloseProject);
+    $('#download-project').click(DownloadProjectFiles);
 } 
 
 function LoadProject(project) {
@@ -329,3 +330,8 @@ function SelectProject(data)
     });
     $( "#project-list" ).dialog("open");
 }
+
+function DownloadProjectFiles()
+{
+    window.open("/mc/project/download/?id="+id_current_project);
+};
