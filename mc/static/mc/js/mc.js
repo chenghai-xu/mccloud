@@ -20,22 +20,31 @@ function NewGeometryNode(t){
     return node;
 }
 
-function NewSolid(type='box'){
-    var node=null;
-    if(type=='box')
-        node=
+var SolidFactory={};
+SolidFactory.New=function(type='box'){
+    var fun = this.new_map.get(type.toLowerCase());
+    if(fun==undefined)
+        fun=this.new_map.get('box');
+    return fun();
+};
+SolidFactory.new_map=new Map();
+SolidFactory.new_map.set('box',function(){
+    var node=
+    {
+        type:'box',
+        parameter: 
         {
-            type:'box',
-            parameter: 
-            {
-                x:1.0,
-                y:1.0,
-                z:1.0,
-                lunit:'cm',
-            },
-        };
-    else if(type=='tube')
-        node=
+            x:1.0,
+            y:1.0,
+            z:1.0,
+            lunit:'cm',
+        },
+    };
+    return node;    
+});
+
+SolidFactory.new_map.set('tube',function(){
+    var node=
         {
             type:'tube',
             parameter: 
@@ -49,8 +58,10 @@ function NewSolid(type='box'){
                 aunit:'deg',
             },
         };
-    else if(type=='sphere')
-        node=
+    return node;    
+});
+SolidFactory.new_map.set('sphere',function(){
+    var node=
         {
             type:'sphere',
             parameter: 
@@ -65,8 +76,11 @@ function NewSolid(type='box'){
                 aunit:'deg',
             },
         };
-    else if(type=='cone')
-        node=
+    return node;    
+});
+
+SolidFactory.new_map.set('cone',function(){
+    var node=
         {
             type:'cone',
             parameter: 
@@ -82,20 +96,30 @@ function NewSolid(type='box'){
                 aunit:'deg',
             },
         };
-    else 
-        node=
+    return node;    
+});
+
+SolidFactory.new_map.set('para',function(){
+    var node=
         {
-            type:'box',
+            type:'para',
             parameter: 
             {
                 x:1.0,
                 y:1.0,
                 z:1.0,
+                alpha:30,
+                theta:30,
+                phi:30,
                 lunit:'cm',
+                aunit:'deg',
             },
         };
+    return node;    
+});
 
-    return node;
+function NewSolid(type='box'){
+    return SolidFactory.New(type);
 }
 function NewVolumePosition(){
     var node=
@@ -159,3 +183,4 @@ function UnitOf(u)
         res=1.0;
     return res;
 }
+

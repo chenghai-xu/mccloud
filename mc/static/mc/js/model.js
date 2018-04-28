@@ -199,3 +199,82 @@ function CalcFaces(geometry,segments_theta,segments_phi,is_close)
     geometry.computeBoundingSphere();
     return geometry;
 }
+
+function ParaGeometry(x, y, z, alpha, theta, phi)
+{
+    var fDx = x/2;
+    var fDy = y/2;
+    var fDz = z/2;
+    
+    alpha=Math.min(alpha,360);
+    alpha=Math.PI*alpha/180;
+
+    theta=Math.min(theta,360);
+    theta=Math.PI*theta/180;
+
+    phi=Math.min(phi,180);
+    phi=Math.PI*phi/180;
+
+    var fTalpha = Math.tan(alpha);
+    var fTthetaCphi = Math.tan(theta)*Math.cos(phi);
+    var fTthetaSphi = Math.tan(theta)*Math.sin(phi);
+
+ 	var geometry = new THREE.Geometry();
+
+    geometry.vertices.push( new THREE.Vector3(-fDz*fTthetaCphi-fDy*fTalpha-fDx, -fDz*fTthetaSphi-fDy, -fDz));
+    geometry.vertices.push( new THREE.Vector3(-fDz*fTthetaCphi-fDy*fTalpha+fDx, -fDz*fTthetaSphi-fDy, -fDz));
+    geometry.vertices.push( new THREE.Vector3(-fDz*fTthetaCphi+fDy*fTalpha-fDx, -fDz*fTthetaSphi+fDy, -fDz));
+    geometry.vertices.push( new THREE.Vector3(-fDz*fTthetaCphi+fDy*fTalpha+fDx, -fDz*fTthetaSphi+fDy, -fDz));
+    geometry.vertices.push( new THREE.Vector3(+fDz*fTthetaCphi-fDy*fTalpha-fDx, +fDz*fTthetaSphi-fDy, +fDz));
+    geometry.vertices.push( new THREE.Vector3(+fDz*fTthetaCphi-fDy*fTalpha+fDx, +fDz*fTthetaSphi-fDy, +fDz));
+    geometry.vertices.push( new THREE.Vector3(+fDz*fTthetaCphi+fDy*fTalpha-fDx, +fDz*fTthetaSphi+fDy, +fDz));
+    geometry.vertices.push( new THREE.Vector3(+fDz*fTthetaCphi+fDy*fTalpha+fDx, +fDz*fTthetaSphi+fDy, +fDz));
+
+    geometry.faces.push( new THREE.Face3(0,2,1) );
+    geometry.faces.push( new THREE.Face3(2,3,1) );
+
+    geometry.faces.push( new THREE.Face3(4,5,6) );
+    geometry.faces.push( new THREE.Face3(5,7,6) );
+
+    geometry.faces.push( new THREE.Face3(0,1,4) );
+    geometry.faces.push( new THREE.Face3(1,5,4) );
+
+    geometry.faces.push( new THREE.Face3(2,6,7) );
+    geometry.faces.push( new THREE.Face3(7,3,2) );
+
+    geometry.faces.push( new THREE.Face3(0,4,2) );
+    geometry.faces.push( new THREE.Face3(4,6,2) );
+
+    geometry.faces.push( new THREE.Face3(1,3,7) );
+    geometry.faces.push( new THREE.Face3(7,5,1) );
+
+    return geometry;
+
+}
+
+/*
+function CalcFacesHexahedron(geometry,segments_theta,segments_phi,is_close)
+{
+
+}
+
+THREE.Face4=function(i,j,k,n)
+{
+
+}
+function mode_test()
+{
+var geo=ParaGeometry(5,5,5,0,30,0)
+var mat = new THREE.MeshPhongMaterial({color: 0x2194ce,shininess:80});
+var mat = new THREE.MeshBasicMaterial( {color:0x000000, wireframe: true} );
+
+//mat.emissive.setHex( 0xff0000 );
+var obj = new THREE.Mesh(geo, mat);
+while(scene.children.length > 0){ 
+    scene.remove(scene.children[0]); 
+}
+scene.add(obj);
+var bbox = new THREE.Box3().setFromObject(obj);
+DrawAxis(bbox,"cm","");
+}
+*/

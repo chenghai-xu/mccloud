@@ -136,6 +136,16 @@ function CalcGeometry(node,lunit='mm',aunit='deg')
              parameter.startphi*UnitOf(parameter.aunit)/UnitOf(aunit),
              parameter.deltaphi*UnitOf(parameter.aunit)/UnitOf(aunit))
     }
+    else if(type=='para')
+    {
+        geometry =  
+         ParaGeometry(parameter.x*UnitOf(parameter.lunit)/UnitOf(lunit),
+             parameter.y*UnitOf(parameter.lunit)/UnitOf(lunit),
+             parameter.z*UnitOf(parameter.lunit)/UnitOf(lunit),
+             parameter.alpha*UnitOf(parameter.aunit)/UnitOf(aunit),
+             parameter.theta*UnitOf(parameter.aunit)/UnitOf(aunit),
+             parameter.phi*UnitOf(parameter.aunit)/UnitOf(aunit))
+    }
     return geometry;
 }
 

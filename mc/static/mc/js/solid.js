@@ -143,3 +143,40 @@ var SolidCone = {
         DrawModel(this.node);
     },
 }
+
+var SolidPara = {
+    node: null,
+    data: null,
+    form: null,
+    Init: function()
+    {
+        var para=this.data;
+        var form=this.form;
+        $(form).find('input[name=x]').val(para.parameter.x);
+        $(form).find('input[name=y]').val(para.parameter.y);
+        $(form).find('input[name=z]').val(para.parameter.z);
+        $(form).find('input[name=alpha]').val(para.parameter.alpha);
+        $(form).find('input[name=theta]').val(para.parameter.theta);
+        $(form).find('input[name=phi]').val(para.parameter.phi);
+        $(form).find('select[name=lunit]').val(para.parameter.lunit);
+        $(form).find('select[name=aunit]').val(para.parameter.aunit);
+    },
+
+    UnitChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var p=$(elem).attr('name');
+        console.log('Change para parameter '+p+' to '+ value);
+        this.data.parameter[p]=value;
+        DrawModel(this.node);
+    },
+
+    ValueChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var p=$(elem).attr('name');
+        console.log('Change para parameter '+p+' to '+ value);
+        this.data.parameter[p]=parseFloat(value);
+        DrawModel(this.node);
+    },
+}

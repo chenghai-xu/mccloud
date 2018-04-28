@@ -119,6 +119,14 @@ VolumeControl.InitSolidForm=function(){
         SolidCone.form=wigdet;
         SolidCone.Init();
     }
+    else if(solid.type=='para')
+    {
+        wigdet = $('#property-solid-para').clone();
+        SolidPara.node=current;
+        SolidPara.data=solid;
+        SolidPara.form=wigdet;
+        SolidPara.Init();
+    }
     else 
         return;
 
