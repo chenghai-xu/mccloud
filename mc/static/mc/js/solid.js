@@ -1,4 +1,9 @@
 $(document).ready(function () {
+    VolumeControl.solid_map.set('box',{selector:'#property-solid-box',control:SolidBox}); 
+    VolumeControl.solid_map.set('tube',{selector:'#property-solid-tube',control:SolidTube}); 
+    VolumeControl.solid_map.set('sphere',{selector:'#property-solid-sphere',control:SolidSphere}); 
+    VolumeControl.solid_map.set('cone',{selector:'#property-solid-cone',control:SolidCone}); 
+    VolumeControl.solid_map.set('para',{selector:'#property-solid-para',control:SolidPara}); 
 });
 
 var SolidBox = {

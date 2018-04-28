@@ -83,60 +83,30 @@ VolumeControl.Delete=function(){
     console.log('delete volume: ' + res);
     DrawModel(par);
 } 
+
+VolumeControl.solid_map = new Map();
 VolumeControl.InitSolidForm=function(){
     var instance = $('#project-view').jstree(true);
     var current=this.current;
     var solid=current.data.solid;
-    var wigdet=null;
-    if(solid.type=='box'){
-        wigdet = $('#property-solid-box').clone();
-        SolidBox.node=current;
-        SolidBox.data=solid;
-        SolidBox.form=wigdet;
-        SolidBox.Init();
-    }
-    else if(solid.type=='tube')
-    {
-        wigdet = $('#property-solid-tube').clone();
-        SolidTube.node=current;
-        SolidTube.data=solid;
-        SolidTube.form=wigdet;
-        SolidTube.Init();
-    }
-    else if(solid.type=='sphere')
-    {
-        wigdet = $('#property-solid-sphere').clone();
-        SolidSphere.node=current;
-        SolidSphere.data=solid;
-        SolidSphere.form=wigdet;
-        SolidSphere.Init();
-    }
-    else if(solid.type=='cone')
-    {
-        wigdet = $('#property-solid-cone').clone();
-        SolidCone.node=current;
-        SolidCone.data=solid;
-        SolidCone.form=wigdet;
-        SolidCone.Init();
-    }
-    else if(solid.type=='para')
-    {
-        wigdet = $('#property-solid-para').clone();
-        SolidPara.node=current;
-        SolidPara.data=solid;
-        SolidPara.form=wigdet;
-        SolidPara.Init();
-    }
-    else 
+    var control=null;
+    var item = this.solid_map.get(solid.type);
+    if(item == undefined)
         return;
-
+    var wigdet = $(item.selector).clone();
+    var control = item.control;
+    control.node=current;
+    control.data=solid;
+    control.form=wigdet;
+    control.Init();
 
     $(wigdet).find('select[name=solid]').val(solid.type);
     wigdet.attr("id","property-detail-current");
     wigdet.removeClass('hidden');
     $('#property-detail-current').remove();
     $('#property-detail-container').append(wigdet);
-} 
+
+};
 
 VolumeControl.SolidTypeChanged=function(sel){
     var selected=$(sel).val();
