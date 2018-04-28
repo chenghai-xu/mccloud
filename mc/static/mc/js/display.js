@@ -16,6 +16,19 @@ var daxis={
     z:20,
     unit:'cm',
 };
+var first_show=true;
+function ConfigCamera(bbox)
+{
+    if(!first_show)
+    {
+        return;
+    }
+
+    camera.position.x = (bbox.min.x - bbox.max.x)*2;
+    camera.position.y = (bbox.min.y - bbox.max.y)*2;
+    camera.position.z = (bbox.min.z - bbox.max.z)*2; 
+    first_show=false;   
+}
 
 function InitDisplay3D() {
     if (!Detector.webgl) Detector.addGetWebGLMessage();
@@ -206,6 +219,7 @@ function DrawModel(node)
     scene.add(root);
     var bbox = new THREE.Box3().setFromObject(root);
     DrawAxis(bbox,lunit_d,aunit);
+	ConfigCamera(bbox);
     render.clear(); 
     //Animate();
     return {lunit:lunit_d,aunit:aunit_d}
