@@ -1,8 +1,29 @@
 $(document).ready(function () {
+    ThreeDisplay.geometry_map.set('box',BoxGeometry);
+    ThreeDisplay.geometry_map.set('cone',ConeGeometry);
+    ThreeDisplay.geometry_map.set('tube',TubeGeometry);
+    ThreeDisplay.geometry_map.set('sphere',SphereGeometry);
+    ThreeDisplay.geometry_map.set('para',ParaGeometry);
 });
 
-function ConeGeometry(z,rmin1,rmax1,rmin2,rmax2,start_phi=0,delta_phi=360)
+function BoxGeometry(parameter,scale)
 {
+    geometry = new THREE.BoxGeometry(parameter.x*UnitOf(parameter.lunit)*scale, 
+        parameter.y*UnitOf(parameter.lunit)*scale, 
+        parameter.z*UnitOf(parameter.lunit)*scale);
+    return geometry;
+}
+//function ConeGeometry(z,rmin1,rmax1,rmin2,rmax2,start_phi=0,delta_phi=360)
+function ConeGeometry(parameter,scale)
+{
+    var z = parameter.z*UnitOf(parameter.lunit)*scale;
+    var rmin1 = parameter.rmin1*UnitOf(parameter.lunit)*scale;
+    var rmax1 = parameter.rmax1*UnitOf(parameter.lunit)*scale;
+    var rmin2 = parameter.rmin2*UnitOf(parameter.lunit)*scale;
+    var rmax2 = parameter.rmax2*UnitOf(parameter.lunit)*scale;
+    var start_phi= parameter.startphi*UnitOf(parameter.aunit)/UnitOf('deg');
+    var delta_phi= parameter.deltaphi*UnitOf(parameter.aunit)/UnitOf('deg');
+
     delta_phi=Math.min(delta_phi,360);
     delta_phi=Math.PI*delta_phi/180;
 
@@ -52,8 +73,15 @@ function ConeGeometry(z,rmin1,rmax1,rmin2,rmax2,start_phi=0,delta_phi=360)
     return CalcFaces(geometry, z_seg, segments, is_close);
 }
 
-function TubeGeometry(rmin,rmax,z,start_phi=0,delta_phi=360)
+//function TubeGeometry(rmin,rmax,z,start_phi=0,delta_phi=360)
+function TubeGeometry(parameter,scale)
 {
+    var rmin=         parameter.rmin*UnitOf(parameter.lunit)*scale;              
+	var rmax=         parameter.rmax*UnitOf(parameter.lunit)*scale;              
+	var z=            parameter.z*UnitOf(parameter.lunit)*scale;                 
+	var start_phi=  parameter.startphi*UnitOf(parameter.aunit)/UnitOf('deg');  
+	var delta_phi=parameter.deltaphi*UnitOf(parameter.aunit)/UnitOf('deg'); 
+
     delta_phi=Math.min(delta_phi,360);
     delta_phi=Math.PI*delta_phi/180;
 
@@ -95,8 +123,16 @@ function TubeGeometry(rmin,rmax,z,start_phi=0,delta_phi=360)
     return CalcFaces(geometry, 1, segments, is_close);
 }
 
-function SphereGeometry(rmin,rmax,start_theta=0,delta_theta=180,start_phi=0,delta_phi=360)
+//function SphereGeometry(rmin,rmax,start_theta=0,delta_theta=180,start_phi=0,delta_phi=360)
+function SphereGeometry(parameter,scale)
 {
+    var rmin        = parameter.rmin*UnitOf(parameter.lunit)*scale;               
+	var rmax        = parameter.rmax*UnitOf(parameter.lunit)*scale;               
+	var start_theta = parameter.starttheta*UnitOf(parameter.aunit)/UnitOf('deg'); 
+	var delta_theta = parameter.deltatheta*UnitOf(parameter.aunit)/UnitOf('deg'); 
+	var start_phi   = parameter.startphi*UnitOf(parameter.aunit)/UnitOf('deg');   
+	var delta_phi   = parameter.deltaphi*UnitOf(parameter.aunit)/UnitOf('deg');   
+
     delta_phi=Math.min(delta_phi,360);
     delta_phi=Math.PI*delta_phi/180;
 
@@ -200,8 +236,16 @@ function CalcFaces(geometry,segments_theta,segments_phi,is_close)
     return geometry;
 }
 
-function ParaGeometry(x, y, z, alpha, theta, phi)
+//function ParaGeometry(x, y, z, alpha, theta, phi)
+function ParaGeometry(parameter,scale)
 {
+    var  x     = parameter.x*UnitOf(parameter.lunit)*scale;            
+	var  y     = parameter.y*UnitOf(parameter.lunit)*scale;            
+	var  z     = parameter.z*UnitOf(parameter.lunit)*scale;            
+	var  alpha = parameter.alpha*UnitOf(parameter.aunit)/UnitOf('deg');
+	var  theta = parameter.theta*UnitOf(parameter.aunit)/UnitOf('deg');
+	var  phi   = parameter.phi*UnitOf(parameter.aunit)/UnitOf('deg');  
+
     var fDx = x/2;
     var fDy = y/2;
     var fDz = z/2;

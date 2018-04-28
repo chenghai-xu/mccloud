@@ -353,7 +353,7 @@ function DrawTrajectory(trjs)
 
 function DoDrawTrajectory(scn,trjs,scale)
 {
-    var coef=UnitOf('mm')/UnitOf(scale.lunit);
+    var coef=UnitOf('mm')*scale;
     //refs:
     //https://stackoverflow.com/questions/31399856/drawing-a-line-with-three-js-dynamically
     for(var k=0; k<trjs.length;k++)

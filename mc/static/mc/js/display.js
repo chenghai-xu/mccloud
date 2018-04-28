@@ -2,8 +2,9 @@ $(document).ready(function () {
    InitDisplay3D(); 
 });
 
+var ThreeDisplay = {};
 var scene, camera, render;
-var geometry, material, mesh;
+//var geometry, material, mesh;
 var width=600;
 var height=480;
 var light;
@@ -94,62 +95,23 @@ function Animate() {
 	render.render(scene, camera);
 }
 
-function CalcGeometry(node,lunit='mm',aunit='deg')
+ThreeDisplay.geometry_map = new Map();
+ThreeDisplay.CalcGeometry = function(solid,scale)
 {
-    var solid=node.data.solid;
-    var parameter=solid.parameter;
-    var type=solid.type;
-    var geometry = null;
-    if(type=='box')
-    {
-        geometry = new THREE.BoxGeometry(parameter.x*UnitOf(parameter.lunit)/UnitOf(lunit), 
-            parameter.y*UnitOf(parameter.lunit)/UnitOf(lunit), 
-            parameter.z*UnitOf(parameter.lunit)/UnitOf(lunit));
-    }
-    else if(type=='tube')
-    {
-        geometry =  
-         TubeGeometry(parameter.rmin*UnitOf(parameter.lunit)/UnitOf(lunit),
-             parameter.rmax*UnitOf(parameter.lunit)/UnitOf(lunit),
-             parameter.z*UnitOf(parameter.lunit)/UnitOf(lunit),
-             parameter.startphi*UnitOf(parameter.aunit)/UnitOf(aunit),
-             parameter.deltaphi*UnitOf(parameter.aunit)/UnitOf(aunit));
-    }
-    else if(type=='sphere')
-    {
-        geometry =  
-         SphereGeometry(parameter.rmin*UnitOf(parameter.lunit)/UnitOf(lunit),
-             parameter.rmax*UnitOf(parameter.lunit)/UnitOf(lunit),
-             parameter.starttheta*UnitOf(parameter.aunit)/UnitOf(aunit),
-             parameter.deltatheta*UnitOf(parameter.aunit)/UnitOf(aunit),
-             parameter.startphi*UnitOf(parameter.aunit)/UnitOf(aunit),
-             parameter.deltaphi*UnitOf(parameter.aunit)/UnitOf(aunit))
-    }
-    else if(type=='cone')
-    {
-        geometry =  
-         ConeGeometry(parameter.z*UnitOf(parameter.lunit)/UnitOf(lunit),
-             parameter.rmin1*UnitOf(parameter.lunit)/UnitOf(lunit),
-             parameter.rmax1*UnitOf(parameter.lunit)/UnitOf(lunit),
-             parameter.rmin2*UnitOf(parameter.lunit)/UnitOf(lunit),
-             parameter.rmax2*UnitOf(parameter.lunit)/UnitOf(lunit),
-             parameter.startphi*UnitOf(parameter.aunit)/UnitOf(aunit),
-             parameter.deltaphi*UnitOf(parameter.aunit)/UnitOf(aunit))
-    }
-    else if(type=='para')
-    {
-        geometry =  
-         ParaGeometry(parameter.x*UnitOf(parameter.lunit)/UnitOf(lunit),
-             parameter.y*UnitOf(parameter.lunit)/UnitOf(lunit),
-             parameter.z*UnitOf(parameter.lunit)/UnitOf(lunit),
-             parameter.alpha*UnitOf(parameter.aunit)/UnitOf(aunit),
-             parameter.theta*UnitOf(parameter.aunit)/UnitOf(aunit),
-             parameter.phi*UnitOf(parameter.aunit)/UnitOf(aunit))
-    }
-    return geometry;
+    var fun = this.geometry_map.get(solid.type);
+    if(fun == undefined)
+        return null;
+    return fun(solid.parameter,scale);
+};
+
+function GetBBox(solid)
+{
+    var geometry = ThreeDisplay.CalcGeometry(solid,1.0);
+    var mat = new THREE.MeshBasicMaterial( {color:0x000000, wireframe: true} );
+    var mesh = new THREE.Mesh(geometry, mat);
+    var bbox = new THREE.Box3().setFromObject(mesh);
+    return bbox;
 }
-
-
 var meshs=new Array();
 function DrawModel(node)
 {
@@ -163,12 +125,17 @@ function DrawModel(node)
     }
 
     var solid=node.data.solid;
-    var lunit_d=solid.parameter.lunit;
-    var aunit_d='deg';
-    var geometry = CalcGeometry(node,lunit_d,aunit_d);
+    var bbox = GetBBox(solid);
+    var size = Math.min(bbox.max.x-bbox.min.x,bbox.max.y-bbox.min.y);
+    size = Math.min(size,bbox.max.z-bbox.min.z);
+    var scale = 2000/size;
+
+    var geometry = ThreeDisplay.CalcGeometry(solid,scale);
     if(geometry==null)
         return;
+
     var color=0x2194ce;
+    var material=null;
     if(node.children.length>0)
     {
         //material = new THREE.MeshPhongMaterial(
@@ -192,7 +159,7 @@ function DrawModel(node)
         var child = instance.get_node(instance.get_node(node.children[i]));
         if(child == null || child.type != 'volume')
             continue;
-        var geo=CalcGeometry(child,lunit_d,aunit_d);
+        var geo=ThreeDisplay.CalcGeometry(child.data.solid,scale);
         if(geo != null )
         {
             var pos=child.data.placement.position;
@@ -205,8 +172,8 @@ function DrawModel(node)
             else
                 mat.emissive.setHex(color);
             var obj = new THREE.Mesh(geo, mat);
-            var lunit=UnitOf(pos.lunit)/UnitOf(lunit_d);
-            var aunit=UnitOf(rot.aunit)/UnitOf(aunit_d);
+            var lunit=UnitOf(pos.lunit)*scale;
+            var aunit=UnitOf(rot.aunit)/UnitOf('deg');
             obj.position.x=pos.x*lunit;
             obj.position.y=pos.y*lunit;
             obj.position.z=pos.z*lunit;
@@ -227,12 +194,12 @@ function DrawModel(node)
     }
     InitLight();
     scene.add(root);
-    var bbox = new THREE.Box3().setFromObject(root);
-    DrawAxis(bbox,lunit_d,aunit);
+    bbox = new THREE.Box3().setFromObject(root);
+    DrawAxis(bbox,scale,solid.parameter.lunit);
 	ConfigCamera(bbox);
     render.clear(); 
     //Animate();
-    return {lunit:lunit_d,aunit:aunit_d}
+    return scale;
 }
 
 var mouse = new THREE.Vector2();
@@ -263,8 +230,9 @@ function PickObject()
     }
 }
 
-function DrawAxis(bbox,lunit='cm',aunit='deg')
+function DrawAxis(bbox,scale,lunit='cm')
 {
+    scale=scale*UnitOf('cm');
     var txt_size=(bbox.max.x-bbox.min.x)/10;
     txt_size=Math.min(txt_size,(bbox.max.y-bbox.min.y)/10);
     txt_size=Math.min(txt_size,(bbox.max.z-bbox.min.z)/10);
@@ -281,13 +249,13 @@ function DrawAxis(bbox,lunit='cm',aunit='deg')
     var axis_x = new THREE.Line( geo_x, mat_x);
     var group_x = new THREE.Group();
 
-    var text=bbox.max.x.toFixed(2)+lunit+'(X)';
+    var text=(bbox.max.x/scale).toFixed(2)+lunit+'(X)';
     var labe_x = new THREE.TextGeometry(text,txt_font);
     var mesh_x = new THREE.Mesh(labe_x,mat_x);
     mesh_x.position.x = bbox.max.x+txt_size*2;
     mesh_x.position.y = -txt_height/2;
 
-    text=bbox.min.x.toFixed(2);
+    text=(bbox.min.x/scale).toFixed(2);
     var labe_x1 = new THREE.TextGeometry(text,txt_font);
     var mesh_x1 = new THREE.Mesh(labe_x1,mat_x);
     mesh_x1.position.x = bbox.min.x-txt_size*4;
@@ -305,13 +273,13 @@ function DrawAxis(bbox,lunit='cm',aunit='deg')
     var axis_y = new THREE.Line( geo_y, mat_y);
     var group_y = new THREE.Group();
 
-    text=bbox.max.y.toFixed(2)+lunit+'(Y)';
+    text=(bbox.max.y/scale).toFixed(2)+lunit+'(Y)';
     var labe_y = new THREE.TextGeometry(text,txt_font);
     var mesh_y = new THREE.Mesh(labe_y,mat_y);
     mesh_y.position.y = bbox.max.y+txt_size;
     mesh_y.position.x = -text.length*txt_size/4;
 
-    text=bbox.min.y.toFixed(2);
+    text=(bbox.min.y/scale).toFixed(2);
     var labe_y1 = new THREE.TextGeometry(text,txt_font);
     var mesh_y1 = new THREE.Mesh(labe_y1,mat_y);
     mesh_y1.position.y = bbox.min.y-txt_size;
@@ -329,13 +297,13 @@ function DrawAxis(bbox,lunit='cm',aunit='deg')
     var axis_z = new THREE.Line( geo_z, mat_z);
     var group_z = new THREE.Group();
 
-    text=bbox.max.z.toFixed(2)+lunit+'(Z)';
+    text=(bbox.max.z/scale).toFixed(2)+lunit+'(Z)';
     var labe_z = new THREE.TextGeometry(text,txt_font);
     var mesh_z = new THREE.Mesh(labe_z,mat_z);
     mesh_z.position.z = bbox.max.z+txt_size;
     mesh_z.position.x = -text.length*txt_size/4;
 
-    text=bbox.min.z.toFixed(2);
+    text=(bbox.min.z/scale).toFixed(2);
     var labe_z1 = new THREE.TextGeometry(text,txt_font);
     var mesh_z1 = new THREE.Mesh(labe_z1,mat_z);
     mesh_z1.position.z = bbox.min.z-txt_size;
@@ -368,3 +336,4 @@ function onMouseDown( event ) {
     instance.deselect_all();
     var res=instance.select_node(id);
 }
+
