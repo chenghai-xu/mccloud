@@ -4,6 +4,7 @@ $(document).ready(function () {
     ThreeDisplay.geometry_map.set('tube',TubeGeometry);
     ThreeDisplay.geometry_map.set('sphere',SphereGeometry);
     ThreeDisplay.geometry_map.set('para',ParaGeometry);
+    ThreeDisplay.geometry_map.set('trap',TrapGeometry);
 });
 
 function BoxGeometry(parameter,scale)
@@ -306,9 +307,10 @@ THREE.Face4=function(i,j,k,n)
 {
 
 }
-function mode_test()
+function mode_test(func,parameter)
 {
-var geo=ParaGeometry(5,5,5,0,30,0)
+var scale =1;
+var geo=func(parameter,scale);
 var mat = new THREE.MeshPhongMaterial({color: 0x2194ce,shininess:80});
 var mat = new THREE.MeshBasicMaterial( {color:0x000000, wireframe: true} );
 
@@ -319,6 +321,81 @@ while(scene.children.length > 0){
 }
 scene.add(obj);
 var bbox = new THREE.Box3().setFromObject(obj);
-DrawAxis(bbox,"cm","");
+DrawAxis(bbox,scale,parameter.lunit);
 }
 */
+/*
+parameter:{
+	z: 60,
+	theta: 20,
+	phi: 5,
+	y1: 30,
+	x1: 40,
+	x2: 40,
+	alpha1: 10,
+	y2: 16,
+	x3: 10,
+	x4: 14,
+	alpha2: 10,
+	lunit: 'cm',
+	aunit: 'deg'
+}
+*/
+function TrapGeometry(parameter,scale)
+{
+	var  theta = parameter.theta*UnitOf(parameter.aunit)/UnitOf('deg');
+	var  phi   = parameter.phi*UnitOf(parameter.aunit)/UnitOf('deg');
+	var  alpha1 = parameter.alpha1*UnitOf(parameter.aunit)/UnitOf('deg');
+	var  alpha2 = parameter.alpha2*UnitOf(parameter.aunit)/UnitOf('deg');
+
+    theta=Math.min(theta*Math.PI/180,Math.PI*2);
+    phi=Math.min(phi*Math.PI/180,Math.PI*2);
+    alpha1=Math.min(alpha1*Math.PI/180,Math.PI*2);
+    alpha2=Math.min(alpha2*Math.PI/180,Math.PI*2);
+    		
+  	var fDz=parameter.z*UnitOf(parameter.lunit)*scale/2;
+  	var fTthetaCphi=Math.tan(theta)*Math.cos(phi);
+  	var fTthetaSphi=Math.tan(theta)*Math.sin(phi);
+
+  	var fDy1=parameter.y1*UnitOf(parameter.lunit)*scale/2;
+  	var fDx1=parameter.x1*UnitOf(parameter.lunit)*scale/2;
+  	var fDx2=parameter.x2*UnitOf(parameter.lunit)*scale/2;
+  	var fTalpha1=Math.tan(alpha1);
+
+  	var fDy2=parameter.y2*UnitOf(parameter.lunit)*scale/2;
+  	var fDx3=parameter.x3*UnitOf(parameter.lunit)*scale/2;
+  	var fDx4=parameter.x4*UnitOf(parameter.lunit)*scale/2;
+  	var fTalpha2=Math.tan(alpha2);
+
+ 	var geometry = new THREE.Geometry();
+
+    geometry.vertices.push( new THREE.Vector3(-fDz*fTthetaCphi-fDy1*fTalpha1-fDx1, -fDz*fTthetaSphi-fDy1,-fDz));
+    geometry.vertices.push( new THREE.Vector3(-fDz*fTthetaCphi-fDy1*fTalpha1+fDx1, -fDz*fTthetaSphi-fDy1,-fDz));
+    geometry.vertices.push( new THREE.Vector3(-fDz*fTthetaCphi+fDy1*fTalpha1-fDx2, -fDz*fTthetaSphi+fDy1,-fDz));
+    geometry.vertices.push( new THREE.Vector3(-fDz*fTthetaCphi+fDy1*fTalpha1+fDx2, -fDz*fTthetaSphi+fDy1,-fDz));
+    geometry.vertices.push( new THREE.Vector3(+fDz*fTthetaCphi-fDy2*fTalpha2-fDx3, +fDz*fTthetaSphi-fDy2,+fDz));
+    geometry.vertices.push( new THREE.Vector3(+fDz*fTthetaCphi-fDy2*fTalpha2+fDx3, +fDz*fTthetaSphi-fDy2,+fDz));
+    geometry.vertices.push( new THREE.Vector3(+fDz*fTthetaCphi+fDy2*fTalpha2-fDx4, +fDz*fTthetaSphi+fDy2,+fDz));
+    geometry.vertices.push( new THREE.Vector3(+fDz*fTthetaCphi+fDy2*fTalpha2+fDx4, +fDz*fTthetaSphi+fDy2,+fDz));
+
+    geometry.faces.push( new THREE.Face3(0,2,1) );
+    geometry.faces.push( new THREE.Face3(2,3,1) );
+
+    geometry.faces.push( new THREE.Face3(4,5,6) );
+    geometry.faces.push( new THREE.Face3(5,7,6) );
+
+    geometry.faces.push( new THREE.Face3(0,1,4) );
+    geometry.faces.push( new THREE.Face3(1,5,4) );
+
+    geometry.faces.push( new THREE.Face3(2,6,7) );
+    geometry.faces.push( new THREE.Face3(7,3,2) );
+
+    geometry.faces.push( new THREE.Face3(0,4,2) );
+    geometry.faces.push( new THREE.Face3(4,6,2) );
+
+    geometry.faces.push( new THREE.Face3(1,3,7) );
+    geometry.faces.push( new THREE.Face3(7,5,1) );
+
+    return geometry;
+
+}

@@ -118,6 +118,30 @@ SolidFactory.new_map.set('para',function(){
     return node;    
 });
 
+SolidFactory.new_map.set('trap',function(){
+    var node=
+        {
+            type:'trap',
+            parameter: 
+            {
+                z: 60,
+                theta: 20,
+                phi: 5,
+                y1: 30,
+                x1: 40,
+                x2: 40,
+                alpha1: 10,
+                y2: 16,
+                x3: 10,
+                x4: 14,
+                alpha2: 10,
+                lunit: 'mm',
+                aunit: 'deg'
+            }
+        };
+    return node;    
+});
+
 function NewSolid(type='box'){
     return SolidFactory.New(type);
 }

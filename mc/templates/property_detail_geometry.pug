@@ -182,6 +182,61 @@ div(id='property-solid-para', class='hidden')
               option rad
       //button(type='submit',class="btn btn-default") Save
 
+div(id='property-solid-trap', class='hidden')
+  div(class='row')
+    label Trap
+  div(class='row')
+    //form(class='form',role='form',action='javascript:void(0);',onsubmit='OnTrapSubmit(this)')
+    form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
+      div(class='form-group')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') z:
+          input(type='number',step='0.0001',class='form-control',name='z',onchange='SolidTrap.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') x1:
+          input(type='number',step='0.0001',class='form-control',name='x1',onchange='SolidTrap.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') x2:
+          input(type='number',step='0.0001',class='form-control',name='x2',onchange='SolidTrap.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') x3:
+          input(type='number',step='0.0001',class='form-control',name='x3',onchange='SolidTrap.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') x4:
+          input(type='number',step='0.0001',class='form-control',name='x4',onchange='SolidTrap.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') y1:
+          input(type='number',step='0.0001',class='form-control',name='y1',onchange='SolidTrap.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') y2:
+          input(type='number',step='0.0001',class='form-control',name='y2',onchange='SolidTrap.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') theta:
+          input(type='number',step='0.0001',class='form-control',name='theta',onchange='SolidTrap.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') phi:
+          input(type='number',step='0.0001',class='form-control',name='phi',onchange='SolidTrap.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') alpha1:
+          input(type='number',step='0.0001',class='form-control',name='alpha1',onchange='SolidTrap.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') alpha2:
+          input(type='number',step='0.0001',class='form-control',name='alpha2',onchange='SolidTrap.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') lunit:
+          select(class='form-control',name='lunit',onchange='SolidTrap.UnitChanged(this)')
+              option m
+              option cm
+              option mm
+              option km
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') aunit:
+          select(class='form-control',name='aunit',onchange='SolidTrap.UnitChanged(this)')
+              option deg
+              option rad
+      //button(type='submit',class="btn btn-default") Save
+
 div(id='property-placement-simple', class='hidden')
   div(class='row')
     label Placement

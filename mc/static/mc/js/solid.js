@@ -4,6 +4,7 @@ $(document).ready(function () {
     VolumeControl.solid_map.set('sphere',{selector:'#property-solid-sphere',control:SolidSphere}); 
     VolumeControl.solid_map.set('cone',{selector:'#property-solid-cone',control:SolidCone}); 
     VolumeControl.solid_map.set('para',{selector:'#property-solid-para',control:SolidPara}); 
+    VolumeControl.solid_map.set('trap',{selector:'#property-solid-trap',control:SolidTrap}); 
 });
 
 var SolidBox = {
@@ -161,6 +162,48 @@ var SolidPara = {
         $(form).find('input[name=y]').val(para.parameter.y);
         $(form).find('input[name=z]').val(para.parameter.z);
         $(form).find('input[name=alpha]').val(para.parameter.alpha);
+        $(form).find('input[name=theta]').val(para.parameter.theta);
+        $(form).find('input[name=phi]').val(para.parameter.phi);
+        $(form).find('select[name=lunit]').val(para.parameter.lunit);
+        $(form).find('select[name=aunit]').val(para.parameter.aunit);
+    },
+
+    UnitChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var p=$(elem).attr('name');
+        console.log('Change para parameter '+p+' to '+ value);
+        this.data.parameter[p]=value;
+        DrawModel(this.node);
+    },
+
+    ValueChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var p=$(elem).attr('name');
+        console.log('Change para parameter '+p+' to '+ value);
+        this.data.parameter[p]=parseFloat(value);
+        DrawModel(this.node);
+    },
+}
+
+var SolidTrap = {
+    node: null,
+    data: null,
+    form: null,
+    Init: function()
+    {
+        var para=this.data;
+        var form=this.form;
+        $(form).find('input[name=z]').val(para.parameter.z);
+        $(form).find('input[name=x1]').val(para.parameter.x1);
+        $(form).find('input[name=y1]').val(para.parameter.y1);
+        $(form).find('input[name=x2]').val(para.parameter.x2);
+        $(form).find('input[name=y2]').val(para.parameter.y2);
+        $(form).find('input[name=x3]').val(para.parameter.x3);
+        $(form).find('input[name=x4]').val(para.parameter.x4);
+        $(form).find('input[name=alpha1]').val(para.parameter.alpha1);
+        $(form).find('input[name=alpha2]').val(para.parameter.alpha2);
         $(form).find('input[name=theta]').val(para.parameter.theta);
         $(form).find('input[name=phi]').val(para.parameter.phi);
         $(form).find('select[name=lunit]').val(para.parameter.lunit);
