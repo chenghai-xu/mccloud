@@ -732,7 +732,7 @@ DirectionModel.NewAngular=function(type)
         return this.NewAngularPlanar();
     else if(type=='Focused')
         return this.NewAngularFocused();
-    return this.NewAngularPlanar();
+    return this.NewAngularIso();
 }
 
 DirectionControl.Init=function()
