@@ -142,6 +142,23 @@ SolidFactory.new_map.set('trap',function(){
     return node;    
 });
 
+SolidFactory.new_map.set('ellipsoid',function(){
+    var node=
+        {
+            type:'ellipsoid',
+            parameter: 
+            {
+                ax:10,
+                by:20,
+                cz:50,
+                zcut1:-10,
+                zcut2:40,
+                lunit:'mm',
+            },
+        };
+    return node;    
+});
+
 function NewSolid(type='box'){
     return SolidFactory.New(type);
 }

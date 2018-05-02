@@ -5,6 +5,7 @@ $(document).ready(function () {
     ThreeDisplay.geometry_map.set('sphere',SphereGeometry);
     ThreeDisplay.geometry_map.set('para',ParaGeometry);
     ThreeDisplay.geometry_map.set('trap',TrapGeometry);
+    ThreeDisplay.geometry_map.set('ellipsoid',EllipsoidGeometry);
 });
 
 function BoxGeometry(parameter,scale)
@@ -399,3 +400,68 @@ function TrapGeometry(parameter,scale)
     return geometry;
 
 }
+
+/*
+parameter:{
+	ax: 10,
+	by: 20,
+	cz: 50,
+	zcut1: -10,
+	zcut2: 40,
+	lunit: 'mm',
+}
+*/
+function EllipsoidGeometry(parameter,scale)
+{
+	/*
+	Ellipsoid:
+	1=x**2/a**2+y**2/b**2+z**2/c**2
+	1-z**2/c**2=x**2/a**2 + y**2/b**2
+	let x**2=x'**2 * a**2 * (c**2-z**2)/c**2, y**2=y'**2 * b**2 * (c**2 - z**2)/c**2
+	then 1=x'**2 + y'**2
+	*/
+
+    var ax = parameter.ax*UnitOf(parameter.lunit)*scale;              
+	var by = parameter.by*UnitOf(parameter.lunit)*scale;              
+	var cz=  parameter.cz*UnitOf(parameter.lunit)*scale; 
+	var zcut1=  parameter.zcut1*UnitOf(parameter.lunit)*scale;                 
+ 	var zcut2=  parameter.zcut2*UnitOf(parameter.lunit)*scale;                 
+
+    var zcut1=Math.max(zcut1,-cz);
+    var zcut2=Math.min(zcut2,cz);
+	if(zcut1>=zcut2)
+	{
+		zcut1=-cz;
+		zcut2=cz;
+	}
+
+    var segments_theta=18;
+    var start_theta=Math.acos(-zcut1/cz);
+    var stop_theta=Math.acos(-zcut2/cz);
+   
+    var step_theta=(stop_theta-start_theta)/18;
+              
+	var start_phi=0;  
+	var delta_phi=2*Math.PI;
+    var segments_phi=36;
+    var step_phi=delta_phi/segments_phi;
+
+ 	var geometry = new THREE.Geometry();
+
+    for(var k=0;k<=segments_theta;k++)
+    {
+    	var z=-Math.cos(k*step_theta+start_theta)*cz;
+    	var coef=Math.sqrt(cz*cz - z*z)/cz;
+        for(var i=0; i<= segments_phi; i++)
+        {
+        	var phi=start_phi+i*step_phi;
+
+            geometry.vertices.push( new THREE.Vector3(0,0,z));
+
+            geometry.vertices.push( new THREE.Vector3(coef*ax*Math.cos(phi),coef*ax*Math.sin(phi),z));
+        }
+    }
+
+    return CalcFaces(geometry, segments_theta, segments_phi, true);
+}
+

@@ -237,6 +237,38 @@ div(id='property-solid-trap', class='hidden')
               option rad
       //button(type='submit',class="btn btn-default") Save
 
+div(id='property-solid-ellipsoid', class='hidden')
+  div(class='row')
+    label Ellipsoid
+  div(class='row')
+    //form(class='form',role='form',action='javascript:void(0);',onsubmit='OnEllipsoidSubmit(this)')
+    form(class='form',role='form',action='javascript:void(0);')
+      {% csrf_token %}
+      div(class='form-group')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') ax:
+          input(type='number',step='0.0001',class='form-control',name='ax',onchange='SolidEllipsoid.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') by:
+          input(type='number',step='0.0001',class='form-control',name='by',onchange='SolidEllipsoid.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') cz:
+          input(type='number',step='0.0001',class='form-control',name='cz',onchange='SolidEllipsoid.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') zcut1:
+          input(type='number',step='0.0001',class='form-control',name='zcut1',onchange='SolidEllipsoid.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') zcut2:
+          input(type='number',step='0.0001',class='form-control',name='zcut2',onchange='SolidEllipsoid.ValueChanged(this)')
+        div(class='input-group input-group-sm')
+          span(class='input-group-addon') lunit:
+          select(class='form-control',name='lunit',onchange='SolidEllipsoid.UnitChanged(this)')
+              option m
+              option cm
+              option mm
+              option km
+      //button(type='submit',class="btn btn-default") Save
+
 div(id='property-placement-simple', class='hidden')
   div(class='row')
     label Placement

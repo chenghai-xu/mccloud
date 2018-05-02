@@ -5,6 +5,7 @@ $(document).ready(function () {
     VolumeControl.solid_map.set('cone',{selector:'#property-solid-cone',control:SolidCone}); 
     VolumeControl.solid_map.set('para',{selector:'#property-solid-para',control:SolidPara}); 
     VolumeControl.solid_map.set('trap',{selector:'#property-solid-trap',control:SolidTrap}); 
+    VolumeControl.solid_map.set('ellipsoid',{selector:'#property-solid-ellipsoid',control:SolidEllipsoid}); 
 });
 
 var SolidBox = {
@@ -208,6 +209,41 @@ var SolidTrap = {
         $(form).find('input[name=phi]').val(para.parameter.phi);
         $(form).find('select[name=lunit]').val(para.parameter.lunit);
         $(form).find('select[name=aunit]').val(para.parameter.aunit);
+    },
+
+    UnitChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var p=$(elem).attr('name');
+        console.log('Change para parameter '+p+' to '+ value);
+        this.data.parameter[p]=value;
+        DrawModel(this.node);
+    },
+
+    ValueChanged: function(elem)
+    {
+        var value=$(elem).val();
+        var p=$(elem).attr('name');
+        console.log('Change para parameter '+p+' to '+ value);
+        this.data.parameter[p]=parseFloat(value);
+        DrawModel(this.node);
+    },
+}
+
+var SolidEllipsoid = {
+    node: null,
+    data: null,
+    form: null,
+    Init: function()
+    {
+        var para=this.data;
+        var form=this.form;
+        $(form).find('input[name=ax]').val(para.parameter.ax);
+        $(form).find('input[name=by]').val(para.parameter.by);
+        $(form).find('input[name=cz]').val(para.parameter.cz);
+        $(form).find('input[name=zcut1]').val(para.parameter.zcut1);
+        $(form).find('input[name=zcut2]').val(para.parameter.zcut2);
+        $(form).find('select[name=lunit]').val(para.parameter.lunit);
     },
 
     UnitChanged: function(elem)
