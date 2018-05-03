@@ -458,7 +458,7 @@ function EllipsoidGeometry(parameter,scale)
 
             geometry.vertices.push( new THREE.Vector3(0,0,z));
 
-            geometry.vertices.push( new THREE.Vector3(coef*ax*Math.cos(phi),coef*ax*Math.sin(phi),z));
+            geometry.vertices.push( new THREE.Vector3(coef*ax*Math.cos(phi),coef*by*Math.sin(phi),z));
         }
     }
 
