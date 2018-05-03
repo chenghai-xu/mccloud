@@ -6,6 +6,7 @@ $(document).ready(function () {
     ThreeDisplay.geometry_map.set('para',ParaGeometry);
     ThreeDisplay.geometry_map.set('trap',TrapGeometry);
     ThreeDisplay.geometry_map.set('ellipsoid',EllipsoidGeometry);
+    ThreeDisplay.geometry_map.set('eltube',EllipticalTubeGeometry);
 });
 
 function BoxGeometry(parameter,scale)
@@ -465,3 +466,49 @@ function EllipsoidGeometry(parameter,scale)
     return CalcFaces(geometry, segments_theta, segments_phi, true);
 }
 
+
+/*
+parameter:{
+	dx: 10,
+	dy: 20,
+	dz: 50,
+	lunit: 'mm',
+}
+*/
+function EllipticalTubeGeometry(parameter,scale)
+{
+    var dx = parameter.dx*UnitOf(parameter.lunit)*scale;              
+	var dy = parameter.dy*UnitOf(parameter.lunit)*scale;
+	var dz = parameter.dz*UnitOf(parameter.lunit)*scale;  
+	               
+	var start_phi =  0;  
+	var delta_phi = 2*Math.PI; 
+    var segments=36;
+    var step = delta_phi/segments;
+
+
+    var z_arr= new Array();
+    z_arr.push(-dz/2.0);
+    z_arr.push(dz/2.0);
+
+ 	var geometry = new THREE.Geometry();
+
+    for(var k=0;k<z_arr.length;k++)
+    {
+        for(var i=0; i<= segments; i++)
+        {
+            geometry.vertices.push( new THREE.Vector3( 
+                0,
+                0,
+                z_arr[k]) );
+
+            geometry.vertices.push( new THREE.Vector3( 
+                dx*Math.cos(start_phi+i*step),
+                dy*Math.sin(start_phi+i*step),
+                z_arr[k]) );
+
+        }
+    }
+
+    return CalcFaces(geometry, 1, segments, true);
+}

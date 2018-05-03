@@ -159,6 +159,21 @@ SolidFactory.new_map.set('ellipsoid',function(){
     return node;    
 });
 
+SolidFactory.new_map.set('eltube',function(){
+    var node=
+        {
+            type:'eltube',
+            parameter: 
+            {
+                dx:10,
+                dy:20,
+                dz:50,
+                lunit:'mm',
+            },
+        };
+    return node;    
+});
+
 function NewSolid(type='box'){
     return SolidFactory.New(type);
 }
