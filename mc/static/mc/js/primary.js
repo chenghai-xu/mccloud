@@ -1012,7 +1012,7 @@ DirectionControl.AngularAUnitChanged=function (elem)
 var PEnergy = {
     TypeMap: new Map([
         ['Mono',{type:'Mono',mono:1.0}],
-        ['Lin',{type:'Lin',min:1.0,max:2.0,gradient:0,intercept:0}],
+        ['Lin',{type:'Lin',min:1.0,max:2.0,gradient:1.0,intercept:0}],
         ['Pow',{type:'Pow',min:1.0,max:2.0,alpha:0}],
         ['Exp',{type:'Exp',min:1.0,max:2.0,ezero:0}],
         ['Gauss',{type:'Gauss',mono:1.0,sigma:0}],
