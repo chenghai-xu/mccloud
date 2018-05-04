@@ -125,15 +125,15 @@ SolidFactory.new_map.set('trap',function(){
             parameter: 
             {
                 z: 60,
-                theta: 20,
-                phi: 5,
-                y1: 40,
                 x1: 30,
                 x2: 40,
-                alpha1: 10,
-                y2: 16,
                 x3: 10,
                 x4: 14,
+                y1: 40,
+                y2: 16,
+                theta: 20,
+                phi: 5,
+                alpha1: 10,
                 alpha2: 10,
                 lunit: 'mm',
                 aunit: 'deg'
