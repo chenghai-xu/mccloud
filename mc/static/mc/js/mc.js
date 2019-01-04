@@ -230,7 +230,7 @@ unit_map.set('cm3',1e-6);
 unit_map.set('m3',1);
 unit_map.set('km3',1e9);
 unit_map.set('deg',1.0);
-unit_map.set('rad',Math.PI/180);
+unit_map.set('rad',180.0/Math.PI);
 
 function UnitOf(u)
 {

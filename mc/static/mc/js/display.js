@@ -173,7 +173,7 @@ function DrawModel(node)
                 mat.emissive.setHex(color);
             var obj = new THREE.Mesh(geo, mat);
             var lunit=UnitOf(pos.lunit)*scale;
-            var aunit=UnitOf(rot.aunit)/UnitOf('deg');
+            var aunit=UnitOf(rot.aunit)/UnitOf('deg')*Math.PI/180;
             obj.position.x=pos.x*lunit;
             obj.position.y=pos.y*lunit;
             obj.position.z=pos.z*lunit;
